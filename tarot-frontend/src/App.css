@@ -1,0 +1,17 @@
+.app {
+  display: flex; /* Enable flexbox */
+  flex-direction: column; /* Align children in a column */
+  background-size: cover;
+  min-height: 100vh; /* Ensure the app takes at least the full height of the viewport */
+  margin: 20px;
+  padding: 20px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0); /* Semi-transparent background */
+}
+
+.spread-info, .spread-selector {
+  margin: 20px;
+  padding: 20px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
+}

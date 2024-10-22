@@ -1,0 +1,107 @@
+/* Default layout */
+.card-display {
+    display: flex;
+    justify-content: space-around;
+    margin: 20px;
+    position: relative;
+}
+
+/* Cross Wrapper */
+.cross-wrapper {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    grid-gap: 20px; /* Space between cards */
+    position: relative; /* For positioning overlapping cards */
+    align-items: start;
+  }
+  
+  /* Overlapping cards wrapper */
+  .overlapping-cards {
+    grid-column: 2; /* Center column */
+    grid-row: 2; /* Center row */
+    position: relative; /* Keep this for absolute positioning */
+  }
+  
+  /* Center card (Present) */
+
+  .card.position-1 {
+    position: absolute; /* Allow overlap */
+    top: 0; /* Adjust as needed */
+    left: 0; /* Adjust as needed */
+    z-index: 1; /* Below the second card */
+}
+
+.card.position-2 {
+    position: absolute; /* Allow overlap */
+    top: 0; /* Adjust as needed */
+    left: 0; /* Adjust as needed */
+    z-index: 2; /* On top of the first card */
+    transform: rotate(90deg); /* Rotate if desired */
+}
+  
+  /* Other four cards forming the cross */
+  .card.position-3 { grid-column: 2; grid-row: 1; } /* Above */
+  .card.position-4 { grid-column: 2; grid-row: 3; } /* Below */
+  .card.position-5 { grid-column: 1; grid-row: 2; } /* Left */
+  .card.position-6 { grid-column: 3; grid-row: 2; } /* Right */
+  
+  /* Right Column Wrapper */
+  .right-column {
+    display: flex;
+    flex-direction: column;
+    margin-left: 20px; /* Space between the cross and right column */
+  }
+  
+  .card {
+    width: 100%; /* Make sure each card takes up its available space */
+    text-align: center;
+    position: relative;
+    cursor: pointer;
+    height: auto; /* Maintain aspect ratio */
+  }
+  
+  .card img {
+    width: 100%; /* Make images scale based on their container */
+  }
+  
+  /* Responsive design */
+  @media (max-width: 1024px) {
+    .card {
+      width: 60%; /* Shrink the card size */
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .card {
+      width: 50%; /* Further shrink card size */
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .card {
+      width: 40%; /* Further shrink card size */
+    }
+  }
+
+  .tooltip {
+    visibility: hidden; /* Hidden by default */
+    width: 120px; /* Width of the tooltip */
+    background-color: black; /* Tooltip background color */
+    color: white; /* Tooltip text color */
+    text-align: center; /* Center text */
+    border-radius: 5px; /* Rounded corners */
+    padding: 5px; /* Padding around text */
+    position: absolute; /* Position relative to card */
+    z-index: 1; /* Make sure it appears on top */
+    top: 100%; /* Position above the card */
+    left: 50%; /* Center horizontally */
+    transform: translateX(-50%); /* Adjust to center */
+    opacity: 0; /* Initially hidden */
+    transition: opacity 0.3s; /* Smooth transition for showing/hiding */
+}
+
+.card:hover .tooltip {
+    visibility: visible; /* Show tooltip on hover */
+    opacity: 1; /* Make it visible */
+}
