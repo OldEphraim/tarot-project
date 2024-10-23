@@ -1,4 +1,5 @@
 import React from 'react';
+import './AboutTarot.css';
 
 const AboutTarot = () => {
   return (
