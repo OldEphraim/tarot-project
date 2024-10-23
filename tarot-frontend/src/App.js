@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import axios from 'axios';
+import Navbar from './components/Navbar';
 import SpreadInfo from './components/SpreadInfo';
 import SpreadSelector from './components/SpreadSelector';
 import CardDisplay from './components/CardDisplay';
+import AboutTarot from './pages/AboutTarot';
+import Login from './pages/Login';
 import './App.css';
 
 const App = () => {
@@ -31,14 +35,22 @@ const App = () => {
   };
 
   return (
+    <Router>
+      <Navbar />
+      <Routes>
+        <Route path="/" element={
     <div className="app">
       <h1>Tarot Card Reader</h1>
         <SpreadInfo />
         <SpreadSelector onSelect={handleSpreadSelect} />
-      {selectedSpread && <h2>You selected: {selectedSpread}</h2>}
-      <CardDisplay cards={cards} selectedSpread={selectedSpread} />
-    </div>
-  );
+      {selectedSpread && <><h2>You selected: {selectedSpread}</h2>
+      {cards.length > 0 && <CardDisplay cards={cards} selectedSpread={selectedSpread} />} </>}
+    </div>} />
+    <Route path="/tarot" element={<AboutTarot />} /> 
+        <Route path="/login" element={<Login />} /> 
+    </Routes>
+    </Router>
+  )
 };
 
 export default App;

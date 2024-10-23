@@ -1,0 +1,38 @@
+/* Navbar.css */
+.navbar {
+    background-color: black;
+    color: white;
+    font-family: 'Fanwood Text', serif; 
+    text-transform: uppercase;
+    padding: 1rem;
+  }
+  
+  .nav-links {
+    list-style: none;
+    display: flex;
+    justify-content: space-around;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .nav-links li {
+    display: inline;
+  }
+  
+  .nav-links a {
+    color: white;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+  }
+  
+  .nav-links a:hover {
+    background-color: #444;
+    border-radius: 5px;
+  }
+  
+  @media (max-width: 768px) {  
+    .nav-links li {
+      margin: 0.5rem 0;
+    }
+  }
+  
