@@ -5,6 +5,7 @@ import (
 	"math/rand"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -35,14 +36,14 @@ func drawMultipleCardsHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Shuffle the deck to prevent duplicates
 	rand.Seed(time.Now().UnixNano())
-	shuffledDeck := make([]TarotCard, len(tarotDeck))
+	shuffledDeck := make([]TarotDeck, len(tarotDeck))
 	copy(shuffledDeck, tarotDeck)
 	rand.Shuffle(len(shuffledDeck), func(i, j int) {
 		shuffledDeck[i], shuffledDeck[j] = shuffledDeck[j], shuffledDeck[i]
 	})
 
 	// Draw the specified number of cards
-	var drawnCards []TarotCard
+	var drawnCards []TarotDeck
 	for i := 0; i < numCards; i++ {
 		card := shuffledDeck[i]
 		// Randomly choose upright or reversed
@@ -55,4 +56,25 @@ func drawMultipleCardsHandler(w http.ResponseWriter, r *http.Request) {
 	// Return the drawn cards as JSON
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(drawnCards)
+}
+
+func searchCardHandler(w http.ResponseWriter, r *http.Request) {
+	// Default to searching for the fool
+	cardName := "fool"
+
+	// Check for a 'cardName' query parameter and update cardName
+	cardName = r.URL.Query().Get("cardName")
+
+	// Search for the card in the tarotDeck
+	for _, card := range tarotDeck {
+		if strings.EqualFold(card.Details.Name, cardName) { // Assuming TarotCard has a Name field
+			w.Header().Set("Content-Type", "application/json")
+			json.NewEncoder(w).Encode(card)
+			return
+		}
+	}
+
+	// If not found, return a 404 error
+	w.WriteHeader(http.StatusNotFound)
+	json.NewEncoder(w).Encode(map[string]string{"error": "Card not found"})
 }

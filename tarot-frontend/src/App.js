@@ -4,6 +4,7 @@ import Navbar from './components/Navbar';
 import AboutTarot from './pages/AboutTarot';
 import Home from './pages/Home';
 import Login from './pages/Login';
+import TarotCard from './pages/TarotCard';
 import './App.css';
 
 const App = () => {
@@ -15,6 +16,7 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/tarot" element={<AboutTarot />} /> 
         <Route path="/login" element={<Login />} /> 
+        <Route path="/tarot/:cardName" element={<TarotCard />} />
     </Routes>
     </div>
     </Router>
