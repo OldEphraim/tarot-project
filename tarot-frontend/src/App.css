@@ -4,7 +4,7 @@
   min-height: 100vh; /* Ensure the app takes at least the full height of the viewport */
   width: 100%;
   overflow-x: hidden;
-  padding-inline: 20px;
+  text-align: center;
 }
 
 .background-image {

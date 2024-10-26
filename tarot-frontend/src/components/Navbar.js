@@ -8,11 +8,13 @@ const Navbar = () => {
     account: false,
   });
   const [dropdownStyles, setDropdownStyles] = useState({}); 
+  const [isDropdownPositioned, setIsDropdownPositioned] = useState(false);
 
   const dropdownRefs = useRef({ tarot: { toggle: null, menuItem: null }, account: { toggle: null, menuItem: null } });
   const navbarRef = useRef(null);
 
   const toggleDropdown = (menu) => {
+    setIsDropdownPositioned(false);
     setShowDropdown((prev) => ({
       tarot: menu === 'tarot', 
       account: menu === 'account', 
@@ -55,6 +57,7 @@ const Navbar = () => {
       }
     }
     setDropdownStyles(newStyles);
+    setIsDropdownPositioned(true);
   }, [showDropdown]);
 
   return (
@@ -67,7 +70,7 @@ const Navbar = () => {
             About Tarot
           </div>
           {showDropdown.tarot && (
-            <ul className="dropdown-menu" style={dropdownStyles.tarot}>
+            <ul className="dropdown-menu" style={{...dropdownStyles.tarot, visibility: isDropdownPositioned ? 'visible' : 'hidden' }}>
               <li ref={(el) => (dropdownRefs.current.tarot.menuItem = el)}><Link to="/tarot/about">Art of Tarot</Link></li>
               <li><Link to="/tarot/spreads">Tarot Spreads</Link></li>
               <li><Link to="/tarot/cards">Tarot Cards</Link></li>
@@ -80,7 +83,7 @@ const Navbar = () => {
             My Account
           </div>
           {showDropdown.account && (
-            <ul className="dropdown-menu">
+            <ul className="dropdown-menu" style={{...dropdownStyles.account, visibility: isDropdownPositioned ? 'visible' : 'hidden' }}>
               <li ref={(el) => (dropdownRefs.current.account.menuItem = el)}><Link to="/login">Login</Link></li>
               <li><Link to="/signup">Sign Up</Link></li>
             </ul>
