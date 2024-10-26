@@ -1,0 +1,31 @@
+.tarot-gallery {
+    padding: 20px;
+}
+
+section {
+    margin-bottom: 40px;
+}
+
+.tarot-card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 15px;
+}
+
+.tarot-card {
+    text-align: center;
+}
+
+.tarot-card img {
+    width: 100%; 
+    height: auto; 
+    border-radius: 8px; 
+    object-fit: contain;
+}
+
+.label {
+    color: black;
+    font-weight: bold;
+    font-family: 'Fanwood Text', serif; 
+    margin-top: -20px;
+}

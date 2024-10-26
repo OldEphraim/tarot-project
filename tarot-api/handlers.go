@@ -78,3 +78,14 @@ func searchCardHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusNotFound)
 	json.NewEncoder(w).Encode(map[string]string{"error": "Card not found"})
 }
+
+// tarotDeckHandler handles requests to get the tarot deck
+func tarotDeckHandler(w http.ResponseWriter, r *http.Request) {
+	// Set the content type to JSON
+	w.Header().Set("Content-Type", "application/json")
+
+	// Encode the tarotDeck variable into JSON and write it to the response
+	if err := json.NewEncoder(w).Encode(tarotDeck); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+}

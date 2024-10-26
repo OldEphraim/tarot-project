@@ -37,6 +37,7 @@ func main() {
 	http.HandleFunc("/api/draw", corsMiddleware(loggingMiddleware(drawCardHandler)))
 	http.HandleFunc("/api/draw-multiple", corsMiddleware(loggingMiddleware(drawMultipleCardsHandler)))
 	http.HandleFunc("/api/search", corsMiddleware(loggingMiddleware(searchCardHandler)))
+	http.HandleFunc("/api/tarot-deck", corsMiddleware(loggingMiddleware(tarotDeckHandler)))
 
 	log.Println("Starting Tarot API on :8080...")
 	log.Fatal(http.ListenAndServe(":8080", nil))

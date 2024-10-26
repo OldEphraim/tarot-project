@@ -23,7 +23,6 @@ const TarotCard = ({ onAppear, onDisappear }) => {
                 }
                 const cardData = await response.json();
                 setCard(cardData);
-                console.log(cardData);
             } catch (err) {
                 setError(err.message);
             }
