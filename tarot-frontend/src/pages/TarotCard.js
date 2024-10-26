@@ -1,10 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import './TarotCard.css';
 
-const TarotCard = () => {
+const TarotCard = ({ onAppear, onDisappear }) => {
     const { cardName } = useParams(); 
     const [card, setCard] = useState(null);
     const [error, setError] = useState(null);
+
+    useEffect(() => {
+        onAppear();
+        return () => {
+            onDisappear();
+        };
+    }, [onAppear, onDisappear]);
 
     useEffect(() => {
         const fetchCard = async () => {
@@ -32,16 +40,21 @@ const TarotCard = () => {
         return <h2>Loading...</h2>;
     }
 
+    const getImagePath = (number) => {
+        const imageFileName = `/tarot-images/card_${number}.jpg`;
+        return imageFileName; 
+      };
+
     return (
-        <div className="tarot-card">
+        <div className="tarot-card-page">
             <h1>{card.name}</h1>
+              <div className="tarot-card">
+                <img src={getImagePath(card.number)} alt={card.name} />
+              </div>
             <div className="emoji">{card.details.emoji}</div>
             <p>{card.details.summary}</p>
-            <h3>Relationships:</h3>
             <p>{card.details.relationships}</p>
-            <h3>Career:</h3>
             <p>{card.details.career}</p>
-            <h3>Reversed:</h3>
             <p>{card.details.reversed}</p>
         </div>
     );

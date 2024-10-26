@@ -1,13 +1,23 @@
 .app {
   display: flex; /* Enable flexbox */
   flex-direction: column; /* Align children in a column */
+  min-height: 100vh; /* Ensure the app takes at least the full height of the viewport */
+  width: 100%;
+  overflow-x: hidden;
+  padding-inline: 20px;
+}
+
+.background-image {
   background-image: url('../public/freepik-forest.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   background-color: black;
-  min-height: 100vh; /* Ensure the app takes at least the full height of the viewport */
-  padding: 20px;
+}
+
+.no-background {
+  background-image: none;
+  background-color: #636363;
 }
 
 .spread-info, .spread-selector {

@@ -1,0 +1,14 @@
+.tarot-card-page {
+    text-align: center;
+    font-family: 'Fanwood Text', serif; 
+}
+
+.tarot-card img {
+    max-height: 33vh;
+    width: auto;
+    padding-bottom: 20px;
+}
+
+.emoji {
+    font-size: 50px;
+}

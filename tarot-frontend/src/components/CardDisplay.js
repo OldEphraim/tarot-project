@@ -16,7 +16,7 @@ const celticCrossPositionMeanings = {
 
 const CardDisplay = ({ cards, selectedSpread }) => {
   const getImagePath = (number) => {
-    const imageFileName = `tarot-images/card_${number}.jpg`;
+    const imageFileName = `/tarot-images/card_${number}.jpg`;
     return imageFileName; 
   };
 
