@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { searchCardByName } from '../services/apiService';
 import './TarotCard.css';
 
 const TarotCard = ({ onAppear, onDisappear }) => {
@@ -17,11 +18,7 @@ const TarotCard = ({ onAppear, onDisappear }) => {
     useEffect(() => {
         const fetchCard = async () => {
             try {
-                const response = await fetch(`http://localhost:8080/api/search?cardName=${cardName}`);
-                if (!response.ok) {
-                    throw new Error('Card not found');
-                }
-                const cardData = await response.json();
+                const cardData = await searchCardByName(cardName);
                 setCard(cardData);
             } catch (err) {
                 setError(err.message);

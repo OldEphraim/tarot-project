@@ -71,9 +71,9 @@ const Navbar = () => {
           </div>
           {showDropdown.tarot && (
             <ul className="dropdown-menu" style={{...dropdownStyles.tarot, visibility: isDropdownPositioned ? 'visible' : 'hidden' }}>
-              <li ref={(el) => (dropdownRefs.current.tarot.menuItem = el)}><Link to="/tarot/about">Art of Tarot</Link></li>
-              <li><Link to="/tarot/spreads">Tarot Spreads</Link></li>
-              <li><Link to="/tarot/cards">Tarot Cards</Link></li>
+              <li ref={(el) => (dropdownRefs.current.tarot.menuItem = el)} onClick={() => closeDropdowns()}><Link to="/tarot/about">Art of Tarot</Link></li>
+              <li onClick={() => closeDropdowns()}><Link to="/tarot/spreads">Tarot Spreads</Link></li>
+              <li onClick={() => closeDropdowns()}><Link to="/tarot/cards">Tarot Cards</Link></li>
             </ul>
           )}
         </li>
@@ -84,8 +84,8 @@ const Navbar = () => {
           </div>
           {showDropdown.account && (
             <ul className="dropdown-menu" style={{...dropdownStyles.account, visibility: isDropdownPositioned ? 'visible' : 'hidden' }}>
-              <li ref={(el) => (dropdownRefs.current.account.menuItem = el)}><Link to="/login">Login</Link></li>
-              <li><Link to="/signup">Sign Up</Link></li>
+              <li ref={(el) => (dropdownRefs.current.account.menuItem = el)} onClick={() => closeDropdowns()}><Link to="/login">Login</Link></li>
+              <li onClick={() => closeDropdowns()}><Link to="/signup">Sign Up</Link></li>
             </ul>
           )}
         </li>

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { readTarotDeck } from '../services/apiService';
 import './TarotGallery.css';
 
 // Mock data for the categories
@@ -46,11 +47,7 @@ const TarotGallery = ({ onAppear, onDisappear }) => {
     useEffect(() => {
         const fetchDeck = async () => {
             try {
-                const response = await fetch(`http://localhost:8080/api/tarot-deck`);
-                if (!response.ok) {
-                    throw new Error('Deck not found');
-                }
-                const deckData = await response.json();
+                const deckData = await readTarotDeck();
                 
                 for (let i = 0; i < tarotCategories.length; i++) {
                 deckData.forEach(card => {

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import CardDisplay from '../components/CardDisplay';
 import SpreadInfo from '../components/SpreadInfo';
 import SpreadSelector from '../components/SpreadSelector';
+import { drawMultipleCards } from '../services/apiService';
 import './Home.css';
 
 const Home = () => {
@@ -23,8 +23,8 @@ const Home = () => {
     }
 
     try {
-      const response = await axios.get(`http://localhost:8080/api/draw-multiple?count=${numCards}`);
-      setCards(response.data);
+      const fetchedCards = await drawMultipleCards(numCards);
+      setCards(fetchedCards);
     } catch (error) {
       console.error("Error fetching cards:", error);
     }
