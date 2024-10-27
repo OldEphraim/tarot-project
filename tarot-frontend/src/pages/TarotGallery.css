@@ -29,3 +29,13 @@ section {
     font-family: 'Fanwood Text', serif; 
     margin-top: -20px;
 }
+
+.category-name {
+    font-family: 'Fanwood Text', serif; 
+    text-transform: uppercase;
+}
+
+.category-description {
+    font-family: 'Fanwood Text', serif; 
+    font-weight: normal;
+}
