@@ -6,6 +6,7 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import TarotCard from './pages/TarotCard';
 import TarotGallery from './pages/TarotGallery';
+import TarotSpreads from './pages/TarotSpreads';
 import './App.css';
 
 const App = () => {
@@ -21,6 +22,7 @@ const App = () => {
         <Route path="/tarot" element={<AboutTarot />} /> 
         <Route path="/tarot/cards" element={<TarotGallery onAppear={() => setBackgroundClass("no-background")} onDisappear={() => setBackgroundClass("background-image")} />} />
         <Route path="/tarot/cards/:cardName" element={<TarotCard onAppear={() => setBackgroundClass("no-background")} onDisappear={() => setBackgroundClass("background-image")} />} />
+        <Route path="/tarot/spreads" element={<TarotSpreads onAppear={() => setBackgroundClass("no-background")} onDisappear={() => setBackgroundClass("background-image")} />} />
     </Routes>
     </div>
     </Router>

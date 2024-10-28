@@ -2,12 +2,38 @@ package main
 
 import (
 	"encoding/json"
+	"log"
 	"math/rand"
 	"net/http"
 	"strconv"
 	"strings"
 	"time"
+
+	openai "github.com/sashabaranov/go-openai"
 )
+
+func chatHandler(client *openai.Client) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		var req struct {
+			Message string `json:"message"`
+		}
+		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+			http.Error(w, "Invalid request payload", http.StatusBadRequest)
+			return
+		}
+
+		// Call the OpenAI service
+		response, err := GetChatResponse(client, req.Message)
+		if err != nil {
+			http.Error(w, "Failed to get response from OpenAI", http.StatusInternalServerError)
+			log.Printf("Error making OpenAI request: %v\n", err)
+			return
+		}
+
+		// Send the response back to the frontend
+		json.NewEncoder(w).Encode(map[string]string{"response": response})
+	}
+}
 
 func drawCardHandler(w http.ResponseWriter, r *http.Request) {
 	rand.Seed(time.Now().UnixNano())

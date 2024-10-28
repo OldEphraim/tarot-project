@@ -39,3 +39,8 @@ section {
     font-family: 'Fanwood Text', serif; 
     font-weight: normal;
 }
+
+.card-description {
+    font-style: italic;
+    font-family: 'Fanwood Text', serif;
+}

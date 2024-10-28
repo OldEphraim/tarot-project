@@ -3,6 +3,10 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
+
+	"github.com/joho/godotenv"
+	openai "github.com/sashabaranov/go-openai"
 )
 
 // Enable CORS for the response
@@ -34,6 +38,15 @@ func corsMiddleware(next http.HandlerFunc) http.HandlerFunc {
 }
 
 func main() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
+	apiKey := os.Getenv("OPENAI_API_KEY")
+	client := openai.NewClient(apiKey)
+
+	http.HandleFunc("/api/chat", corsMiddleware(loggingMiddleware(chatHandler(client))))
 	http.HandleFunc("/api/draw", corsMiddleware(loggingMiddleware(drawCardHandler)))
 	http.HandleFunc("/api/draw-multiple", corsMiddleware(loggingMiddleware(drawMultipleCardsHandler)))
 	http.HandleFunc("/api/search", corsMiddleware(loggingMiddleware(searchCardHandler)))
