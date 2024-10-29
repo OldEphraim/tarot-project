@@ -9,7 +9,7 @@ import (
 // GetChatResponse sends a message to OpenAI and returns the response.
 func GetChatResponse(client *openai.Client, userMessage string) (string, error) {
 	request := openai.ChatCompletionRequest{
-		Model: "gpt-3.5-turbo",
+		Model: "gpt-4o-mini",
 		Messages: []openai.ChatCompletionMessage{
 			{Role: "user", Content: userMessage},
 		},

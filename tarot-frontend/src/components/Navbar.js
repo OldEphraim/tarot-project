@@ -60,12 +60,19 @@ const Navbar = () => {
     setIsDropdownPositioned(true);
   }, [showDropdown]);
 
-  return (
-    <nav className="navbar" ref={navbarRef}>
-      <ul className="nav-links">
-        <li><div className="home-link" onClick={() => closeDropdowns()}><Link to="/">Home</Link></div></li>
 
-        <li>
+  const handleNavbarClick = (e) => {
+    if (e.target.tagName !== 'LI' && e.target.tagName !== 'A') {
+      closeDropdowns();
+    }
+  };
+
+  return (
+    <nav className="navbar" ref={navbarRef} onClick={handleNavbarClick}>
+      <ul className="nav-links">
+        <li onClick={(e) => e.stopPropagation()}><div className="home-link" onClick={() => closeDropdowns()}><Link to="/">Home</Link></div></li>
+
+        <li onClick={(e) => e.stopPropagation()}>
           <div className="dropdown-toggle" ref={(el) => (dropdownRefs.current.tarot.toggle = el)} onClick={() => toggleDropdown('tarot')}>
             About Tarot
           </div>
@@ -78,7 +85,7 @@ const Navbar = () => {
           )}
         </li>
 
-        <li>
+        <li onClick={(e) => e.stopPropagation()}>
           <div className="dropdown-toggle" ref={(el) => (dropdownRefs.current.account.toggle = el)} onClick={() => toggleDropdown('account')}>
             My Account
           </div>
@@ -90,7 +97,7 @@ const Navbar = () => {
           )}
         </li>
 
-        <li><div className="oldephraim-link" onClick={() => closeDropdowns()}><a href="https://oldephraim.github.io" target="_blank" rel="noopener noreferrer">About Me</a></div></li>
+        <li onClick={(e) => e.stopPropagation()}><div className="oldephraim-link" onClick={() => closeDropdowns()}><a href="https://oldephraim.github.io" target="_blank" rel="noopener noreferrer">About Me</a></div></li>
       </ul>
     </nav>
   );
