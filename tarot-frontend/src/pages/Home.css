@@ -19,7 +19,38 @@ h1, h2, h3, p {
   
   .typewriter-effects {
     font-family: 'Fanwood Text', serif; 
-    font-weight: normal;
+    font-size: 25px;
+    font-weight: bolder;
     text-align: left;
-    text-shadow: 1px 0 0 #000, 0 -1px 0 #000, 0 1px 0 #000, -1px 0 0 #000;
+    mix-blend-mode: darken;
+    --font-color: black;
+    color: black;
+  }
+
+  .button-container {
+    display: flex;
+    justify-content: center; /* Center the buttons */
+    gap: 20px; /* Space between buttons */
+    margin-top: 20px; /* Space above buttons */
+  }
+  
+  .spooky-button {
+    background-color: #333; /* Dark background */
+    color: #fff; /* Light text color */
+    border: 2px solid #888; /* Darker border */
+    padding: 10px 20px; /* Padding for size */
+    font-size: 16px; /* Font size */
+    font-family: 'Fanwood Text', serif; /* Use your spooky font */
+    cursor: pointer; /* Pointer on hover */
+    transition: all 0.3s ease; /* Smooth transition */
+  }
+  
+  .spooky-button:hover {
+    background-color: #444; /* Slightly lighter on hover */
+    border-color: #aaa; /* Lighten border on hover */
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5); /* Subtle shadow effect */
+  }
+  
+  .spooky-button:focus {
+    outline: none; /* Remove focus outline */
   }
