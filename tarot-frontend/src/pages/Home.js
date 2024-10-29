@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import * as Typewriter from 'react-effect-typewriter';
 import CardDisplay from '../components/CardDisplay';
 import SpreadInfo from '../components/SpreadInfo';
 import SpreadSelector from '../components/SpreadSelector';
+import TarotChat from '../components/TarotChat';
 import { drawMultipleCards } from '../services/apiService';
 import './Home.css';
 
@@ -32,7 +34,12 @@ const Home = () => {
 
   return (
     <div className="home">
-      <h1>Tarot Card Reader</h1>
+      <h1 className="home-header">Tarot Card Reader</h1>
+      <Typewriter.Container className="typewriter-effects">
+      <Typewriter.Paragraph className="typewriter-effects">Welcome, dear visitor, to my tarot card reader. For more information regarding the meanings of specific tarot cards, or the spreads which can be used, please visit the resources which have been made available under ‘Art of Tarot’. If you would like your results saved, so that you can use them for later and develop personal associations with the cards, please log in.</Typewriter.Paragraph>
+      <Typewriter.Paragraph className="typewriter-effects">Would you like to speak to our AI assistant about the challenges you are facing, or would you like to proceed directly to the card drawing?</Typewriter.Paragraph>
+      </Typewriter.Container>
+      <TarotChat />
         <SpreadInfo />
         <SpreadSelector onSelect={handleSpreadSelect} />
       {selectedSpread && <><h2>You selected: {selectedSpread}</h2>
