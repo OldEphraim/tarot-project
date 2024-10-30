@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import * as Typewriter from 'react-effect-typewriter';
 import CardDisplay from '../components/CardDisplay';
-import SpreadInfo from '../components/SpreadInfo';
-import SpreadSelector from '../components/SpreadSelector';
 import TarotChat from '../components/TarotChat';
 import { drawMultipleCards } from '../services/apiService';
 import './Home.css';
@@ -18,13 +16,19 @@ const Home = () => {
     setSelectedSpread(spread);
     let numCards;
 
-    // Determine the number of cards based on the spread
-    if (spread === "Three-Card Spread") {
+    if (spread === "One-Card Spread") {
+      numCards = 1;
+    } else if (spread === "Three-Card Spread") {
       numCards = 3;
-    } else if (spread === "Celtic Cross") {
-      numCards = 10; // Assuming a Celtic Cross uses 10 cards
+    } else if (spread === "Five-Card Spread") {
+      numCards = 5;
+    }
+    else if (spread === "Celtic Cross") {
+      numCards = 10; 
     } else {
-      numCards = 5; // Default for others
+      return (
+        <h1>Error drawing cards...</h1>
+      )
     }
 
     try {
@@ -72,22 +76,19 @@ const Home = () => {
 
         {/* Buttons */}
         <div className="button-container" style={{visibility: areCardSelectionButtonsVisible ? 'visible' : 'hidden'}}>
-        <button className="spooky-button" onClick={() => {/* Placeholder comment */}}>
+        <button className="spooky-button" onClick={() => handleSpreadSelect("One-Card Spread")}>
           ONE CARD
         </button>
-        <button className="spooky-button" onClick={() => {/* Placeholder comment */}}>
+        <button className="spooky-button" onClick={() => handleSpreadSelect("Three-Card Spread")}>
           THREE CARDS
         </button>
-        <button className="spooky-button" onClick={() => {/* Placeholder comment */}}>
+        <button className="spooky-button" onClick={() => handleSpreadSelect("Five-Card Spread")}>
           FIVE CARDS
         </button>
-        <button className="spooky-button" onClick={() => {/* Placeholder comment */}}>
+        <button className="spooky-button" onClick={() => handleSpreadSelect("Celtic Cross")}>
           CELTIC CROSS
         </button>
       </div>
-
-        <SpreadInfo />
-        <SpreadSelector onSelect={handleSpreadSelect} />
       {selectedSpread && <><h2>You selected: {selectedSpread}</h2>
       {cards.length > 0 && <CardDisplay cards={cards} selectedSpread={selectedSpread} />} </>}
     </div>
