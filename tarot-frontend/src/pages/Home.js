@@ -10,10 +10,16 @@ const Home = () => {
   const [cards, setCards] = useState([]);
   const [areCardSelectionButtonsVisible, setAreCardSelectionButtonsVisible] = useState(false);
   const [areTopButtonsVisible, setAreTopButtonsVisible] = useState(false); 
-  const [isProceedToCardsVisible, setIsProceedToCardsVisible] = useState(false);
+  const [proceedingTextIsVisible, setProceedingTextIsVisible] = useState(false);
+  const [isCardSelectionTextVisible, setIsCardSelectionTextVisible] = useState(false);
+  const [isCardDisplayVisible, setIsCardDisplayVisible] = useState(false);
 
   const handleSpreadSelect = async (spread) => {
     setSelectedSpread(spread);
+    setAreCardSelectionButtonsVisible(false);
+
+    document.getElementById("the-fortuneteller-will-now-draw").scrollIntoView({behavior: "smooth"})
+
     let numCards;
 
     if (spread === "One-Card Spread") {
@@ -39,6 +45,14 @@ const Home = () => {
     }
   };
 
+  const makeCardDisplayVisible = () => {
+    setIsCardDisplayVisible(true);
+  }
+
+  const makeCardSelectionTextVisible = () => {
+    setIsCardSelectionTextVisible(true);
+  }
+
   const makeCardSelectionButtonsVisible = () => {
     setAreCardSelectionButtonsVisible(true); 
   };
@@ -49,7 +63,12 @@ const Home = () => {
 
   const proceedToCards = () => {
     setAreTopButtonsVisible(false);
-    setIsProceedToCardsVisible(true);
+
+    setTimeout(() => {
+      setProceedingTextIsVisible(true);
+    }, 500); // Adjust the delay in milliseconds as needed (500 ms = 0.5 seconds)  
+
+    setProceedingTextIsVisible(true);
   }
 
   return (
@@ -60,7 +79,7 @@ const Home = () => {
       <Typewriter.Paragraph className="typewriter-effects" typingSpeed={20} onEnd={() => makeTopButtonsVisible()}>WOULD you like to speak to our AI assistant about the challenges you are facing, or would you like to proceed directly to the card drawing?</Typewriter.Paragraph>
       </Typewriter.Container>
 
-      {/* Buttons */}
+      {areTopButtonsVisible &&
         <div className="button-container" style={{visibility: areTopButtonsVisible ? 'visible' : 'hidden'}}>
         <button className="spooky-button" onClick={() => {/* Logic to speak to assistant */}}>
           SPEAK TO ASSISTANT
@@ -68,14 +87,18 @@ const Home = () => {
         <button className="spooky-button" onClick={() => proceedToCards()}>
           PROCEED TO CARDS
         </button>
-      </div>
+      </div>}
 
-        <Typewriter.Container className="typewriter-effects" style={{visibility: isProceedToCardsVisible ? 'visible' : 'hidden'}}>
-        <Typewriter.Paragraph className="typewriter-effects" typingSpeed={20} startAnimation={isProceedToCardsVisible} onEnd={() => makeCardSelectionButtonsVisible()}>WOULD you like to draw one card, three cards, five cards, or an entire Celtic cross?</Typewriter.Paragraph>
+      <Typewriter.Container className="typewriter-effects">
+        <Typewriter.Paragraph className="typewriter-effects" typingSpeed={20} startAnimation={proceedingTextIsVisible} onEnd={() => makeCardSelectionTextVisible()}>SO YOU have chosen to proceed directly to the cards.</Typewriter.Paragraph>
+      </Typewriter.Container>
+
+        <Typewriter.Container className="typewriter-effects">
+        <Typewriter.Paragraph className="typewriter-effects" id="would-you-like-to-draw" typingSpeed={20} startAnimation={isCardSelectionTextVisible} onEnd={() => makeCardSelectionButtonsVisible()}>WOULD you like to draw one card, three cards, five cards, or an entire Celtic cross?</Typewriter.Paragraph>
         </Typewriter.Container>
 
-        {/* Buttons */}
-        <div className="button-container" style={{visibility: areCardSelectionButtonsVisible ? 'visible' : 'hidden'}}>
+        {areCardSelectionButtonsVisible &&
+        <div className="button-container">
         <button className="spooky-button" onClick={() => handleSpreadSelect("One-Card Spread")}>
           ONE CARD
         </button>
@@ -88,9 +111,13 @@ const Home = () => {
         <button className="spooky-button" onClick={() => handleSpreadSelect("Celtic Cross")}>
           CELTIC CROSS
         </button>
-      </div>
-      {selectedSpread && <><h2>You selected: {selectedSpread}</h2>
-      {cards.length > 0 && <CardDisplay cards={cards} selectedSpread={selectedSpread} />} </>}
+      </div>}
+      
+        <Typewriter.Container className="typewriter-effects" style={{visibility: selectedSpread ? 'visible' : 'hidden'}}>
+        <Typewriter.Paragraph className="typewriter-effects" id="the-fortuneteller-will-now-draw" typingSpeed={20} startAnimation={selectedSpread !== null} onEnd={() => makeCardDisplayVisible()}>THE FORTUNETELLER will now draw a {selectedSpread} for you.</Typewriter.Paragraph>
+        </Typewriter.Container>
+
+      {isCardDisplayVisible && cards.length > 0 && <CardDisplay cards={cards} selectedSpread={selectedSpread} />}
     </div>
   );
 };

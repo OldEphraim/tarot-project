@@ -3,17 +3,10 @@ import { useParams } from 'react-router-dom';
 import { searchCardByName } from '../services/apiService';
 import './TarotCard.css';
 
-const TarotCard = ({ onAppear, onDisappear }) => {
+const TarotCard = () => {
     const { cardName } = useParams(); 
     const [card, setCard] = useState(null);
     const [error, setError] = useState(null);
-
-    useEffect(() => {
-        onAppear();
-        return () => {
-            onDisappear();
-        };
-    }, [onAppear, onDisappear]);
 
     useEffect(() => {
         const fetchCard = async () => {

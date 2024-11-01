@@ -25,15 +25,17 @@
   
   /* Center card (Present) */
 
+  .card.position-1.position-absolute, .card.position-2.position-absolute {
+    position: absolute;
+  }
+
   .card.position-1 {
-    position: absolute; /* Allow overlap */
     top: 0; /* Adjust as needed */
     left: 0; /* Adjust as needed */
     z-index: 1; /* Below the second card */
 }
 
 .card.position-2 {
-    position: absolute; /* Allow overlap */
     top: 0; /* Adjust as needed */
     left: 0; /* Adjust as needed */
     z-index: 2; /* On top of the first card */
@@ -63,6 +65,7 @@
   
   .card img {
     width: 100%; /* Make images scale based on their container */
+    max-height: 40vh;
   }
   
   /* Responsive design */

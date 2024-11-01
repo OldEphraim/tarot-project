@@ -1,15 +1,7 @@
-import React, { useEffect } from "react";
+import React from "react";
 import './TarotSpreads.css';
 
-const TarotSpreads = ({ onAppear, onDisappear }) => {
-    useEffect(() => {
-        onAppear();
-        return () => {
-            onDisappear();
-        };
-    }, [onAppear, onDisappear]);
-
-
+const TarotSpreads = () => {
   const spreads = [
     {
       name: "Single Card",

@@ -37,16 +37,9 @@ function formatKeywords(description) {
       .map(keyword => keyword.trim().toLowerCase()); // Trim whitespace and convert to lowercase
   }
 
-const TarotGallery = ({ onAppear, onDisappear }) => {
+const TarotGallery = () => {
     const [deck, setDeck] = useState(null);
     const [error, setError] = useState(null);
-
-    useEffect(() => {
-        onAppear();
-        return () => {
-            onDisappear();
-        };
-    }, [onAppear, onDisappear]);
 
     useEffect(() => {
         const fetchDeck = async () => {

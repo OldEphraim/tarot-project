@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import AboutTarot from './pages/AboutTarot';
@@ -10,19 +10,17 @@ import TarotSpreads from './pages/TarotSpreads';
 import './App.css';
 
 const App = () => {
-  const [backgroundClass, setBackgroundClass] = useState("background-image");
-
   return (
     <Router>
       <Navbar />
-      <div className={`app ${backgroundClass}`}>
+      <div className={`app`}>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} /> 
         <Route path="/tarot" element={<AboutTarot />} /> 
-        <Route path="/tarot/cards" element={<TarotGallery onAppear={() => setBackgroundClass("no-background")} onDisappear={() => setBackgroundClass("background-image")} />} />
-        <Route path="/tarot/cards/:cardName" element={<TarotCard onAppear={() => setBackgroundClass("no-background")} onDisappear={() => setBackgroundClass("background-image")} />} />
-        <Route path="/tarot/spreads" element={<TarotSpreads onAppear={() => setBackgroundClass("no-background")} onDisappear={() => setBackgroundClass("background-image")} />} />
+        <Route path="/tarot/cards" element={<TarotGallery />} />
+        <Route path="/tarot/cards/:cardName" element={<TarotCard />} />
+        <Route path="/tarot/spreads" element={<TarotSpreads />} />
     </Routes>
     </div>
     </Router>
