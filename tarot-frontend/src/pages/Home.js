@@ -22,11 +22,11 @@ const Home = () => {
 
     let numCards;
 
-    if (spread === "One-Card Spread") {
+    if (spread === "One") {
       numCards = 1;
-    } else if (spread === "Three-Card Spread") {
+    } else if (spread === "Three") {
       numCards = 3;
-    } else if (spread === "Five-Card Spread") {
+    } else if (spread === "Five") {
       numCards = 5;
     }
     else if (spread === "Celtic Cross") {
@@ -99,13 +99,13 @@ const Home = () => {
 
         {areCardSelectionButtonsVisible &&
         <div className="button-container">
-        <button className="spooky-button" onClick={() => handleSpreadSelect("One-Card Spread")}>
+        <button className="spooky-button" onClick={() => handleSpreadSelect("One")}>
           ONE CARD
         </button>
-        <button className="spooky-button" onClick={() => handleSpreadSelect("Three-Card Spread")}>
+        <button className="spooky-button" onClick={() => handleSpreadSelect("Three")}>
           THREE CARDS
         </button>
-        <button className="spooky-button" onClick={() => handleSpreadSelect("Five-Card Spread")}>
+        <button className="spooky-button" onClick={() => handleSpreadSelect("Five")}>
           FIVE CARDS
         </button>
         <button className="spooky-button" onClick={() => handleSpreadSelect("Celtic Cross")}>
@@ -114,7 +114,8 @@ const Home = () => {
       </div>}
       
         <Typewriter.Container className="typewriter-effects" style={{visibility: selectedSpread ? 'visible' : 'hidden'}}>
-        <Typewriter.Paragraph className="typewriter-effects" id="the-fortuneteller-will-now-draw" typingSpeed={20} startAnimation={selectedSpread !== null} onEnd={() => makeCardDisplayVisible()}>THE FORTUNETELLER will now draw a {selectedSpread} for you.</Typewriter.Paragraph>
+        {selectedSpread === "Celtic Cross" && <Typewriter.Paragraph className="typewriter-effects" id="the-fortuneteller-will-now-draw" typingSpeed={20} startAnimation={selectedSpread !== null} onEnd={() => makeCardDisplayVisible()}>THE FORTUNETELLER will now draw a {selectedSpread} for you.</Typewriter.Paragraph>}
+        {selectedSpread !== "Celtic Cross" && <Typewriter.Paragraph className="typewriter-effects" id="the-fortuneteller-will-now-draw" typingSpeed={20} startAnimation={selectedSpread !== null} onEnd={() => makeCardDisplayVisible()}>THE FORTUNETELLER will now draw a {selectedSpread}-Card Spread for you.</Typewriter.Paragraph>}
         </Typewriter.Container>
 
       {isCardDisplayVisible && cards.length > 0 && <CardDisplay cards={cards} selectedSpread={selectedSpread} />}
