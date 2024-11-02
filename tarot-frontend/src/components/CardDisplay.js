@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { getCardAtPositionExplanation } from '../services/openaiService';
 import * as Typewriter from 'react-effect-typewriter';
 import './CardDisplay.css';
 
@@ -30,14 +31,18 @@ const CardDisplay = ({ cards, selectedSpread }) => {
     if (currentCardIndex > 0) {
       const card = cards[currentCardIndex - 1];
       const meaning = celticCrossPositionMeanings[currentCardIndex];
-      const explanation = `${meaning}: ${card.name}`;
 
-      setExplanationTexts((prevTexts) => {
-        if (!prevTexts.includes(explanation)) {
-          return [...prevTexts, explanation];
-        }
-        return prevTexts;
-      });
+      const fetchExplanation = async () => {
+        const explanation = await getCardAtPositionExplanation(card.name, meaning);
+        setExplanationTexts((prevTexts) => {
+          if (!prevTexts.includes(explanation)) {
+            return [...prevTexts, `${meaning}: ${explanation}`];
+          }
+          return prevTexts;
+        });
+      };
+  
+      fetchExplanation();
     }
   }, [currentCardIndex, cards]);
 
