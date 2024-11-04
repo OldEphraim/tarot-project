@@ -54,3 +54,13 @@ h1, h2, h3, p {
   .spooky-button:focus {
     outline: none; /* Remove focus outline */
   }
+
+  .no-style-link {
+    color: inherit; /* Inherit the color from the button */
+    text-decoration: none; /* Remove the underline */
+  }
+  
+  .no-style-link:hover {
+    color: inherit;
+    text-decoration: none;
+  }

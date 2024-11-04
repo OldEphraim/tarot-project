@@ -49,6 +49,7 @@ func main() {
 	http.HandleFunc("/api/chat", corsMiddleware(loggingMiddleware(chatHandler(client))))
 	http.HandleFunc("/api/draw", corsMiddleware(loggingMiddleware(drawCardHandler)))
 	http.HandleFunc("/api/draw-multiple", corsMiddleware(loggingMiddleware(drawMultipleCardsHandler)))
+	http.HandleFunc("/api/generate-image", corsMiddleware(loggingMiddleware(imageGenerationHandler(client))))
 	http.HandleFunc("/api/search", corsMiddleware(loggingMiddleware(searchCardHandler)))
 	http.HandleFunc("/api/tarot-deck", corsMiddleware(loggingMiddleware(tarotDeckHandler)))
 

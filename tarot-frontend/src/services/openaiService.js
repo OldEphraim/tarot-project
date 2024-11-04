@@ -23,3 +23,16 @@ export const getCardAtPositionExplanation = async (card, position) => {
     return "Error generating explanation.";
   }
 };
+
+export const generateCardImage = async (theme, card) => {
+    try {
+      const response = await axios.post("http://localhost:8080/api/generate-image", {
+        theme,
+        card
+      });
+      return response.data.imageUrl;
+    } catch (error) {
+      console.error("Error generating image:", error);
+      return "Error generating image.";
+    }
+  };

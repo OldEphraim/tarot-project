@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"math/rand"
 	"net/http"
@@ -82,6 +83,31 @@ func drawMultipleCardsHandler(w http.ResponseWriter, r *http.Request) {
 	// Return the drawn cards as JSON
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(drawnCards)
+}
+
+func imageGenerationHandler(client *openai.Client) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		var req struct {
+			Theme string `json:"theme"`
+			Card  string `json:"card"`
+		}
+		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+			http.Error(w, "Invalid request payload", http.StatusBadRequest)
+			return
+		}
+
+		// Call the image generation service
+		imageUrl, err := GenerateCardImage(client, req.Theme, req.Card)
+		if err != nil {
+			fmt.Println("This is an error", client, req.Theme, req.Card)
+			http.Error(w, "Failed to generate image", http.StatusInternalServerError)
+			log.Printf("Error generating image: %v\n", err)
+			return
+		}
+
+		// Send the image URL back to the frontend
+		json.NewEncoder(w).Encode(map[string]string{"imageUrl": imageUrl})
+	}
 }
 
 func searchCardHandler(w http.ResponseWriter, r *http.Request) {

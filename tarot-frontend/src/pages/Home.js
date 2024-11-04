@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import * as Typewriter from 'react-effect-typewriter';
 import CardDisplay from '../components/CardDisplay';
 import TarotChat from '../components/TarotChat';
@@ -6,13 +7,16 @@ import { drawMultipleCards } from '../services/apiService';
 import './Home.css';
 
 const Home = () => {
+  const [artStyle, setArtStyle] = useState("");
   const [selectedSpread, setSelectedSpread] = useState(null);
   const [cards, setCards] = useState([]);
   const [areCardSelectionButtonsVisible, setAreCardSelectionButtonsVisible] = useState(false);
   const [areTopButtonsVisible, setAreTopButtonsVisible] = useState(false); 
+  const [areArtStyleSelectionButtonsVisible, setAreArtStyleSelectionButtonsVisible] = useState(false);
   const [proceedingTextIsVisible, setProceedingTextIsVisible] = useState(false);
   const [isCardSelectionTextVisible, setIsCardSelectionTextVisible] = useState(false);
   const [isCardDisplayVisible, setIsCardDisplayVisible] = useState(false);
+  const [isArtStyleSelectionTextVisible, setIsArtStyleSelectionTextVisible] = useState(false);
 
   const handleSpreadSelect = async (spread) => {
     setSelectedSpread(spread);
@@ -57,6 +61,14 @@ const Home = () => {
     setAreCardSelectionButtonsVisible(true); 
   };
 
+  const makeArtStyleSelectionTextVisible = () => {
+    setIsArtStyleSelectionTextVisible(true);
+  }
+
+  const makeArtStyleSelectionButtonsVisible = () => {
+    setAreArtStyleSelectionButtonsVisible(true);
+  }
+
   const makeTopButtonsVisible = () => {
     setAreTopButtonsVisible(true); 
   };
@@ -69,6 +81,12 @@ const Home = () => {
     }, 500); // Adjust the delay in milliseconds as needed (500 ms = 0.5 seconds)  
 
     setProceedingTextIsVisible(true);
+  }
+
+  const handleArtStyleSelection = (style) => {
+    setAreArtStyleSelectionButtonsVisible(false);
+    setArtStyle(style);
+    makeCardSelectionTextVisible();
   }
 
   return (
@@ -90,8 +108,25 @@ const Home = () => {
       </div>}
 
       <Typewriter.Container className="typewriter-effects">
-        <Typewriter.Paragraph className="typewriter-effects" typingSpeed={20} startAnimation={proceedingTextIsVisible} onEnd={() => makeCardSelectionTextVisible()}>SO YOU have chosen to proceed directly to the cards.</Typewriter.Paragraph>
+        <Typewriter.Paragraph className="typewriter-effects" typingSpeed={20} startAnimation={proceedingTextIsVisible} onEnd={() => makeArtStyleSelectionTextVisible()}>SO YOU have chosen to proceed directly to the cards.</Typewriter.Paragraph>
       </Typewriter.Container>
+
+      <Typewriter.Container className="typewriter-effects">
+        <Typewriter.Paragraph className="typewriter-effects" typingSpeed={20} startAnimation={isArtStyleSelectionTextVisible} onEnd={() => makeArtStyleSelectionButtonsVisible()}>WOULD you prefer the classic Rider-Waite designs, or AI-generated artwork for your cards in a randomly-chosen style? If you would like to customize the style of your AI-generated cards, please log in.</Typewriter.Paragraph>
+      </Typewriter.Container>
+
+      {areArtStyleSelectionButtonsVisible &&
+        <div className="button-container">
+        <button className="spooky-button" onClick={() => handleArtStyleSelection("Rider-Waite")}>
+          RIDER-WAITE CLASSIC
+        </button>
+        <button className="spooky-button" onClick={() => handleArtStyleSelection("Random")}>
+          AI SURPRISE
+        </button>
+        <button className="spooky-button"><Link to="/login" className="no-style-link">
+          LOGIN
+        </Link></button>
+      </div>}
 
         <Typewriter.Container className="typewriter-effects">
         <Typewriter.Paragraph className="typewriter-effects" id="would-you-like-to-draw" typingSpeed={20} startAnimation={isCardSelectionTextVisible} onEnd={() => makeCardSelectionButtonsVisible()}>WOULD you like to draw one card, three cards, five cards, or an entire Celtic cross?</Typewriter.Paragraph>
