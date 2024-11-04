@@ -4,13 +4,8 @@ const api = axios.create({
     baseURL: 'http://localhost:8080/api',
 });
 
-export const drawSingleCard = async () => {
-    const response = await api.get(`/draw`);
-    return response.data;
-}
-
 export const drawMultipleCards = async (numCards) => {
-    const response = await api.get(`/draw-multiple?count=${numCards}`);
+    const response = await api.get(`/draw?count=${numCards}`);
     return response.data;
 };
 

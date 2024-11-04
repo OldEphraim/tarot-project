@@ -1,4 +1,4 @@
-package main
+package models
 
 type TarotDeck struct {
 	Number      string    `json:"number"`
@@ -20,7 +20,7 @@ type TarotCard struct {
 	Reversed      string `json:"reversed"`
 }
 
-var tarotDeck = []TarotDeck{
+var TarotDetails = []TarotDeck{
 	// Major Arcana
 	{"00", "The Fool", "A new beginning, freedom, innocence", "Major Arcana", "Major Arcana", "Freedom, innocence", "Recklessness, risk-taking", fool},
 	{"02", "The Magician", "Power, skill, concentration", "Major Arcana", "Major Arcana", "Skill, power", "Manipulation, poor planning", magician},

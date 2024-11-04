@@ -30,7 +30,8 @@ export const generateCardImage = async (theme, card) => {
         theme,
         card
       });
-      return response.data.imageUrl;
+      console.log("This is the generateCardImage response:", response);
+      return response.data.requestID;
     } catch (error) {
       console.error("Error generating image:", error);
       return "Error generating image.";

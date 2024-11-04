@@ -1,5 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { getCardAtPositionExplanation } from '../services/openaiService';
+import React, { useEffect, useRef, useState } from 'react';
+import axios from 'axios';
+import { getRandomTheme } from '../constants/TarotThemes';
+import { getCardAtPositionExplanation, generateCardImage } from '../services/openaiService';
+import TarotCardImage from './TarotCardImage';
 import * as Typewriter from 'react-effect-typewriter';
 import './CardDisplay.css';
 
@@ -16,9 +19,13 @@ const celticCrossPositionMeanings = {
   10: "Outcome"
 };
 
-const CardDisplay = ({ cards, selectedSpread }) => {
+const CardDisplay = ({ cards, selectedSpread, artStyle }) => {
   const [currentCardIndex, setCurrentCardIndex] = useState(1);
   const [explanationTexts, setExplanationTexts] = useState([]);
+  const [imageRequests, setImageRequests] = useState({});
+
+  const explanationsFetched = useRef(new Set());
+  const hasFetchedImages = useRef(false);
 
   const handleTypewriterEnd = () => {
     if (currentCardIndex < cards.length) {
@@ -28,28 +35,71 @@ const CardDisplay = ({ cards, selectedSpread }) => {
   };
 
   useEffect(() => {
-    if (currentCardIndex > 0) {
-      const card = cards[currentCardIndex - 1];
-      const meaning = celticCrossPositionMeanings[currentCardIndex];
+    const fetchExplanation = async () => {
+      if (currentCardIndex > 0 && currentCardIndex <= cards.length) {
+        const card = cards[currentCardIndex - 1];
+        const meaning = celticCrossPositionMeanings[currentCardIndex];
+        const explanationKey = `${card.name}-${meaning}`
 
-      const fetchExplanation = async () => {
-        const explanation = await getCardAtPositionExplanation(card.name, meaning);
-        setExplanationTexts((prevTexts) => {
-          if (!prevTexts.includes(explanation)) {
-            return [...prevTexts, `${meaning}: ${explanation}`];
-          }
-          return prevTexts;
-        });
-      };
+        if (!explanationsFetched.current.has(explanationKey)) {
+          explanationsFetched.current.add(explanationKey);
+          const explanation = await getCardAtPositionExplanation(card.name, meaning);
+          setExplanationTexts((prevTexts) => [...prevTexts, `${meaning}: ${explanation}`]);
+        }
+      }
+    };
   
-      fetchExplanation();
-    }
-  }, [currentCardIndex, cards]);
+    fetchExplanation();
+  }, [cards, currentCardIndex]);
 
-  const getImagePath = (number) => {
-    const imageFileName = `/tarot-images/card_${number}.jpg`;
-    return imageFileName;
-  };
+  useEffect(() => {
+    if (!hasFetchedImages.current) {
+    const fetchImages = async () => {
+      const newImageRequests = {};
+
+      for (const card of cards) {
+        if (artStyle === "Rider-Waite") {
+          newImageRequests[card.name] = { status: "ready", url: `/tarot-images/card_${card.number}.jpg` };
+        } else if (artStyle === "Random") {
+          const theme = getRandomTheme();
+          const requestId = await generateCardImage(theme, card.name);
+          newImageRequests[card.name] = { requestId, status: "pending" };
+        }
+      }
+
+      setImageRequests(newImageRequests);
+    };
+
+    fetchImages();
+    hasFetchedImages.current = true;
+  }
+  }, [artStyle, cards]); 
+
+  useEffect(() => {
+    const pollForImages = async () => {
+      const newImageRequests = { ...imageRequests };
+
+      for (const [cardName, request] of Object.entries(imageRequests)) {
+        if (request.status === "pending") {
+          try {
+            const response = await axios.get(`http://localhost:8080/api/get-image-result?requestID=${request.requestId}`);
+            if (response.status === 200 && response.data.imageUrl) {
+              newImageRequests[cardName] = { status: "ready", url: response.data.imageUrl };
+            }
+          } catch (error) {
+            console.error(`Error fetching image for ${cardName}:`, error);
+          }
+        }
+      }
+
+      setImageRequests(newImageRequests);
+    };
+
+    if (artStyle === "Random" && Object.values(imageRequests).some(req => req.status === "pending")) {
+      const interval = setInterval(pollForImages, 3000);
+      return () => clearInterval(interval);
+    }
+  }, [imageRequests, artStyle]);
 
   const renderCardLayout = () => {
     const isVisible = (index) => index < currentCardIndex;
@@ -60,16 +110,16 @@ const CardDisplay = ({ cards, selectedSpread }) => {
           <div className="cross-wrapper">
             {cards.slice(0, 6).map((card, index) => (
               <div key={index} className={`card position-${index + 1} ${isVisible(index) ? "visible" : ""}`}>
-                <img src={getImagePath(card.number)} alt={card.name} />
-                <span className="tooltip">{`${celticCrossPositionMeanings[index + 1]}: ${card.name}`}</span>
+              <TarotCardImage card={card} imageUrl={imageRequests[card.name]?.url} />
+              <span className="tooltip">{`${celticCrossPositionMeanings[index + 1]}: ${card.name}`}</span>
               </div>
             ))}
           </div>
           <div className="right-column">
             {cards.slice(6, 10).map((card, index) => (
               <div key={index} className={`card position-${index + 7} ${isVisible(index + 6) ? "visible" : ""}`}>
-                <img src={getImagePath(card.number)} alt={card.name} />
-                <span className="tooltip">{`${celticCrossPositionMeanings[index + 7]}: ${card.name}`}</span>
+              <TarotCardImage card={card} imageUrl={imageRequests[card.name]?.url} />
+              <span className="tooltip">{`${celticCrossPositionMeanings[index + 7]}: ${card.name}`}</span>
               </div>
             ))}
           </div>
@@ -81,8 +131,8 @@ const CardDisplay = ({ cards, selectedSpread }) => {
       <div className={`card-display row-layout ${selectedSpread}`}>
         {cards.map((card, index) => (
           <div key={index} className={`card ${isVisible(index) ? "visible" : ""}`}>
-            <img src={getImagePath(card.number)} alt={card.name} />
-            <span className="tooltip">{card.name}</span>
+          <TarotCardImage card={card} imageUrl={imageRequests[card.name]?.url} />
+          <span className="tooltip">{card.name}</span>
           </div>
         ))}
       </div>

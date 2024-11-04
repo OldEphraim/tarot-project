@@ -1,4 +1,4 @@
-package main
+package services
 
 import (
 	"context"
@@ -24,12 +24,14 @@ func GetChatResponse(client *openai.Client, userMessage string) (string, error) 
 
 // GenerateCardImage sends a request to OpenAI's DALL-E model to create an image.
 func GenerateCardImage(client *openai.Client, theme, card string) (string, error) {
-	description := fmt.Sprintf("A tarot card with a %s theme showing the card '%s'.", theme, card)
+	description := fmt.Sprintf("The tarot card %s depicted in a %s theme, without any words.", card, theme)
 	request := openai.ImageRequest{
+		Model:          "dall-e-3",
 		Prompt:         description,
-		Size:           openai.CreateImageSize1024x1024,
+		Size:           openai.CreateImageSize1792x1024,
 		ResponseFormat: openai.CreateImageResponseFormatURL,
 		N:              1,
+		Style:          "vivid",
 	}
 	response, err := client.CreateImage(context.Background(), request)
 	if err != nil {

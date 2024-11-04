@@ -153,7 +153,7 @@ const Home = () => {
         {selectedSpread !== "Celtic Cross" && <Typewriter.Paragraph className="typewriter-effects" id="the-fortuneteller-will-now-draw" typingSpeed={20} startAnimation={selectedSpread !== null} onEnd={() => makeCardDisplayVisible()}>THE FORTUNETELLER will now draw a {selectedSpread}-Card Spread for you.</Typewriter.Paragraph>}
         </Typewriter.Container>
 
-      {isCardDisplayVisible && cards.length > 0 && <CardDisplay cards={cards} selectedSpread={selectedSpread} />}
+      {isCardDisplayVisible && cards.length > 0 && <CardDisplay cards={cards} selectedSpread={selectedSpread} artStyle={artStyle} />}
     </div>
   );
 };
