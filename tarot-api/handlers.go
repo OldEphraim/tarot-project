@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"math/rand"
 	"net/http"
@@ -99,7 +98,6 @@ func imageGenerationHandler(client *openai.Client) http.HandlerFunc {
 		// Call the image generation service
 		imageUrl, err := GenerateCardImage(client, req.Theme, req.Card)
 		if err != nil {
-			fmt.Println("This is an error", client, req.Theme, req.Card)
 			http.Error(w, "Failed to generate image", http.StatusInternalServerError)
 			log.Printf("Error generating image: %v\n", err)
 			return
