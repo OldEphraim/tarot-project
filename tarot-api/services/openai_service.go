@@ -28,7 +28,7 @@ func GenerateCardImage(client *openai.Client, theme, card string) (string, error
 	request := openai.ImageRequest{
 		Model:          "dall-e-3",
 		Prompt:         description,
-		Size:           openai.CreateImageSize1792x1024,
+		Size:           openai.CreateImageSize1024x1792,
 		ResponseFormat: openai.CreateImageResponseFormatURL,
 		N:              1,
 		Style:          "vivid",

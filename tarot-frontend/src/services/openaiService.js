@@ -30,10 +30,22 @@ export const generateCardImage = async (theme, card) => {
         theme,
         card
       });
-      console.log("This is the generateCardImage response:", response);
       return response.data.requestID;
     } catch (error) {
       console.error("Error generating image:", error);
       return "Error generating image.";
+    }
+  };
+
+  export const retrieveCardImage = async (requestId) => {
+    try {
+      const response = await axios.get(`http://localhost:8080/api/get-image-result?requestID=${requestId}`);
+      if (response.status === 200 && response.data.imageUrl) {
+        return { status: "ready", url: response.data.imageUrl };
+      }
+      return { status: "pending" };
+    } catch (error) {
+      console.error(`Error fetching image result:`, error);
+      return { status: "error" };
     }
   };

@@ -22,22 +22,27 @@ func DrawCardsHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	// Shuffle the deck to prevent duplicates
 	rand.Seed(time.Now().UnixNano())
-	shuffledDeck := make([]models.TarotDeck, len(models.TarotDetails))
-	copy(shuffledDeck, models.TarotDetails)
-	rand.Shuffle(len(shuffledDeck), func(i, j int) {
-		shuffledDeck[i], shuffledDeck[j] = shuffledDeck[j], shuffledDeck[i]
-	})
-
-	// Draw the specified number of cards
+	cardCount := len(models.TarotDetails)
+	drawnIndices := make(map[int]bool) // Track selected card indices to prevent duplicates
 	var drawnCards []models.TarotDeck
-	for i := 0; i < numCards; i++ {
-		card := shuffledDeck[i]
-		// Randomly choose upright or reversed
-		if rand.Intn(2) == 0 {
+
+	for len(drawnCards) < numCards {
+		randomIndex := rand.Intn(cardCount)
+		if drawnIndices[randomIndex] {
+			continue // Skip if the card has already been drawn
+		}
+		drawnIndices[randomIndex] = true
+
+		// Select the card
+		card := models.TarotDetails[randomIndex]
+
+		// Set the card as reversed 1 in 8 times
+		if rand.Intn(8) == 0 {
 			card.Description = card.Reversed
 		}
+
+		// Append the drawn card to the result
 		drawnCards = append(drawnCards, card)
 	}
 

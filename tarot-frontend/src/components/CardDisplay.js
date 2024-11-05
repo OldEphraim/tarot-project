@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import { getRandomTheme } from '../constants/TarotThemes';
-import { getCardAtPositionExplanation, generateCardImage } from '../services/openaiService';
+import { getCardAtPositionExplanation, generateCardImage, retrieveCardImage } from '../services/openaiService';
 import TarotCardImage from './TarotCardImage';
 import * as Typewriter from 'react-effect-typewriter';
 import './CardDisplay.css';
@@ -81,13 +81,9 @@ const CardDisplay = ({ cards, selectedSpread, artStyle }) => {
 
       for (const [cardName, request] of Object.entries(imageRequests)) {
         if (request.status === "pending") {
-          try {
-            const response = await axios.get(`http://localhost:8080/api/get-image-result?requestID=${request.requestId}`);
-            if (response.status === 200 && response.data.imageUrl) {
-              newImageRequests[cardName] = { status: "ready", url: response.data.imageUrl };
-            }
-          } catch (error) {
-            console.error(`Error fetching image for ${cardName}:`, error);
+          const result = await retrieveCardImage(request.requestId);
+          if (result.status === "ready") {
+            newImageRequests[cardName] = { status: "ready", url: result.url }
           }
         }
       }
