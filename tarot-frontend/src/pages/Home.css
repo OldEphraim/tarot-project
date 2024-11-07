@@ -25,6 +25,7 @@ h1, h2, h3, p {
     mix-blend-mode: darken;
     --font-color: black;
     color: black;
+    margin-bottom: 1em;
   }
 
   .button-container {

@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import { getCardAtPositionExplanation } from '../services/openaiService';
 import celticCrossPositionMeanings from '../constants/CelticCrossPositionMeanings';
 
-export const useCardExplanations = (cards, currentCardIndex) => {
+export const useCardExplanations = (cards, currentCardIndex, skipAnimation) => {
   const [explanationTexts, setExplanationTexts] = useState([]);
   const explanationsFetched = useRef(new Set());
 
@@ -10,9 +10,11 @@ export const useCardExplanations = (cards, currentCardIndex) => {
     const fetchExplanations = async () => {
       const newExplanations = [];
 
-      for (let i = 0; i < currentCardIndex; i++) {
+      const endIndex = skipAnimation ? cards.length : currentCardIndex;
+
+      for (let i = 0; i < endIndex; i++) {
         const card = cards[i];
-        const meaning = celticCrossPositionMeanings[i + 1]; // Assuming position is 1-based
+        const meaning = celticCrossPositionMeanings[i + 1]; 
         const explanationKey = `${card.name}-${meaning}`;
 
         if (!explanationsFetched.current.has(explanationKey)) {
@@ -28,7 +30,7 @@ export const useCardExplanations = (cards, currentCardIndex) => {
     };
 
     fetchExplanations();
-  }, [cards, currentCardIndex]);
+  }, [cards, currentCardIndex, skipAnimation]);
 
   return { explanationTexts };
 };
