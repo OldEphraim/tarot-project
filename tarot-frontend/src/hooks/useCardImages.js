@@ -13,11 +13,11 @@ export const useCardImages = (cards, artStyle) => {
 
         for (const card of cards) {
           if (artStyle === 'Rider-Waite') {
-            newImageRequests[card.name] = { status: 'ready', url: `/tarot-images/card_${card.number}.jpg` };
+            newImageRequests[card.name] = { status: 'ready', url: `/tarot-images/card_${card.number}.jpg`, theme: "Rider-Waite" };
           } else if (artStyle === 'Random') {
             const theme = getRandomTheme();
             const requestId = await generateCardImage(theme, card.name);
-            newImageRequests[card.name] = { requestId, status: 'pending' };
+            newImageRequests[card.name] = { requestId, status: 'pending', theme: theme };
           }
         }
 
@@ -37,7 +37,7 @@ export const useCardImages = (cards, artStyle) => {
         if (request.status === 'pending') {
           const result = await retrieveCardImage(request.requestId);
           if (result.status === 'ready') {
-            newImageRequests[cardName] = { status: 'ready', url: result.url };
+            newImageRequests[cardName] = { status: 'ready', url: result.url, theme: request.theme };
           }
         }
       }

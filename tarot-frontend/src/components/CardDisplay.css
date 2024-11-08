@@ -98,29 +98,6 @@
     }
   }
 
-  .tooltip {
-    z-index: 10;
-    visibility: hidden; 
-    width: inherit; 
-    background-color: black; 
-    color: white;
-    text-align: center; 
-    border-radius: 5px; 
-    padding: 5px; 
-    position: absolute; 
-    top: 100%; 
-    left: 50%; 
-    transform: translateX(-50%); 
-    opacity: 0;
-    transition: opacity 0.3s;
-}
-
-.card:hover .tooltip {
-    visibility: visible; /* Show tooltip on hover */
-    opacity: 1; /* Make it visible */
-    transform: translate(-50%, 0);
-}
-
 /* Layout for non-Celtic Cross spreads (row layout) */
 .card-display.row-layout {
   display: grid;
