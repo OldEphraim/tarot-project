@@ -13,7 +13,6 @@ const Home = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCardData, setSelectedCardData] = useState(null);
-  const [fadeOut, setFadeOut] = useState(false);
 
   const [areCardSelectionButtonsVisible, setAreCardSelectionButtonsVisible] = useState(false);
   const [areTopButtonsVisible, setAreTopButtonsVisible] = useState(false); 
@@ -31,23 +30,6 @@ const Home = () => {
   };
 
   const closeModal = () => setIsModalOpen(false);
-
-  const handleScrollAndClose = () => {
-    // Scroll to the target explanation element
-    const targetElement = document.getElementById(`explanation-text-${selectedCardData.position}`);
-    if (targetElement) {
-      const yOffset = -70; // Offset to scroll 50px above the element
-      const yPosition = targetElement.getBoundingClientRect().top + window.pageYOffset + yOffset;
-      window.scrollTo({ top: yPosition, behavior: "smooth" });
-    }
-
-    console.log(selectedCardData);
-    // Trigger the fade-out animation
-    setFadeOut(true);
-
-    // Close the modal after the fade-out animation ends
-    setTimeout(closeModal, 500); // Adjust timing to match CSS animation duration
-  };
 
   const handleProceedToCards = () => {
     setAreTopButtonsVisible(false);
@@ -86,16 +68,7 @@ const Home = () => {
     <div className="home">
       {/* Modal component */}
       {isModalOpen && (
-        <Modal onClose={closeModal} cardName={selectedCardData.card.name} artStyle={selectedCardData.theme === "Rider-Waite" ? "the classic Rider-Waite" : `an AI-generated ${selectedCardData.theme}`} className={fadeOut ? "fade-out" : ""}>
-          <img src={selectedCardData.imageUrl} alt={selectedCardData.card.name} />
-          <p className="art-style">You drew a {selectedCardData.card.name} in the {selectedCardData.positionMeaning} position.</p>
-          <div>
-            <button className="spooky-button" onClick={() => handleScrollAndClose()}>
-              See Explanation
-            </button>
-            <button className="spooky-button" onClick={() => alert('Saved to Favorites!')}>Save to Favorites</button>
-          </div>
-        </Modal>
+        <Modal onClose={closeModal} selectedCardData={selectedCardData} />
       )}
       <h1 className="home-header">Tarot Card Reader</h1>
       <Typewriter

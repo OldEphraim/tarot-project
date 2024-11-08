@@ -1,4 +1,5 @@
 import React from 'react';
+import { Box, CircularProgress } from '@mui/material';
 
 const TarotCardImage = ({ card, imageUrl, position, positionMeaning, theme, openModal }) => {
   const handleClick = () => {
@@ -7,7 +8,7 @@ const TarotCardImage = ({ card, imageUrl, position, positionMeaning, theme, open
 
   return (
     <div onClick={handleClick}>
-      {imageUrl ? <img src={imageUrl} alt={card.name} /> : <p>Loading image...</p>}
+      {imageUrl ? <img src={imageUrl} alt={card.name} /> : <Box sx={{display: 'flex'}}><CircularProgress color="inherit" /></Box>}
     </div>
   );
 };
