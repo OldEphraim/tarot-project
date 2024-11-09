@@ -32,6 +32,7 @@ func main() {
 
 	http.HandleFunc("/api/chat", utils.CorsMiddleware(loggingMiddleware(handlers.ChatHandler(client))))
 	http.HandleFunc("/api/draw", utils.CorsMiddleware(loggingMiddleware(handlers.DrawCardsHandler)))
+	http.HandleFunc("/api/esmeralda/chat", utils.CorsMiddleware(loggingMiddleware(handlers.EsmeraldaChatHandler(client))))
 	http.HandleFunc("/api/generate-image", utils.CorsMiddleware(loggingMiddleware(handlers.ImageGenerationHandler(rateLimiter))))
 	http.HandleFunc("/api/get-image-result", utils.CorsMiddleware(loggingMiddleware(handlers.GetImageResultHandler(rateLimiter))))
 	http.HandleFunc("/api/search", utils.CorsMiddleware(loggingMiddleware(handlers.SearchCardHandler)))

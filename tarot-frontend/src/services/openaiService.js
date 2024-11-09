@@ -1,21 +1,21 @@
 import axios from "axios";
 
-export const getChatResponse = async (userMessage) => {
+export const getEsmeraldaResponse = async (userMessage) => {
   try {
-    const response = await axios.post("http://localhost:8080/api/chat", {
+    const response = await axios.post("http://localhost:8080/api/esmeralda/chat", {
       message: userMessage,
     });
     return response.data.response;
   } catch (error) {
     console.error("Error:", error);
-    return "Error processing your request.";
+    return "Error communicating with Esmeralda.";
   }
 };
 
 export const getCardAtPositionExplanation = async (card, position) => {
   try {
     const response = await axios.post("http://localhost:8080/api/chat", {
-      message: `Provide a brief, general explanation for what it might mean for the tarot card ${card} to occupy the position ${position} in a tarot reading. Describe the type of influence or theme it might represent on a person's career goals or love life.`,
+      message: `Provide a brief, general explanation for what it might mean for the tarot card ${card} to occupy the position ${position} in a tarot reading. You can discuss the type of influence or theme it might represent on a person's career goals or love life, but try not to use more than 2-3 sentences.`,
     });
     return response.data.response;
   } catch (error) {

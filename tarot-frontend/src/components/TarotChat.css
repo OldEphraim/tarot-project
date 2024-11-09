@@ -1,0 +1,38 @@
+.message-input-box {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: 20px;
+}
+
+.message-input {
+  width: 100%;
+  max-width: 80%; /* Allow expansion to 80% of the container width */
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #4267b2; /* Spooky blue border */
+  border-radius: 4px;
+  outline: none;
+  background-color: transparent;
+  color: #ffffff; /* Text color */
+  caret-color: #4267b2; /* Spooky blue cursor */
+  transition: box-shadow 0.2s ease;
+  resize: none; /* Prevent manual resizing */
+  overflow: hidden; /* Hide overflow until it expands */
+}
+
+.message-input:focus {
+  border-color: #4267b2;
+  box-shadow: 0 0 10px 5px rgba(66, 103, 178, 0.8); /* Intense blue glow */
+}
+
+.message-input::placeholder {
+  color: #8a9ca9; /* Lighter color for placeholder */
+}
+
+.below-text {
+  font-size: 14px;
+  font-style: italic;
+  color: black;
+  margin-top: 8px;
+}
