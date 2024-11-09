@@ -15,10 +15,11 @@
   outline: none;
   background-color: transparent;
   color: #ffffff; /* Text color */
-  caret-color: #4267b2; /* Spooky blue cursor */
+  caret-color: black;
   transition: box-shadow 0.2s ease;
   resize: none; /* Prevent manual resizing */
   overflow: hidden; /* Hide overflow until it expands */
+  font-family: 'EB Garamond';
 }
 
 .message-input:focus {
@@ -35,4 +36,21 @@
   font-style: italic;
   color: black;
   margin-top: 8px;
+}
+
+.esmeralda-message {
+  font-family: 'Fanwood Text', serif; 
+  font-size: 25px;
+  font-weight: bolder;
+  text-align: left;
+  mix-blend-mode: darken;
+  --font-color: black;
+  color: black;
+  margin-bottom: 1em;
+}
+
+.user-message {
+  text-align: left;
+  font-family: 'EB Garamond';
+  font-size: 16px;
 }
