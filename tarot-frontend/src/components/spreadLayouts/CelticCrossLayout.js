@@ -2,7 +2,7 @@ import React from 'react';
 import TarotCardImage from '../TarotCardImage';
 import celticCrossPositionMeanings from '../../constants/CelticCrossPositionMeanings';
 
-const CelticCrossLayout = ({ cards, imageRequests, currentCardIndex, openModal }) => {
+const CelticCrossLayout = ({ cards, imageRequests, currentCardIndex }) => {
   const isVisible = (index) => index < currentCardIndex;
 
   return (
@@ -13,7 +13,7 @@ const CelticCrossLayout = ({ cards, imageRequests, currentCardIndex, openModal }
             key={index}
             className={`card position-${index + 1} ${isVisible(index) ? 'visible' : ''}`}
           >
-            <TarotCardImage card={card} imageUrl={imageRequests[card.name]?.url} position={index} positionMeaning={celticCrossPositionMeanings[index + 1]} theme={imageRequests[card.name]?.theme} openModal={openModal} />
+            <TarotCardImage card={card} imageUrl={imageRequests[card.name]?.url} position={index} positionMeaning={celticCrossPositionMeanings[index + 1]} theme={imageRequests[card.name]?.theme} />
           </div>
         ))}
       </div>
@@ -23,7 +23,7 @@ const CelticCrossLayout = ({ cards, imageRequests, currentCardIndex, openModal }
             key={index}
             className={`card position-${index + 7} ${isVisible(index + 6) ? 'visible' : ''}`}
           >
-            <TarotCardImage card={card} imageUrl={imageRequests[card.name]?.url} position={index + 6} positionMeaning={celticCrossPositionMeanings[index + 7]} theme={imageRequests[card.name]?.theme} openModal={openModal} />
+            <TarotCardImage card={card} imageUrl={imageRequests[card.name]?.url} position={index + 6} positionMeaning={celticCrossPositionMeanings[index + 7]} theme={imageRequests[card.name]?.theme} />
           </div>
         ))}
       </div>

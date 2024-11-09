@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import './Modal.css';
 
 const Modal = ({ onClose, selectedCardData }) => {
-    console.log(selectedCardData);
     const [fadeOut, setFadeOut] = useState(false);
 
     const handleScrollToExplanation = () => {

@@ -1,9 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Box, CircularProgress } from '@mui/material';
+import { useModal } from '../context/ModalContext';
 
-const TarotCardImage = ({ card, imageUrl, position, positionMeaning, theme, openModal }) => {
+const TarotCardImage = ({ card, imageUrl, position, positionMeaning, theme }) => {
   const [imgSrc, setImgSrc] = useState(imageUrl || null);
   const spinnerRef = useRef(null);
+  const { openModal } = useModal();
 
   useEffect(() => {
     setImgSrc(imageUrl);
@@ -14,7 +16,7 @@ const TarotCardImage = ({ card, imageUrl, position, positionMeaning, theme, open
         if (spinnerRef.current) {
           setImgSrc('/tarot-images/error.webp'); 
         }
-      }, 60000); 
+      }, 120000); 
 
       return () => clearTimeout(loadTimeout); 
     }

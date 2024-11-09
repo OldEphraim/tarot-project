@@ -7,7 +7,7 @@ import RowLayout from './spreadLayouts/RowLayout';
 import Typewriter from './Typewriter';
 import './CardDisplay.css';
 
-const CardDisplay = ({ cards, selectedSpread, artStyle, openModal }) => {
+const CardDisplay = ({ cards, selectedSpread, artStyle }) => {
   const [currentCardIndex, setCurrentCardIndex] = useState(1);
   const [skipAnimation, setSkipAnimation] = useState(false);
 
@@ -30,7 +30,6 @@ const CardDisplay = ({ cards, selectedSpread, artStyle, openModal }) => {
           cards={cards}
           imageRequests={imageRequests}
           currentCardIndex={currentCardIndex}
-          openModal={openModal}
         />
       ) : (
         <RowLayout
@@ -38,7 +37,6 @@ const CardDisplay = ({ cards, selectedSpread, artStyle, openModal }) => {
           imageRequests={imageRequests}
           currentCardIndex={currentCardIndex} 
           selectedSpread={selectedSpread}
-          openModal={openModal}
         />
       )}
       {explanationTexts.map((text, index) => (

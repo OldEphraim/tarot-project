@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useModal } from '../context/ModalContext';
 import CardDisplay from '../components/CardDisplay';
 import Modal from '../components/Modal';
 import Typewriter from '../components/Typewriter';
@@ -7,12 +8,11 @@ import { drawMultipleCards } from '../services/apiService';
 import './Home.css';
 
 const Home = () => {
+  const { isModalOpen, selectedCardData, closeModal } = useModal();
+
   const [artStyle, setArtStyle] = useState("");
   const [selectedSpread, setSelectedSpread] = useState(null);
   const [cards, setCards] = useState([]);
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedCardData, setSelectedCardData] = useState(null);
 
   const [areCardSelectionButtonsVisible, setAreCardSelectionButtonsVisible] = useState(false);
   const [areTopButtonsVisible, setAreTopButtonsVisible] = useState(false); 
@@ -23,13 +23,6 @@ const Home = () => {
   const [isFortunetellerTextVisible, setIsFortunetellerTextVisible] = useState(false);
   const [isCardDisplayVisible, setIsCardDisplayVisible] = useState(false);
   const [isArtStyleSelectionTextVisible, setIsArtStyleSelectionTextVisible] = useState(false);
-
-  const openModal = (cardData) => {
-    setSelectedCardData(cardData);
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => setIsModalOpen(false);
 
   const handleProceedToCards = () => {
     setAreTopButtonsVisible(false);
@@ -149,7 +142,7 @@ const Home = () => {
         onEnd={() => setIsCardDisplayVisible(true)}
       />
 
-      {isCardDisplayVisible && cards.length > 0 && <CardDisplay cards={cards} selectedSpread={selectedSpread} artStyle={artStyle} openModal={openModal} />}
+      {isCardDisplayVisible && cards.length > 0 && <CardDisplay cards={cards} selectedSpread={selectedSpread} artStyle={artStyle} />}
     </div>
   );
 };
