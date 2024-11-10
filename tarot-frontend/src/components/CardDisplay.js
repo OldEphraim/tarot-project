@@ -33,7 +33,6 @@ const CardDisplay = ({ cards, selectedSpread, artStyle }) => {
           cards={cards}
           imageRequests={imageRequests}
           currentCardIndex={currentCardIndex}
-          selectedSpread={selectedSpread}
         />
       )}
       {explanationTexts.map((text, index) => (

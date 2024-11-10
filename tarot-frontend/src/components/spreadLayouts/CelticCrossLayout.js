@@ -6,7 +6,7 @@ const CelticCrossLayout = ({ cards, imageRequests, currentCardIndex }) => {
   const isVisible = (index) => index < currentCardIndex;
 
   return (
-    <div className="card-display">
+    <div className="card-display celtic-cross-layout">
       <div className="cross-wrapper">
         {cards.slice(0, 6).map((card, index) => (
           <div

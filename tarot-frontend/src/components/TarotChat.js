@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import CelticCrossLayout from "./spreadLayouts/CelticCrossLayout";
 import RowLayout from "./spreadLayouts/RowLayout";
 import Typewriter from "./Typewriter";
 import { useCardImages } from "../hooks/useCardImages";
@@ -44,6 +45,7 @@ const TarotChat = () => {
         text: aiResponse.response,
         sender: "esmeralda",
         cards: newCards,
+        celticCross: aiResponse.celticCross,
       });
 
       setStartTyping(true);
@@ -99,15 +101,23 @@ const TarotChat = () => {
               }
             >
               {/* Render RowLayout if the message has associated cards */}
-              {msg.cards && msg.cards.length > 0 && (
-                <RowLayout
+              {msg.cards &&
+                msg.cards.length > 0 &&
+                !(msg.celticCross && msg.cards.length === 10) && (
+                  <RowLayout
+                    cards={msg.cards}
+                    imageRequests={msg.images}
+                    currentCardIndex={msg.cards.length}
+                  />
+                )}
+              {/* Render CelticCrossLayout if the message has associated cards */}
+              {msg.cards && msg.cards.length === 10 && msg.celticCross && (
+                <CelticCrossLayout
                   cards={msg.cards}
                   imageRequests={msg.images}
                   currentCardIndex={msg.cards.length}
-                  selectedSpread="Five" // Set this based on your spread type logic
                 />
               )}
-
               {shouldType ? (
                 <Typewriter
                   text={msg.text}

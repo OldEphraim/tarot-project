@@ -34,6 +34,9 @@ func EsmeraldaChatHandler(client *openai.Client) http.HandlerFunc {
 			return
 		}
 
+		// Check if "Celtic cross" is mentioned in the message (case insensitive)
+		celticCross := strings.Contains(strings.ToLower(req.Message), "celtic cross")
+
 		// Check response for tarot card mentions
 		matchedCards := findMentionedCards(response)
 
@@ -42,6 +45,7 @@ func EsmeraldaChatHandler(client *openai.Client) http.HandlerFunc {
 		json.NewEncoder(w).Encode(map[string]interface{}{
 			"response": response,
 			"cards":    matchedCards,
+			"celticCross": celticCross,
 		})
 	}
 }

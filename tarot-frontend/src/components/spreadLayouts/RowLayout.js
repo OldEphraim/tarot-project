@@ -2,16 +2,11 @@ import React from "react";
 import TarotCardImage from "../TarotCardImage";
 import celticCrossPositionMeanings from "../../constants/CelticCrossPositionMeanings";
 
-const RowLayout = ({
-  cards,
-  imageRequests,
-  currentCardIndex,
-  selectedSpread,
-}) => {
+const RowLayout = ({ cards, imageRequests, currentCardIndex }) => {
   const isVisible = (index) => index < currentCardIndex;
 
   return (
-    <div className={`card-display row-layout ${selectedSpread}`}>
+    <div className={`card-display row-layout`}>
       {cards.map((card, index) => (
         <div
           key={index}

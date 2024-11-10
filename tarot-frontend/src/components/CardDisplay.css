@@ -1,11 +1,14 @@
 /* Default layout */
 .card-display {
-  display: grid;
-  grid-template-columns: 3.5fr 1fr;
   gap: 20px;
   position: relative;
   margin-bottom: 1em;
   z-index: 0;
+}
+
+.card-display.celtic-cross-layout {
+  display: grid;
+  grid-template-columns: 3.5fr 1fr;
 }
 
 /* Cross Wrapper */
@@ -20,7 +23,7 @@
   grid-column: 1;
   grid-row: 1;
 }
-  
+
 .card.position-1 {
   grid-column: 2;
   grid-row: 2;
@@ -32,12 +35,24 @@
   z-index: 2;
 }
 
-.card.position-3 { grid-column: 2; grid-row: 1; }
-.card.position-4 { grid-column: 2; grid-row: 3; }
-.card.position-5 { grid-column: 1; grid-row: 2; }
-.card.position-6 { grid-column: 3; grid-row: 2; }
-  
-  /* Right Column Wrapper */
+.card.position-3 {
+  grid-column: 2;
+  grid-row: 1;
+}
+.card.position-4 {
+  grid-column: 2;
+  grid-row: 3;
+}
+.card.position-5 {
+  grid-column: 1;
+  grid-row: 2;
+}
+.card.position-6 {
+  grid-column: 3;
+  grid-row: 2;
+}
+
+/* Right Column Wrapper */
 /* Right Column for cards 7-10 */
 .right-column {
   display: grid;
@@ -49,70 +64,62 @@
   grid-row: 1;
 }
 
-  .card {
-    width: 100px;
-    height: 150px;
-    text-align: center;
-    position: relative;
-    cursor: pointer;
-    height: auto; /* Maintain aspect ratio */
-    opacity: 0;
-    transform: scale(0.9);
-    transition: opacity 0.5s ease-in, transform 0.5s ease-in;
-    pointer-events: none;
-    z-index: 1;
-  }
+.card {
+  width: 100px;
+  height: 150px;
+  text-align: center;
+  position: relative;
+  cursor: pointer;
+  height: auto; /* Maintain aspect ratio */
+  opacity: 0;
+  transform: scale(0.9);
+  transition:
+    opacity 0.5s ease-in,
+    transform 0.5s ease-in;
+  pointer-events: none;
+  z-index: 1;
+}
 
-  .card.visible {
-    opacity: 1;
-    transform: scale(1);
-    pointer-events: auto;
+.card.visible {
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: auto;
 }
 
 .card.position-2.visible {
   transform: scale(1) rotate(90deg); /* Combine scale and rotation */
 }
-  
-  .card img {
-    width: 100%; /* Make images scale based on their container */
-    height: auto;
-    max-height: 100%;
+
+.card img {
+  width: 100%; /* Make images scale based on their container */
+  height: auto;
+  max-height: 100%;
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
+  .card {
+    width: 60%; /* Shrink the card size */
   }
-  
-  /* Responsive design */
-  @media (max-width: 1024px) {
-    .card {
-      width: 60%; /* Shrink the card size */
-    }
+}
+
+@media (max-width: 768px) {
+  .card {
+    width: 50%; /* Further shrink card size */
   }
-  
-  @media (max-width: 768px) {
-    .card {
-      width: 50%; /* Further shrink card size */
-    }
+}
+
+@media (max-width: 480px) {
+  .card {
+    width: 40%; /* Further shrink card size */
   }
-  
-  @media (max-width: 480px) {
-    .card {
-      width: 40%; /* Further shrink card size */
-    }
-  }
+}
 
 /* Layout for non-Celtic Cross spreads (row layout) */
 .card-display.row-layout {
-  display: grid;
-}
-
-.card-display.row-layout.One {
-  grid-template-columns: repeat(1, 1fr);
-}
-
-.card-display.row-layout.Three {
-  grid-template-columns: repeat(3, 1fr);
-}
-
-.card-display.row-layout.Five {
-  grid-template-columns: repeat(5, 1fr);
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 }
 
 .card-display.row-layout .card {
