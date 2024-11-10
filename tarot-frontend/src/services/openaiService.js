@@ -6,9 +6,8 @@ export const getEsmeraldaResponse = async (userMessage) => {
       "http://localhost:8080/api/esmeralda/chat",
       {
         message: userMessage,
-      },
+      }
     );
-    console.log(response);
     return response.data;
   } catch (error) {
     console.error("Error:", error);
@@ -35,7 +34,7 @@ export const generateCardImage = async (theme, card) => {
       {
         theme,
         card,
-      },
+      }
     );
     return response.data.requestID;
   } catch (error) {
@@ -47,7 +46,7 @@ export const generateCardImage = async (theme, card) => {
 export const retrieveCardImage = async (requestId) => {
   try {
     const response = await axios.get(
-      `http://localhost:8080/api/get-image-result?requestID=${requestId}`,
+      `http://localhost:8080/api/get-image-result?requestID=${requestId}`
     );
     if (response.status === 200 && response.data.imageUrl) {
       return { status: "ready", url: response.data.imageUrl };

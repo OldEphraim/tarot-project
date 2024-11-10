@@ -16,7 +16,7 @@ const CardDisplay = ({ cards, selectedSpread, artStyle }) => {
   const { explanationTexts } = useCardExplanations(
     cards,
     skipAnimation ? cards.length : currentCardIndex,
-    skipAnimation,
+    skipAnimation
   );
   const { imageRequests } = useCardImages(cards, artStyle);
 

@@ -3,6 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"net/http"
+	"sort"
 	"strings"
 	"tarot-api/models"
 	"tarot-api/services"
@@ -49,13 +50,26 @@ func EsmeraldaChatHandler(client *openai.Client) http.HandlerFunc {
 func findMentionedCards(response string) []models.TarotDeck {
 	var mentionedCards []models.TarotDeck
 	responseLower := strings.ToLower(response)
+	cardPositions := make(map[string]int) // Map to store first occurrence position
 
 	for _, card := range models.TarotDetails {
 		cardNameLower := strings.ToLower(card.Name)
+		// Check for exact or approximate match
 		if strings.Contains(responseLower, cardNameLower) || levenshteinDistance(responseLower, cardNameLower) <= 1 {
+			// Record the first position of the card name in the response text
+			position := strings.Index(responseLower, cardNameLower)
+			if position != -1 {
+				cardPositions[card.Name] = position
+			}
+			// Add the card to the list of mentioned cards
 			mentionedCards = append(mentionedCards, card)
 		}
 	}
+
+	// Sort the mentioned cards by their positions in the response
+	sort.Slice(mentionedCards, func(i, j int) bool {
+		return cardPositions[mentionedCards[i].Name] < cardPositions[mentionedCards[j].Name]
+	})
 
 	return mentionedCards
 }
