@@ -35,7 +35,7 @@ const TarotChat = () => {
         ...prevConversation,
         { text: aiResponse, sender: 'esmeralda' },
       ]);
-      setStartTyping(true); // Start typing effect for the new message
+      setStartTyping(true);
     }
   };
 
