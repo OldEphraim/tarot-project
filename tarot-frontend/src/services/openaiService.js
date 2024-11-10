@@ -5,7 +5,8 @@ export const getEsmeraldaResponse = async (userMessage) => {
     const response = await axios.post("http://localhost:8080/api/esmeralda/chat", {
       message: userMessage,
     });
-    return response.data.response;
+    console.log(response);
+    return response.data;
   } catch (error) {
     console.error("Error:", error);
     return "Error communicating with Esmeralda.";

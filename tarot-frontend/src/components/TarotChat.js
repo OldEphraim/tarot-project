@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
+import RowLayout from './spreadLayouts/RowLayout';
 import Typewriter from './Typewriter';
+import { useCardImages } from '../hooks/useCardImages';
 import { getEsmeraldaResponse } from '../services/openaiService';
 import './TarotChat.css';
 
@@ -9,7 +11,10 @@ const TarotChat = () => {
   const [showTextarea, setShowTextarea] = useState(true);
   const [loading, setLoading] = useState(false);
   const [startTyping, setStartTyping] = useState(false);
+  const [cards, setCards] = useState([]);
   const textareaRef = useRef(null);
+
+  const { imageRequests } = useCardImages(cards, "Rider-Waite");
 
   const handleInputChange = (e) => {
     const text = e.target.value;
@@ -33,8 +38,9 @@ const TarotChat = () => {
 
       setConversation((prevConversation) => [
         ...prevConversation,
-        { text: aiResponse, sender: 'esmeralda' },
+        { text: aiResponse.response, sender: 'esmeralda' },
       ]);
+      setCards(aiResponse.cards || []);
       setStartTyping(true);
     }
   };
@@ -67,16 +73,26 @@ const TarotChat = () => {
           const shouldType = msg.sender === 'esmeralda' && isLastMessage && startTyping;
 
           return (
-            <p key={index} className={msg.sender === 'user' ? 'user-message' : 'esmeralda-message'}>
+            <div key={index} className={msg.sender === 'user' ? 'user-message' : 'esmeralda-message'}>
               {shouldType ? (
                 <Typewriter text={msg.text} startAnimation onEnd={handleTypewriterEnd} />
               ) : (
                 msg.text
               )}
-            </p>
+            </div>
           );
         })}
       </div>
+
+      {/* Render RowLayout if there are cards */}
+        {cards.length > 0 && (
+          <RowLayout
+            cards={cards}
+            imageRequests={imageRequests}
+            currentCardIndex={cards.length} 
+            selectedSpread="Three" // Fix this tomorrow, currently set to weird default
+          />
+        )}
 
       {/* Render textarea only when Esmeralda has finished typing */}
       {showTextarea && (
