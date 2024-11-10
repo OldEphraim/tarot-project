@@ -20,13 +20,6 @@ const CardDisplay = ({ cards, selectedSpread, artStyle }) => {
   );
   const { imageRequests } = useCardImages(cards, artStyle);
 
-  const handleTypewriterEnd = () => {
-    if (!skipAnimation && currentCardIndex < cards.length) {
-      setCurrentCardIndex(currentCardIndex + 1);
-      window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
-    }
-  };
-
   return (
     <div>
       {selectedSpread === "Celtic Cross" ? (
@@ -56,7 +49,6 @@ const CardDisplay = ({ cards, selectedSpread, artStyle }) => {
               text={text}
               typingSpeed={20}
               startAnimation={!skipAnimation}
-              onEnd={handleTypewriterEnd}
             />
           ) : null}
         </div>

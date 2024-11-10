@@ -4,9 +4,20 @@ import TarotChat from "../TarotChat";
 
 const SpeakToFortunetellerWorkflow = ({ onExit }) => {
   const [isChatVisible, setIsChatVisible] = useState(false);
+  const [isFortunetellerVisible, setIsFortunetellerVisible] = useState(false);
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
+  const [startTypewriter, setStartTypewriter] = useState(false);
 
   const handleStartChat = () => {
     setIsChatVisible(true);
+  };
+
+  const handleImageLoad = () => {
+    setIsImageLoaded(true);
+
+    setTimeout(() => {
+      setStartTypewriter(true);
+    }, 1500);
   };
 
   const esmeraldaIntro = `
@@ -19,20 +30,33 @@ const SpeakToFortunetellerWorkflow = ({ onExit }) => {
 `;
 
   return (
-    <div className="speak-to-fortuneteller-workflow">
-      <img
-        className="esmeralda"
-        src="/esmeralda-universe-images/esmeralda.webp"
-        alt="esmeralda"
-      />
-
+    <div className="proceed-to-cards-workflow">
       <Typewriter
-        text={esmeraldaIntro}
+        text="SO YOU have chosen to speak with the fortuneteller."
         startAnimation
-        onEnd={() => handleStartChat()}
+        onEnd={() => setIsFortunetellerVisible(true)}
       />
 
-      {isChatVisible && <TarotChat />}
+      {isFortunetellerVisible && (
+        <div className="speak-to-fortuneteller-workflow">
+          <img
+            className={`esmeralda ${isImageLoaded ? "fade-in" : ""}`}
+            src="/esmeralda-universe-images/esmeralda.webp"
+            alt="esmeralda"
+            onLoad={handleImageLoad}
+          />
+
+          {startTypewriter && (
+            <Typewriter
+              text={esmeraldaIntro}
+              startAnimation
+              onEnd={() => handleStartChat()}
+            />
+          )}
+
+          {isChatVisible && <TarotChat />}
+        </div>
+      )}
     </div>
   );
 };
