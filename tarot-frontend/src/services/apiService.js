@@ -4,6 +4,22 @@ const api = axios.create({
   baseURL: "http://localhost:8080/api",
 });
 
+export const createAccount = async ({ username, email, password }) => {
+  try {
+    const response = await api.post("/users", {
+      username,
+      email,
+      password,
+    });
+    return response.data;
+  } catch (error) {
+    if (error.response) {
+      throw new Error(error.response.data.error || "Failed to create account");
+    }
+    throw new Error("Network error");
+  }
+};
+
 export const drawMultipleCards = async (numCards) => {
   const response = await api.get(`/draw?count=${numCards}`);
   return response.data;

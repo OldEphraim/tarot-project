@@ -133,7 +133,7 @@ const Navbar = () => {
                 <Link to="/login">Login</Link>
               </li>
               <li onClick={() => closeDropdowns()}>
-                <Link to="/signup">Sign Up</Link>
+                <Link to="/create-account">Sign Up</Link>
               </li>
             </ul>
           )}

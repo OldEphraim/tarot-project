@@ -12,12 +12,35 @@ import (
 
 func CreateUserHandler(w http.ResponseWriter, r *http.Request, dbQueries *database.Queries) {
 	var input struct {
+		Username string `json:"username"`
 		Password string `json:"password"`
 		Email    string `json:"email"`
 	}
 
 	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
 		respondWithError(w, http.StatusBadRequest, "Invalid input")
+		return
+	}
+
+	// Check if username is already taken
+	usernameTaken, err := dbQueries.CheckUsernameExists(r.Context(), input.Username)
+	if err != nil {
+		respondWithError(w, http.StatusInternalServerError, "Could not check username")
+		return
+	}
+	if usernameTaken {
+		respondWithError(w, http.StatusConflict, "Username is already taken")
+		return
+	}
+
+	// Check if email is already taken
+	emailTaken, err := dbQueries.CheckEmailExists(r.Context(), input.Email)
+	if err != nil {
+		respondWithError(w, http.StatusInternalServerError, "Could not check email")
+		return
+	}
+	if emailTaken {
+		respondWithError(w, http.StatusConflict, "Email is already taken")
 		return
 	}
 
@@ -31,6 +54,7 @@ func CreateUserHandler(w http.ResponseWriter, r *http.Request, dbQueries *databa
 
 	// Pass params to the CreateUser function
 	params := database.CreateUserParams{
+		Username: input.Username,
 		Email:          input.Email,
 		HashedPassword: string(hashedPassword),
 	}
@@ -44,6 +68,7 @@ func CreateUserHandler(w http.ResponseWriter, r *http.Request, dbQueries *databa
 
 	user := database.User{
 		ID:             newUser.ID,
+		Username:       newUser.Username,
 		CreatedAt:      newUser.CreatedAt,
 		UpdatedAt:      newUser.UpdatedAt,
 		Email:          newUser.Email,
@@ -52,10 +77,10 @@ func CreateUserHandler(w http.ResponseWriter, r *http.Request, dbQueries *databa
 
 	respondWithJSON(w, http.StatusCreated, map[string]interface{}{
 		"id":              user.ID,
+		"username":        user.Username,
 		"created_at":      user.CreatedAt,
 		"updated_at":      user.UpdatedAt,
 		"email":           user.Email,
-		"hashed_password": user.HashedPassword,
 	})
 }
 

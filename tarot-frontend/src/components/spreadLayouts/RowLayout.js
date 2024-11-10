@@ -3,6 +3,8 @@ import TarotCardImage from "../TarotCardImage";
 import celticCrossPositionMeanings from "../../constants/CelticCrossPositionMeanings";
 
 const RowLayout = ({ cards, imageRequests, currentCardIndex }) => {
+  console.log(cards);
+  console.log(currentCardIndex);
   const isVisible = (index) => index < currentCardIndex;
 
   return (

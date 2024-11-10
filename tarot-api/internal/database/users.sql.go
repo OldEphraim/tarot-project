@@ -9,24 +9,52 @@ import (
 	"context"
 )
 
+const checkEmailExists = `-- name: CheckEmailExists :one
+SELECT COUNT(*) > 0
+FROM users
+WHERE email = $1
+`
+
+func (q *Queries) CheckEmailExists(ctx context.Context, email string) (bool, error) {
+	row := q.db.QueryRowContext(ctx, checkEmailExists, email)
+	var column_1 bool
+	err := row.Scan(&column_1)
+	return column_1, err
+}
+
+const checkUsernameExists = `-- name: CheckUsernameExists :one
+SELECT COUNT(*) > 0
+FROM users
+WHERE username = $1
+`
+
+func (q *Queries) CheckUsernameExists(ctx context.Context, username string) (bool, error) {
+	row := q.db.QueryRowContext(ctx, checkUsernameExists, username)
+	var column_1 bool
+	err := row.Scan(&column_1)
+	return column_1, err
+}
+
 const createUser = `-- name: CreateUser :one
-INSERT INTO users (id, created_at, updated_at, email, hashed_password)
+INSERT INTO users (id, username, created_at, updated_at, email, hashed_password)
 VALUES (
-    gen_random_uuid(), NOW(), NOW(), $1, $2
+    gen_random_uuid(), $1, NOW(), NOW(), $2, $3
 )
-RETURNING id, created_at, updated_at, email, hashed_password
+RETURNING id, username, created_at, updated_at, email, hashed_password
 `
 
 type CreateUserParams struct {
+	Username       string
 	Email          string
 	HashedPassword string
 }
 
 func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, error) {
-	row := q.db.QueryRowContext(ctx, createUser, arg.Email, arg.HashedPassword)
+	row := q.db.QueryRowContext(ctx, createUser, arg.Username, arg.Email, arg.HashedPassword)
 	var i User
 	err := row.Scan(
 		&i.ID,
+		&i.Username,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 		&i.Email,
