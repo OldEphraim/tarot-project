@@ -1,13 +1,19 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from "react";
 
-const Typewriter = ({ text, typingSpeed = 20, startAnimation = false, onEnd, className = "typewriter-effects" }) => {
-  const [displayedText, setDisplayedText] = useState('');
+const Typewriter = ({
+  text,
+  typingSpeed = 20,
+  startAnimation = false,
+  onEnd,
+  className = "typewriter-effects",
+}) => {
+  const [displayedText, setDisplayedText] = useState("");
   const [index, setIndex] = useState(0);
   const hasEnded = useRef(false);
 
   useEffect(() => {
     if (startAnimation) {
-      setDisplayedText('');
+      setDisplayedText("");
       setIndex(0);
       hasEnded.current = false;
     }

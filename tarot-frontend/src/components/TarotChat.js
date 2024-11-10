@@ -1,12 +1,12 @@
-import React, { useState, useRef, useEffect } from 'react';
-import RowLayout from './spreadLayouts/RowLayout';
-import Typewriter from './Typewriter';
-import { useCardImages } from '../hooks/useCardImages';
-import { getEsmeraldaResponse } from '../services/openaiService';
-import './TarotChat.css';
+import React, { useState, useRef, useEffect } from "react";
+import RowLayout from "./spreadLayouts/RowLayout";
+import Typewriter from "./Typewriter";
+import { useCardImages } from "../hooks/useCardImages";
+import { getEsmeraldaResponse } from "../services/openaiService";
+import "./TarotChat.css";
 
 const TarotChat = () => {
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
   const [conversation, setConversation] = useState([]);
   const [showTextarea, setShowTextarea] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -23,22 +23,22 @@ const TarotChat = () => {
   };
 
   const handleKeyDown = async (e) => {
-    if (e.key === 'Enter' && !e.shiftKey && message.trim()) {
+    if (e.key === "Enter" && !e.shiftKey && message.trim()) {
       e.preventDefault();
       setLoading(true);
       setShowTextarea(false);
       setConversation((prevConversation) => [
         ...prevConversation,
-        { text: message, sender: 'user' },
+        { text: message, sender: "user" },
       ]);
 
       const aiResponse = await getEsmeraldaResponse(message);
-      setMessage('');
+      setMessage("");
       setLoading(false);
 
       setConversation((prevConversation) => [
         ...prevConversation,
-        { text: aiResponse.response, sender: 'esmeralda' },
+        { text: aiResponse.response, sender: "esmeralda" },
       ]);
       setCards(aiResponse.cards || []);
       setStartTyping(true);
@@ -48,9 +48,9 @@ const TarotChat = () => {
   const adjustTextareaHeight = (reset = false) => {
     if (textareaRef.current) {
       if (reset) {
-        textareaRef.current.style.height = 'auto';
+        textareaRef.current.style.height = "auto";
       }
-      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = "auto";
       textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
     }
   };
@@ -70,29 +70,40 @@ const TarotChat = () => {
       <div className="conversation-history">
         {conversation.map((msg, index) => {
           const isLastMessage = index === conversation.length - 1;
-          const shouldType = msg.sender === 'esmeralda' && isLastMessage && startTyping;
+          const shouldType =
+            msg.sender === "esmeralda" && isLastMessage && startTyping;
 
           return (
-            <div key={index} className={msg.sender === 'user' ? 'user-message' : 'esmeralda-message'}>
+            <div
+              key={index}
+              className={
+                msg.sender === "user" ? "user-message" : "esmeralda-message"
+              }
+            >
               {shouldType ? (
-                <Typewriter text={msg.text} startAnimation onEnd={handleTypewriterEnd} />
+                <Typewriter
+                  text={msg.text}
+                  startAnimation
+                  onEnd={handleTypewriterEnd}
+                />
               ) : (
-                msg.text
+                <>
+                  {msg.text}
+                  {/* Render RowLayout if there are cards */}
+                  {cards.length > 0 && msg.sender === "user" && (
+                    <RowLayout
+                      cards={cards}
+                      imageRequests={imageRequests}
+                      currentCardIndex={cards.length}
+                      selectedSpread="Three" // Fix this tomorrow, currently set to weird default
+                    />
+                  )}
+                </>
               )}
             </div>
           );
         })}
       </div>
-
-      {/* Render RowLayout if there are cards */}
-        {cards.length > 0 && (
-          <RowLayout
-            cards={cards}
-            imageRequests={imageRequests}
-            currentCardIndex={cards.length} 
-            selectedSpread="Three" // Fix this tomorrow, currently set to weird default
-          />
-        )}
 
       {/* Render textarea only when Esmeralda has finished typing */}
       {showTextarea && (
@@ -104,7 +115,7 @@ const TarotChat = () => {
             onKeyDown={handleKeyDown}
             placeholder="Type your message..."
             className="message-input"
-            style={{ resize: 'none', overflow: 'hidden' }}
+            style={{ resize: "none", overflow: "hidden" }}
           />
           <div className="below-text">
             Type your message and press Enter to respond to Esmeralda.

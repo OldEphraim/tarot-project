@@ -1,25 +1,26 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useModal } from '../context/ModalContext';
-import Modal from '../components/Modal';
-import Typewriter from '../components/Typewriter';
-import ProceedToCardsWorkflow from '../components/workflows/ProceedToCardsWorkflow';
-import SpeakToFortunetellerWorkflow from '../components/workflows/SpeakToFortunetellerWorkflow';
-import './Home.css';
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { useModal } from "../context/ModalContext";
+import Modal from "../components/Modal";
+import Typewriter from "../components/Typewriter";
+import ProceedToCardsWorkflow from "../components/workflows/ProceedToCardsWorkflow";
+import SpeakToFortunetellerWorkflow from "../components/workflows/SpeakToFortunetellerWorkflow";
+import "./Home.css";
 
 const Home = () => {
   const { isModalOpen, selectedCardData, closeModal } = useModal();
   const [workflow, setWorkflow] = useState(null);
-  const [isSecondParagraphVisible, setIsSecondParagraphVisible] = useState(false);
+  const [isSecondParagraphVisible, setIsSecondParagraphVisible] =
+    useState(false);
   const [areTopButtonsVisible, setAreTopButtonsVisible] = useState(false);
 
   const handleProceedToCards = () => {
-    setWorkflow('cards');
-  }
+    setWorkflow("cards");
+  };
 
   const handleProceedToFortuneteller = () => {
-    setWorkflow('fortuneteller');
-  }
+    setWorkflow("fortuneteller");
+  };
 
   return (
     <div className="home">
@@ -40,21 +41,30 @@ const Home = () => {
         onEnd={() => setAreTopButtonsVisible(true)}
       />
 
-      {areTopButtonsVisible && !workflow &&
+      {areTopButtonsVisible && !workflow && (
         <div className="button-container">
-        <button className="spooky-button" onClick={() => handleProceedToFortuneteller()}>
-          SPEAK TO FORTUNETELLER
-        </button>
-        <button className="spooky-button" onClick={() => handleProceedToCards()}>
-          PROCEED TO CARDS
-        </button>
-        <button className="spooky-button"><Link to="/login" className="no-style-link">
-          LOGIN
-        </Link></button>
-      </div>}
+          <button
+            className="spooky-button"
+            onClick={() => handleProceedToFortuneteller()}
+          >
+            SPEAK TO FORTUNETELLER
+          </button>
+          <button
+            className="spooky-button"
+            onClick={() => handleProceedToCards()}
+          >
+            PROCEED TO CARDS
+          </button>
+          <button className="spooky-button">
+            <Link to="/login" className="no-style-link">
+              LOGIN
+            </Link>
+          </button>
+        </div>
+      )}
 
-      {workflow === 'cards' && <ProceedToCardsWorkflow />}
-      {workflow === 'fortuneteller' && <SpeakToFortunetellerWorkflow />}
+      {workflow === "cards" && <ProceedToCardsWorkflow />}
+      {workflow === "fortuneteller" && <SpeakToFortunetellerWorkflow />}
     </div>
   );
 };

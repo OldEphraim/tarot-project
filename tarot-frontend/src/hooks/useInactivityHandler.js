@@ -1,6 +1,10 @@
-import { useEffect } from 'react';
+import { useEffect } from "react";
 
-export const useInactivityHandler = (cardsLength, setSkipAnimation, setCurrentCardIndex) => {
+export const useInactivityHandler = (
+  cardsLength,
+  setSkipAnimation,
+  setCurrentCardIndex,
+) => {
   useEffect(() => {
     let inactivityTimeout;
 
@@ -15,10 +19,10 @@ export const useInactivityHandler = (cardsLength, setSkipAnimation, setCurrentCa
       }
     };
 
-    document.addEventListener('visibilitychange', handleVisibilityChange);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
 
     return () => {
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
       clearTimeout(inactivityTimeout); // Cleanup on unmount
     };
   }, [cardsLength, setSkipAnimation, setCurrentCardIndex]);

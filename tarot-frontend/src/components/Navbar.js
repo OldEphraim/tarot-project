@@ -1,23 +1,26 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
-import './Navbar.css'; 
+import React, { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
+import "./Navbar.css";
 
 const Navbar = () => {
   const [showDropdown, setShowDropdown] = useState({
     tarot: false,
     account: false,
   });
-  const [dropdownStyles, setDropdownStyles] = useState({}); 
+  const [dropdownStyles, setDropdownStyles] = useState({});
   const [isDropdownPositioned, setIsDropdownPositioned] = useState(false);
 
-  const dropdownRefs = useRef({ tarot: { toggle: null, menuItem: null }, account: { toggle: null, menuItem: null } });
+  const dropdownRefs = useRef({
+    tarot: { toggle: null, menuItem: null },
+    account: { toggle: null, menuItem: null },
+  });
   const navbarRef = useRef(null);
 
   const toggleDropdown = (menu) => {
     setIsDropdownPositioned(false);
     setShowDropdown((prev) => ({
-      tarot: menu === 'tarot', 
-      account: menu === 'account', 
+      tarot: menu === "tarot",
+      account: menu === "account",
     }));
   };
 
@@ -36,12 +39,12 @@ const Navbar = () => {
     };
     const handleKeyPress = () => closeDropdowns();
 
-    document.addEventListener('click', handleClickOutside);
-    document.addEventListener('keypress', handleKeyPress);
+    document.addEventListener("click", handleClickOutside);
+    document.addEventListener("keypress", handleKeyPress);
 
     return () => {
-      document.removeEventListener('click', handleClickOutside);
-      document.removeEventListener('keypress', handleKeyPress);
+      document.removeEventListener("click", handleClickOutside);
+      document.removeEventListener("keypress", handleKeyPress);
     };
   }, []);
 
@@ -60,9 +63,8 @@ const Navbar = () => {
     setIsDropdownPositioned(true);
   }, [showDropdown]);
 
-
   const handleNavbarClick = (e) => {
-    if (e.target.tagName !== 'LI' && e.target.tagName !== 'A') {
+    if (e.target.tagName !== "LI" && e.target.tagName !== "A") {
       closeDropdowns();
     }
   };
@@ -70,34 +72,84 @@ const Navbar = () => {
   return (
     <nav className="navbar" ref={navbarRef} onClick={handleNavbarClick}>
       <ul className="nav-links">
-        <li onClick={(e) => e.stopPropagation()}><div className="home-link" onClick={() => closeDropdowns()}><Link to="/">Home</Link></div></li>
+        <li onClick={(e) => e.stopPropagation()}>
+          <div className="home-link" onClick={() => closeDropdowns()}>
+            <Link to="/">Home</Link>
+          </div>
+        </li>
 
         <li onClick={(e) => e.stopPropagation()}>
-          <div className="dropdown-toggle" ref={(el) => (dropdownRefs.current.tarot.toggle = el)} onClick={() => toggleDropdown('tarot')}>
+          <div
+            className="dropdown-toggle"
+            ref={(el) => (dropdownRefs.current.tarot.toggle = el)}
+            onClick={() => toggleDropdown("tarot")}
+          >
             About Tarot
           </div>
           {showDropdown.tarot && (
-            <ul className="dropdown-menu" style={{...dropdownStyles.tarot, visibility: isDropdownPositioned ? 'visible' : 'hidden' }}>
-              <li ref={(el) => (dropdownRefs.current.tarot.menuItem = el)} onClick={() => closeDropdowns()}><Link to="/tarot/about">Art of Tarot</Link></li>
-              <li onClick={() => closeDropdowns()}><Link to="/tarot/spreads">Tarot Spreads</Link></li>
-              <li onClick={() => closeDropdowns()}><Link to="/tarot/cards">Tarot Cards</Link></li>
+            <ul
+              className="dropdown-menu"
+              style={{
+                ...dropdownStyles.tarot,
+                visibility: isDropdownPositioned ? "visible" : "hidden",
+              }}
+            >
+              <li
+                ref={(el) => (dropdownRefs.current.tarot.menuItem = el)}
+                onClick={() => closeDropdowns()}
+              >
+                <Link to="/tarot/about">Art of Tarot</Link>
+              </li>
+              <li onClick={() => closeDropdowns()}>
+                <Link to="/tarot/spreads">Tarot Spreads</Link>
+              </li>
+              <li onClick={() => closeDropdowns()}>
+                <Link to="/tarot/cards">Tarot Cards</Link>
+              </li>
             </ul>
           )}
         </li>
 
         <li onClick={(e) => e.stopPropagation()}>
-          <div className="dropdown-toggle" ref={(el) => (dropdownRefs.current.account.toggle = el)} onClick={() => toggleDropdown('account')}>
+          <div
+            className="dropdown-toggle"
+            ref={(el) => (dropdownRefs.current.account.toggle = el)}
+            onClick={() => toggleDropdown("account")}
+          >
             My Account
           </div>
           {showDropdown.account && (
-            <ul className="dropdown-menu" style={{...dropdownStyles.account, visibility: isDropdownPositioned ? 'visible' : 'hidden' }}>
-              <li ref={(el) => (dropdownRefs.current.account.menuItem = el)} onClick={() => closeDropdowns()}><Link to="/login">Login</Link></li>
-              <li onClick={() => closeDropdowns()}><Link to="/signup">Sign Up</Link></li>
+            <ul
+              className="dropdown-menu"
+              style={{
+                ...dropdownStyles.account,
+                visibility: isDropdownPositioned ? "visible" : "hidden",
+              }}
+            >
+              <li
+                ref={(el) => (dropdownRefs.current.account.menuItem = el)}
+                onClick={() => closeDropdowns()}
+              >
+                <Link to="/login">Login</Link>
+              </li>
+              <li onClick={() => closeDropdowns()}>
+                <Link to="/signup">Sign Up</Link>
+              </li>
             </ul>
           )}
         </li>
 
-        <li onClick={(e) => e.stopPropagation()}><div className="oldephraim-link" onClick={() => closeDropdowns()}><a href="https://oldephraim.github.io" target="_blank" rel="noopener noreferrer">About Me</a></div></li>
+        <li onClick={(e) => e.stopPropagation()}>
+          <div className="oldephraim-link" onClick={() => closeDropdowns()}>
+            <a
+              href="https://oldephraim.github.io"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              About Me
+            </a>
+          </div>
+        </li>
       </ul>
     </nav>
   );

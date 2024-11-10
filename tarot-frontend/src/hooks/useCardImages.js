@@ -1,31 +1,40 @@
-import { useEffect, useState, useRef } from 'react';
-import { getRandomTheme } from '../constants/TarotThemes';
-import { generateCardImage, retrieveCardImage } from '../services/openaiService';
+import { useEffect, useState } from "react";
+import { getRandomTheme } from "../constants/TarotThemes";
+import {
+  generateCardImage,
+  retrieveCardImage,
+} from "../services/openaiService";
 
 export const useCardImages = (cards, artStyle) => {
   const [imageRequests, setImageRequests] = useState({});
-  const hasFetchedImages = useRef(false);
 
   useEffect(() => {
-    if (!hasFetchedImages.current) {
-      const fetchImages = async () => {
-        const newImageRequests = {};
+    const fetchImages = async () => {
+      const newImageRequests = {};
 
-        for (const card of cards) {
-          if (artStyle === 'Rider-Waite') {
-            newImageRequests[card.name] = { status: 'ready', url: `/tarot-images/card_${card.number}.jpg`, theme: "Rider-Waite" };
-          } else if (artStyle === 'Random') {
-            const theme = getRandomTheme();
-            const requestId = await generateCardImage(theme, card.name);
-            newImageRequests[card.name] = { requestId, status: 'pending', theme: theme };
-          }
+      for (const card of cards) {
+        if (artStyle === "Rider-Waite") {
+          newImageRequests[card.name] = {
+            status: "ready",
+            url: `/tarot-images/card_${card.number}.jpg`,
+            theme: "Rider-Waite",
+          };
+        } else if (artStyle === "Random") {
+          const theme = getRandomTheme();
+          const requestId = await generateCardImage(theme, card.name);
+          newImageRequests[card.name] = {
+            requestId,
+            status: "pending",
+            theme: theme,
+          };
         }
+      }
 
-        setImageRequests(newImageRequests);
-      };
+      setImageRequests(newImageRequests);
+    };
 
+    if (cards.length > 0) {
       fetchImages();
-      hasFetchedImages.current = true;
     }
   }, [artStyle, cards]);
 
@@ -34,10 +43,14 @@ export const useCardImages = (cards, artStyle) => {
       const newImageRequests = { ...imageRequests };
 
       for (const [cardName, request] of Object.entries(imageRequests)) {
-        if (request.status === 'pending') {
+        if (request.status === "pending") {
           const result = await retrieveCardImage(request.requestId);
-          if (result.status === 'ready') {
-            newImageRequests[cardName] = { status: 'ready', url: result.url, theme: request.theme };
+          if (result.status === "ready") {
+            newImageRequests[cardName] = {
+              status: "ready",
+              url: result.url,
+              theme: request.theme,
+            };
           }
         }
       }
@@ -45,7 +58,10 @@ export const useCardImages = (cards, artStyle) => {
       setImageRequests(newImageRequests);
     };
 
-    if (artStyle === 'Random' && Object.values(imageRequests).some(req => req.status === 'pending')) {
+    if (
+      artStyle === "Random" &&
+      Object.values(imageRequests).some((req) => req.status === "pending")
+    ) {
       const interval = setInterval(pollForImages, 3000);
       return () => clearInterval(interval);
     }

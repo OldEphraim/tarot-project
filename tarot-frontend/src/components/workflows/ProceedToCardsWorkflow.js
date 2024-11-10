@@ -1,19 +1,26 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import CardDisplay from '../CardDisplay';
-import Typewriter from '../Typewriter';
-import { drawMultipleCards } from '../../services/apiService';
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import CardDisplay from "../CardDisplay";
+import Typewriter from "../Typewriter";
+import { drawMultipleCards } from "../../services/apiService";
 
 const ProceedToCardsWorkflow = ({ onExit }) => {
   const [artStyle, setArtStyle] = useState("");
   const [selectedSpread, setSelectedSpread] = useState(null);
   const [cards, setCards] = useState([]);
   const [isCardDisplayVisible, setIsCardDisplayVisible] = useState(false);
-  const [isArtStyleSelectionTextVisible, setIsArtStyleSelectionTextVisible] = useState(false);
-  const [areArtStyleSelectionButtonsVisible, setAreArtStyleSelectionButtonsVisible] = useState(false);
-  const [isCardSelectionTextVisible, setIsCardSelectionTextVisible] = useState(false);
-  const [areCardSelectionButtonsVisible, setAreCardSelectionButtonsVisible] = useState(false);
-  const [isFortunetellerTextVisible, setIsFortunetellerTextVisible] = useState(false);
+  const [isArtStyleSelectionTextVisible, setIsArtStyleSelectionTextVisible] =
+    useState(false);
+  const [
+    areArtStyleSelectionButtonsVisible,
+    setAreArtStyleSelectionButtonsVisible,
+  ] = useState(false);
+  const [isCardSelectionTextVisible, setIsCardSelectionTextVisible] =
+    useState(false);
+  const [areCardSelectionButtonsVisible, setAreCardSelectionButtonsVisible] =
+    useState(false);
+  const [isFortunetellerTextVisible, setIsFortunetellerTextVisible] =
+    useState(false);
 
   const handleArtStyleSelection = (style) => {
     setAreArtStyleSelectionButtonsVisible(false);
@@ -28,11 +35,20 @@ const ProceedToCardsWorkflow = ({ onExit }) => {
     let numCards;
 
     switch (spread) {
-      case "One": numCards = 1; break;
-      case "Three": numCards = 3; break;
-      case "Five": numCards = 5; break;
-      case "Celtic Cross": numCards = 10; break;
-      default: return;
+      case "One":
+        numCards = 1;
+        break;
+      case "Three":
+        numCards = 3;
+        break;
+      case "Five":
+        numCards = 5;
+        break;
+      case "Celtic Cross":
+        numCards = 10;
+        break;
+      default:
+        return;
     }
 
     try {
@@ -61,11 +77,23 @@ const ProceedToCardsWorkflow = ({ onExit }) => {
 
       {areArtStyleSelectionButtonsVisible && !isCardSelectionTextVisible && (
         <div className="button-container">
-          <button className="spooky-button" onClick={() => handleArtStyleSelection("Rider-Waite")}>RIDER-WAITE CLASSIC</button>
-          <button className="spooky-button" onClick={() => handleArtStyleSelection("Random")}>AI SURPRISE</button>
-          <button className="spooky-button"><Link to="/login" className="no-style-link">
-          LOGIN
-          </Link></button>
+          <button
+            className="spooky-button"
+            onClick={() => handleArtStyleSelection("Rider-Waite")}
+          >
+            RIDER-WAITE CLASSIC
+          </button>
+          <button
+            className="spooky-button"
+            onClick={() => handleArtStyleSelection("Random")}
+          >
+            AI SURPRISE
+          </button>
+          <button className="spooky-button">
+            <Link to="/login" className="no-style-link">
+              LOGIN
+            </Link>
+          </button>
         </div>
       )}
 
@@ -79,10 +107,30 @@ const ProceedToCardsWorkflow = ({ onExit }) => {
 
       {areCardSelectionButtonsVisible && (
         <div className="button-container">
-          <button className="spooky-button" onClick={() => handleSpreadSelect("One")}>ONE CARD</button>
-          <button className="spooky-button" onClick={() => handleSpreadSelect("Three")}>THREE CARDS</button>
-          <button className="spooky-button" onClick={() => handleSpreadSelect("Five")}>FIVE CARDS</button>
-          <button className="spooky-button" onClick={() => handleSpreadSelect("Celtic Cross")}>CELTIC CROSS</button>
+          <button
+            className="spooky-button"
+            onClick={() => handleSpreadSelect("One")}
+          >
+            ONE CARD
+          </button>
+          <button
+            className="spooky-button"
+            onClick={() => handleSpreadSelect("Three")}
+          >
+            THREE CARDS
+          </button>
+          <button
+            className="spooky-button"
+            onClick={() => handleSpreadSelect("Five")}
+          >
+            FIVE CARDS
+          </button>
+          <button
+            className="spooky-button"
+            onClick={() => handleSpreadSelect("Celtic Cross")}
+          >
+            CELTIC CROSS
+          </button>
         </div>
       )}
 
@@ -95,7 +143,11 @@ const ProceedToCardsWorkflow = ({ onExit }) => {
       )}
 
       {isCardDisplayVisible && cards.length > 0 && (
-        <CardDisplay cards={cards} selectedSpread={selectedSpread} artStyle={artStyle} />
+        <CardDisplay
+          cards={cards}
+          selectedSpread={selectedSpread}
+          artStyle={artStyle}
+        />
       )}
     </div>
   );

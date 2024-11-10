@@ -2,9 +2,12 @@ import axios from "axios";
 
 export const getEsmeraldaResponse = async (userMessage) => {
   try {
-    const response = await axios.post("http://localhost:8080/api/esmeralda/chat", {
-      message: userMessage,
-    });
+    const response = await axios.post(
+      "http://localhost:8080/api/esmeralda/chat",
+      {
+        message: userMessage,
+      },
+    );
     console.log(response);
     return response.data;
   } catch (error) {
@@ -26,27 +29,32 @@ export const getCardAtPositionExplanation = async (card, position) => {
 };
 
 export const generateCardImage = async (theme, card) => {
-    try {
-      const response = await axios.post("http://localhost:8080/api/generate-image", {
+  try {
+    const response = await axios.post(
+      "http://localhost:8080/api/generate-image",
+      {
         theme,
-        card
-      });
-      return response.data.requestID;
-    } catch (error) {
-      console.error("Error generating image:", error);
-      return "Error generating image.";
-    }
-  };
+        card,
+      },
+    );
+    return response.data.requestID;
+  } catch (error) {
+    console.error("Error generating image:", error);
+    return "Error generating image.";
+  }
+};
 
-  export const retrieveCardImage = async (requestId) => {
-    try {
-      const response = await axios.get(`http://localhost:8080/api/get-image-result?requestID=${requestId}`);
-      if (response.status === 200 && response.data.imageUrl) {
-        return { status: "ready", url: response.data.imageUrl };
-      }
-      return { status: "pending" };
-    } catch (error) {
-      console.error(`Error fetching image result:`, error);
-      return { status: "error" };
+export const retrieveCardImage = async (requestId) => {
+  try {
+    const response = await axios.get(
+      `http://localhost:8080/api/get-image-result?requestID=${requestId}`,
+    );
+    if (response.status === 200 && response.data.imageUrl) {
+      return { status: "ready", url: response.data.imageUrl };
     }
-  };
+    return { status: "pending" };
+  } catch (error) {
+    console.error(`Error fetching image result:`, error);
+    return { status: "error" };
+  }
+};

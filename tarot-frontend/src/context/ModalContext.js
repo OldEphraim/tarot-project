@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState } from "react";
 
 const ModalContext = createContext();
 
@@ -19,7 +19,9 @@ export const ModalProvider = ({ children }) => {
   };
 
   return (
-    <ModalContext.Provider value={{ isModalOpen, selectedCardData, openModal, closeModal }}>
+    <ModalContext.Provider
+      value={{ isModalOpen, selectedCardData, openModal, closeModal }}
+    >
       {children}
     </ModalContext.Provider>
   );

@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import Typewriter from '../Typewriter';
-import TarotChat from '../TarotChat';
+import React, { useState } from "react";
+import Typewriter from "../Typewriter";
+import TarotChat from "../TarotChat";
 
 const SpeakToFortunetellerWorkflow = ({ onExit }) => {
   const [isChatVisible, setIsChatVisible] = useState(false);
@@ -20,15 +20,19 @@ const SpeakToFortunetellerWorkflow = ({ onExit }) => {
 
   return (
     <div className="speak-to-fortuneteller-workflow">
-        <img className="esmeralda" src="/esmeralda-universe-images/esmeralda.webp" alt="esmeralda" />
+      <img
+        className="esmeralda"
+        src="/esmeralda-universe-images/esmeralda.webp"
+        alt="esmeralda"
+      />
 
-        <Typewriter
-          text={esmeraldaIntro}
-          startAnimation
-          onEnd={() => handleStartChat()}
-        />
+      <Typewriter
+        text={esmeraldaIntro}
+        startAnimation
+        onEnd={() => handleStartChat()}
+      />
 
-        {isChatVisible && <TarotChat />}
+      {isChatVisible && <TarotChat />}
     </div>
   );
 };
