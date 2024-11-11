@@ -18,7 +18,7 @@ const CreateAccount = ({ onClose }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setErrors({}); // Clear previous errors
+    setErrors({});
     const { username, email, password, confirmPassword } = formData;
 
     if (!username)

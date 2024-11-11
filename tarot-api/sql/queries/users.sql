@@ -14,3 +14,8 @@ WHERE username = $1;
 SELECT COUNT(*) > 0
 FROM users
 WHERE email = $1;
+
+-- name: GetUserByEmail :one
+SELECT id, email, created_at, updated_at, hashed_password
+FROM users
+WHERE email = $1;

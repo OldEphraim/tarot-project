@@ -18,6 +18,7 @@ import (
 // apiConfig holds in-memory state
 type apiConfig struct {
 	dbQueries      *database.Queries
+	jwtSecret []byte
 }
 
 // Middleware to log incoming requests
@@ -45,6 +46,7 @@ func main() {
 	// Initialize apiConfig
 	apiCfg := &apiConfig{
 		dbQueries: dbQueries,
+		jwtSecret: []byte(os.Getenv("JWT_SECRET")),
 	}
 
 	apiKey := os.Getenv("OPENAI_API_KEY")
@@ -52,6 +54,15 @@ func main() {
 	rateLimiter := services.NewRateLimiter(client)
 
 	// dbQueries handlers
+	http.HandleFunc("/api/login", utils.CorsMiddleware(loggingMiddleware(func(w http.ResponseWriter, r *http.Request) {
+		handlers.LoginHandler(w, r, apiCfg.dbQueries, apiCfg.jwtSecret)
+	})))
+	http.HandleFunc("/api/refresh", utils.CorsMiddleware(loggingMiddleware(func(w http.ResponseWriter, r *http.Request) {
+		handlers.RefreshHandler(w, r, apiCfg.dbQueries, apiCfg.jwtSecret)
+	})))
+	http.HandleFunc("/api/revoke", utils.CorsMiddleware(loggingMiddleware(func(w http.ResponseWriter, r *http.Request) {
+		handlers.RevokeHandler(w, r, apiCfg.dbQueries)
+	})))
 	http.HandleFunc("/api/users", utils.CorsMiddleware(loggingMiddleware(func(w http.ResponseWriter, r *http.Request) {
 		handlers.CreateUserHandler(w, r, apiCfg.dbQueries)
 	})))

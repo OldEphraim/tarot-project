@@ -5,9 +5,8 @@ import (
 	"log"
 	"net/http"
 
+	"tarot-api/internal/auth"
 	"tarot-api/internal/database"
-
-	"golang.org/x/crypto/bcrypt"
 )
 
 func CreateUserHandler(w http.ResponseWriter, r *http.Request, dbQueries *database.Queries) {
@@ -45,7 +44,7 @@ func CreateUserHandler(w http.ResponseWriter, r *http.Request, dbQueries *databa
 	}
 
 	// Hash the password using bcrypt
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.DefaultCost)
+	hashedPassword, err := auth.HashPassword(input.Password)
 	if err != nil {
 		log.Printf("Error hashing password: %v\n", err)
 		respondWithError(w, http.StatusInternalServerError, "Could not hash password")
@@ -66,21 +65,12 @@ func CreateUserHandler(w http.ResponseWriter, r *http.Request, dbQueries *databa
 		return
 	}
 
-	user := database.User{
-		ID:             newUser.ID,
-		Username:       newUser.Username,
-		CreatedAt:      newUser.CreatedAt,
-		UpdatedAt:      newUser.UpdatedAt,
-		Email:          newUser.Email,
-		HashedPassword: newUser.HashedPassword,
-	}
-
 	respondWithJSON(w, http.StatusCreated, map[string]interface{}{
-		"id":              user.ID,
-		"username":        user.Username,
-		"created_at":      user.CreatedAt,
-		"updated_at":      user.UpdatedAt,
-		"email":           user.Email,
+		"id":              newUser.ID,
+		"username":        newUser.Username,
+		"created_at":      newUser.CreatedAt,
+		"updated_at":      newUser.UpdatedAt,
+		"email":           newUser.Email,
 	})
 }
 

@@ -7,6 +7,9 @@ package database
 
 import (
 	"context"
+	"time"
+
+	"github.com/google/uuid"
 )
 
 const checkEmailExists = `-- name: CheckEmailExists :one
@@ -58,6 +61,33 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 		&i.CreatedAt,
 		&i.UpdatedAt,
 		&i.Email,
+		&i.HashedPassword,
+	)
+	return i, err
+}
+
+const getUserByEmail = `-- name: GetUserByEmail :one
+SELECT id, email, created_at, updated_at, hashed_password
+FROM users
+WHERE email = $1
+`
+
+type GetUserByEmailRow struct {
+	ID             uuid.UUID
+	Email          string
+	CreatedAt      time.Time
+	UpdatedAt      time.Time
+	HashedPassword string
+}
+
+func (q *Queries) GetUserByEmail(ctx context.Context, email string) (GetUserByEmailRow, error) {
+	row := q.db.QueryRowContext(ctx, getUserByEmail, email)
+	var i GetUserByEmailRow
+	err := row.Scan(
+		&i.ID,
+		&i.Email,
+		&i.CreatedAt,
+		&i.UpdatedAt,
 		&i.HashedPassword,
 	)
 	return i, err
