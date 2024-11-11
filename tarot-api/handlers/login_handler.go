@@ -2,16 +2,19 @@ package handlers
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 	"time"
 
 	"tarot-api/internal/auth"
 	"tarot-api/internal/database"
+
+	"github.com/google/uuid"
 )
 
 func LoginHandler(w http.ResponseWriter, r *http.Request, dbQueries *database.Queries, jwtSecret []byte) {
 	type request struct {
-		Email            string `json:"email"`
+		Username            string `json:"username"`
 		Password         string `json:"password"`
 		ExpiresInSeconds *int   `json:"expires_in_seconds,omitempty"`
 	}
@@ -23,43 +26,45 @@ func LoginHandler(w http.ResponseWriter, r *http.Request, dbQueries *database.Qu
 		return
 	}
 
-	user, err := dbQueries.GetUserByEmail(r.Context(), req.Email)
+	// Retrieve user by username
+	user, err := dbQueries.GetUserByUsername(r.Context(), req.Username)
 	if err != nil {
-		http.Error(w, "Incorrect email or password", http.StatusUnauthorized)
+		log.Println("Username does not exist")
+		respondWithError(w, http.StatusUnauthorized, "Incorrect username or password")
 		return
 	}
+
+	// Verify password
+	log.Printf("Logging in with password: '%s', stored hash: '%s'", req.Password, user.HashedPassword)
 
 	if err := auth.CheckPasswordHash(req.Password, user.HashedPassword); err != nil {
-		http.Error(w, "Incorrect email or password", http.StatusUnauthorized)
+		log.Println("Password was not correct")
+		log.Printf("bcrypt error: %v", err)
+		respondWithError(w, http.StatusUnauthorized, "Incorrect username or password")
 		return
 	}
 
-	// Set default expiration time
-	expiration := 1 * time.Hour
-	if req.ExpiresInSeconds != nil {
-		if *req.ExpiresInSeconds > 3600 {
-			expiration = 1 * time.Hour
-		} else {
-			expiration = time.Duration(*req.ExpiresInSeconds) * time.Second
-		}
+	// Define JWT expiration
+	expiration := time.Hour
+	if req.ExpiresInSeconds != nil && *req.ExpiresInSeconds <= 3600 {
+		expiration = time.Duration(*req.ExpiresInSeconds) * time.Second
 	}
 
-	// Create a JWT token
+	// Generate JWT
 	accessToken, err := auth.MakeJWT(user.ID, string(jwtSecret), expiration)
 	if err != nil {
 		respondWithError(w, http.StatusInternalServerError, "Could not create token")
 		return
 	}
 
-	// Create a refresh token
+	// Generate and save refresh token
 	refreshToken, err := auth.MakeRefreshToken()
 	if err != nil {
 		respondWithError(w, http.StatusInternalServerError, "Could not create refresh token")
 		return
 	}
 
-	// Save the refresh token to the database with expiration
-	expiresAt := time.Now().Add(60 * 24 * time.Hour) // 60 days from now
+	expiresAt := time.Now().Add(60 * 24 * time.Hour)
 	_, err = dbQueries.CreateRefreshToken(r.Context(), database.CreateRefreshTokenParams{
 		Token:     refreshToken,
 		UserID:    user.ID,
@@ -70,12 +75,21 @@ func LoginHandler(w http.ResponseWriter, r *http.Request, dbQueries *database.Qu
 		return
 	}
 
-	respondWithJSON(w, http.StatusOK, map[string]interface{}{
-		"id":            user.ID,
-		"created_at":    time.Now(),
-		"updated_at":    time.Now(),
-		"email":         req.Email,
-		"token":         accessToken,
-		"refresh_token": refreshToken,
+	type loginResponse struct {
+		ID           uuid.UUID `json:"id"`
+		CreatedAt    time.Time `json:"created_at"`
+		UpdatedAt    time.Time `json:"updated_at"`
+		Username        string `json:"username"`
+		Token        string `json:"token"`
+		RefreshToken string `json:"refresh_token"`
+	}
+
+	respondWithJSON(w, http.StatusOK, loginResponse{
+		ID:           user.ID,
+		CreatedAt:    user.CreatedAt,
+		UpdatedAt:    user.UpdatedAt,
+		Username:        user.Username,
+		Token:        accessToken,
+		RefreshToken: refreshToken,
 	})
 }

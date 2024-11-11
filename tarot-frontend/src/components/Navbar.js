@@ -1,8 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useAuth } from "../context/AuthContext";
 import { Link } from "react-router-dom";
 import "./Navbar.css";
 
 const Navbar = () => {
+  const { user, logout } = useAuth();
+  console.log(user);
+
   const [showDropdown, setShowDropdown] = useState({
     tarot: false,
     account: false,
@@ -118,7 +122,7 @@ const Navbar = () => {
           >
             My Account
           </div>
-          {showDropdown.account && (
+          {showDropdown.account && !user && (
             <ul
               className="dropdown-menu"
               style={{
@@ -134,6 +138,25 @@ const Navbar = () => {
               </li>
               <li onClick={() => closeDropdowns()}>
                 <Link to="/create-account">Sign Up</Link>
+              </li>
+            </ul>
+          )}
+          {showDropdown.account && user && (
+            <ul
+              className="dropdown-menu"
+              style={{
+                ...dropdownStyles.account,
+                visibility: isDropdownPositioned ? "visible" : "hidden",
+              }}
+            >
+              <li
+                ref={(el) => (dropdownRefs.current.account.menuItem = el)}
+                onClick={() => closeDropdowns()}
+              >
+                <Link to="/profile">Profile</Link>
+              </li>
+              <li onClick={() => closeDropdowns()}>
+                <Link to="/create-account">Logout</Link>
               </li>
             </ul>
           )}
