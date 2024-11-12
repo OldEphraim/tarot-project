@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import "./Navbar.css";
 
 const Navbar = () => {
-  const { user, logout } = useAuth();
+  const { username, logout } = useAuth();
 
   const [showDropdown, setShowDropdown] = useState({
     tarot: false,
@@ -121,7 +121,7 @@ const Navbar = () => {
           >
             My Account
           </div>
-          {showDropdown.account && !user && (
+          {showDropdown.account && !username && (
             <ul
               className="dropdown-menu"
               style={{
@@ -140,7 +140,7 @@ const Navbar = () => {
               </li>
             </ul>
           )}
-          {showDropdown.account && user && (
+          {showDropdown.account && username && (
             <ul
               className="dropdown-menu"
               style={{

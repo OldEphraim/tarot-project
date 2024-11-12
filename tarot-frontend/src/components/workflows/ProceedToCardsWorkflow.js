@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import CardDisplay from "../CardDisplay";
 import Typewriter from "../Typewriter";
+import { useAuth } from "../../context/AuthContext";
 import { drawMultipleCards } from "../../services/tarotService";
 
 const ProceedToCardsWorkflow = ({ onExit }) => {
@@ -21,6 +22,8 @@ const ProceedToCardsWorkflow = ({ onExit }) => {
     useState(false);
   const [isFortunetellerTextVisible, setIsFortunetellerTextVisible] =
     useState(false);
+
+  const { username } = useAuth();
 
   const handleArtStyleSelection = (style) => {
     setAreArtStyleSelectionButtonsVisible(false);
@@ -69,7 +72,7 @@ const ProceedToCardsWorkflow = ({ onExit }) => {
 
       {isArtStyleSelectionTextVisible && (
         <Typewriter
-          text="WOULD you prefer the classic Rider-Waite designs, or AI-generated artwork for your cards in a randomly-chosen style? If you would like to customize the style of your AI-generated cards, please log in."
+          text={`WOULD you prefer the classic Rider-Waite designs, or AI-generated artwork for your cards in a randomly-chosen style? If you would like to customize the style of your AI-generated cards, ${username ? "you can do so in your Profile page." : "please log in."}`}
           startAnimation
           onEnd={() => setAreArtStyleSelectionButtonsVisible(true)}
         />
@@ -89,17 +92,19 @@ const ProceedToCardsWorkflow = ({ onExit }) => {
           >
             AI SURPRISE
           </button>
-          <button className="spooky-button">
-            <Link to="/login" className="no-style-link">
-              LOGIN
-            </Link>
-          </button>
+          {!username && (
+            <button className="spooky-button">
+              <Link to="/login" className="no-style-link">
+                LOGIN
+              </Link>
+            </button>
+          )}
         </div>
       )}
 
       {isCardSelectionTextVisible && (
         <Typewriter
-          text="WOULD you like to draw one card, three cards, five cards, or an entire Celtic cross?"
+          text="WOULD you like to draw one card, three cards, a five-card Elemental spread, or an entire Celtic Cross?"
           startAnimation
           onEnd={() => setAreCardSelectionButtonsVisible(true)}
         />
@@ -123,7 +128,7 @@ const ProceedToCardsWorkflow = ({ onExit }) => {
             className="spooky-button"
             onClick={() => handleSpreadSelect("Five")}
           >
-            FIVE CARDS
+            ELEMENTAL SPREAD
           </button>
           <button
             className="spooky-button"
@@ -136,7 +141,7 @@ const ProceedToCardsWorkflow = ({ onExit }) => {
 
       {isFortunetellerTextVisible && (
         <Typewriter
-          text={`THE FORTUNETELLER will now draw a ${selectedSpread}${selectedSpread !== "Celtic Cross" ? "-Card Spread" : ""} for you.`}
+          text={`THE FORTUNETELLER will now draw ${selectedSpread !== "One" ? "a" : ""}${selectedSpread === "Five" ? "n" : ""} ${selectedSpread !== "Five" ? `${selectedSpread}` : "Elemental"}${selectedSpread === "Three" ? "-Card" : ""}${selectedSpread === "Three" || selectedSpread === "Five" ? " Spread" : ""}${selectedSpread === "One" ? " tarot card" : ""} for you.`}
           startAnimation
           onEnd={() => setIsCardDisplayVisible(true)}
         />
