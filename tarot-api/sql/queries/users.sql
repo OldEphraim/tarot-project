@@ -19,3 +19,8 @@ WHERE email = $1;
 SELECT id, username, created_at, updated_at, hashed_password
 FROM users
 WHERE username = $1;
+
+-- name: UpdateUserLogoutTimestamp :exec
+UPDATE users
+SET updated_at = NOW()
+WHERE username = $1;

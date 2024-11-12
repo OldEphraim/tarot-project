@@ -5,7 +5,6 @@ import "./Navbar.css";
 
 const Navbar = () => {
   const { user, logout } = useAuth();
-  console.log(user);
 
   const [showDropdown, setShowDropdown] = useState({
     tarot: false,

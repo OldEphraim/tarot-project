@@ -15,12 +15,11 @@ export const AuthProvider = ({ children }) => {
     const initializeAuth = () => {
       const accessToken = authService.getAccessToken();
       const refreshToken = authService.getRefreshToken();
-      if (accessToken && refreshToken) {
-        // Optionally decode or verify tokens
-        setUser({ accessToken, refreshToken });
+      const username = authService.getUsername();
+      if (accessToken && refreshToken && username) {
+        setUser({ accessToken, refreshToken, username });
       } else {
-        // Handle missing tokens (optional logout or token refresh)
-        authService.clearAuthData(); // Clear any partial tokens
+        authService.clearAuthData(); // Clear any partial information
         setUser(null);
       }
       setIsLoading(false);
@@ -30,6 +29,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (credentials) => {
     try {
+      console.log("credentials:", credentials);
       const userData = await authService.login(credentials);
       console.log(userData);
       setUser(userData);

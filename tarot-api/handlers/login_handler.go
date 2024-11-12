@@ -35,7 +35,6 @@ func LoginHandler(w http.ResponseWriter, r *http.Request, dbQueries *database.Qu
 	}
 
 	// Verify password
-	log.Printf("Logging in with password: '%s', stored hash: '%s'", req.Password, user.HashedPassword)
 	if err := auth.CheckPasswordHash(req.Password, user.HashedPassword); err != nil {
 		log.Println("Password was not correct")
 		log.Printf("bcrypt error: %v", err)
@@ -87,7 +86,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request, dbQueries *database.Qu
 		ID:           user.ID,
 		CreatedAt:    user.CreatedAt,
 		UpdatedAt:    user.UpdatedAt,
-		Username:     user.Username,
+		Username:     req.Username,
 		Token:        accessToken,
 		RefreshToken: refreshToken,
 	})

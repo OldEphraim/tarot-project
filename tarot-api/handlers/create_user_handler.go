@@ -58,8 +58,6 @@ func CreateUserHandler(w http.ResponseWriter, r *http.Request, dbQueries *databa
 		HashedPassword: string(hashedPassword),
 	}
 
-	log.Printf("Creating account with password: '%s', hashed password: '%s'", input.Password, hashedPassword)
-
 	// Create a new user in the database
 	newUser, err := dbQueries.CreateUser(r.Context(), params)
 	if err != nil {

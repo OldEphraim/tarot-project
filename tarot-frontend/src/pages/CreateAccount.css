@@ -25,8 +25,8 @@
 
 .modal-close {
   position: absolute;
-  top: 5px;
-  right: 5px;
+  top: 20px;
+  right: 20px;
   background: none;
   border: none;
   font-size: 18px;

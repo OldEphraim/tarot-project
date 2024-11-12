@@ -1,8 +1,10 @@
 import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { createAccount } from "../services/authService";
+import { useAuth } from "../context/AuthContext";
 import "./CreateAccount.css";
 
-const CreateAccount = ({ onClose }) => {
+const CreateAccount = () => {
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -11,6 +13,9 @@ const CreateAccount = ({ onClose }) => {
   });
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -35,7 +40,6 @@ const CreateAccount = ({ onClose }) => {
         setIsSubmitting(true);
         const response = await createAccount(formData);
         console.log(response);
-        onClose();
       } catch (error) {
         if (error.message.includes("Username is already taken")) {
           setErrors((prev) => ({ ...prev, username: error.message }));
@@ -46,6 +50,14 @@ const CreateAccount = ({ onClose }) => {
         }
       } finally {
         setIsSubmitting(false);
+        try {
+          await login({ username, password });
+        } catch (error) {
+          // This will eventually require Delete Account functionality to do right
+          setErrors({ form: error.message });
+        } finally {
+          navigate("/profile"); // Go to profile if logged in
+        }
       }
     }
   };
@@ -53,9 +65,9 @@ const CreateAccount = ({ onClose }) => {
   return (
     <div className="modal-overlay">
       <div className="modal-content create-account-modal">
-        <button className="modal-close" onClick={onClose}>
-          X
-        </button>
+        <Link to="/">
+          <div className="modal-close">X</div>
+        </Link>
 
         <h2 className="modal-name">Join Us</h2>
         <p className="explanation">

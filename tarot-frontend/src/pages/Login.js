@@ -1,9 +1,11 @@
 import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import "./Login.css";
 
-const Login = ({ onClose }) => {
+const Login = () => {
   const { login } = useAuth();
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     username: "",
@@ -37,22 +39,21 @@ const Login = ({ onClose }) => {
 
     setIsSubmitting(true);
     try {
-      // Use login from context to handle login logic
       await login({ username, password });
-      onClose(); // Close modal on successful login
     } catch (error) {
       setServerError(error.message);
     } finally {
       setIsSubmitting(false);
+      navigate("/profile"); // Go to profile if logged in
     }
   };
 
   return (
     <div className="modal-overlay">
       <div className="modal-content login-modal">
-        <button className="modal-close" onClick={onClose}>
-          X
-        </button>
+        <Link to="/">
+          <div className="modal-close">X</div>
+        </Link>
 
         <h2 className="modal-name">Welcome Back</h2>
         <p className="explanation">

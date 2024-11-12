@@ -7,15 +7,17 @@ const api = axios.create({
 });
 
 // Store tokens and user info in localStorage
-const setAuthData = ({ token, refresh_token }) => {
+const setAuthData = ({ token, refresh_token, username }) => {
   localStorage.setItem("accessToken", token);
   localStorage.setItem("refreshToken", refresh_token);
+  localStorage.setItem("username", username);
 };
 
 // Clear tokens from localStorage
 export const clearAuthData = () => {
   localStorage.removeItem("accessToken");
   localStorage.removeItem("refreshToken");
+  localStorage.removeItem("username");
 };
 
 export const createAccount = async ({ username, email, password }) => {
@@ -35,10 +37,14 @@ export const createAccount = async ({ username, email, password }) => {
 };
 
 // Login function
-export const login = async ({ email, password, expiresInSeconds = 3600 }) => {
+export const login = async ({
+  username,
+  password,
+  expiresInSeconds = 3600,
+}) => {
   try {
     const response = await api.post("/login", {
-      email,
+      username,
       password,
       expires_in_seconds: expiresInSeconds,
     });
@@ -56,7 +62,8 @@ export const login = async ({ email, password, expiresInSeconds = 3600 }) => {
 export const logout = async () => {
   try {
     const refreshToken = localStorage.getItem("refreshToken");
-    await api.post("/logout", { token: refreshToken });
+    const username = localStorage.getItem("username");
+    await api.post("/logout", { username: username, token: refreshToken });
     clearAuthData();
     return { success: true };
   } catch (error) {
@@ -70,3 +77,4 @@ export const logout = async () => {
 // Helper to retrieve tokens
 export const getAccessToken = () => localStorage.getItem("accessToken");
 export const getRefreshToken = () => localStorage.getItem("refreshToken");
+export const getUsername = () => localStorage.getItem("username");

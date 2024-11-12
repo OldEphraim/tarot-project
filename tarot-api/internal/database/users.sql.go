@@ -92,3 +92,14 @@ func (q *Queries) GetUserByUsername(ctx context.Context, username string) (GetUs
 	)
 	return i, err
 }
+
+const updateUserLogoutTimestamp = `-- name: UpdateUserLogoutTimestamp :exec
+UPDATE users
+SET updated_at = NOW()
+WHERE username = $1
+`
+
+func (q *Queries) UpdateUserLogoutTimestamp(ctx context.Context, username string) error {
+	_, err := q.db.ExecContext(ctx, updateUserLogoutTimestamp, username)
+	return err
+}
