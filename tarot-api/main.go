@@ -38,11 +38,11 @@ func main() {
 	http.HandleFunc("/api/login", utils.WrapWithMiddleware(func(w http.ResponseWriter, r *http.Request) {
 		handlers.LoginHandler(w, r, dbQueries, jwtSecret)
 	}, http.MethodPost))
+	http.HandleFunc("/api/logout", utils.WrapWithMiddleware(func(w http.ResponseWriter, r *http.Request) {
+		handlers.LogoutHandler(w, r, dbQueries)
+	}, http.MethodPost))
 	http.HandleFunc("/api/refresh", utils.WrapWithMiddleware(func(w http.ResponseWriter, r *http.Request) {
 		handlers.RefreshHandler(w, r, dbQueries, jwtSecret)
-	}, http.MethodPost))
-	http.HandleFunc("/api/revoke", utils.WrapWithMiddleware(func(w http.ResponseWriter, r *http.Request) {
-		handlers.RevokeHandler(w, r, dbQueries)
 	}, http.MethodPost))
 	http.HandleFunc("/api/users", utils.WrapWithMiddleware(func(w http.ResponseWriter, r *http.Request) {
 		handlers.CreateUserHandler(w, r, dbQueries)

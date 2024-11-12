@@ -53,7 +53,7 @@ func CreateUserHandler(w http.ResponseWriter, r *http.Request, dbQueries *databa
 
 	// Pass params to the CreateUser function
 	params := database.CreateUserParams{
-		Username: input.Username,
+		Username:       input.Username,
 		Email:          input.Email,
 		HashedPassword: string(hashedPassword),
 	}

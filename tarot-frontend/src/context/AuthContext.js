@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { login as loginService } from "../services/apiService"; // Import loginService from your service
+import * as authService from "../services/authService";
 
 // Create the context
 const AuthContext = createContext();
@@ -11,38 +11,43 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Check local storage for user info on initial load
   useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem("user"));
-    if (storedUser) {
-      setUser(storedUser);
-    }
-    setIsLoading(false);
+    const initializeAuth = () => {
+      const accessToken = authService.getAccessToken();
+      const refreshToken = authService.getRefreshToken();
+      if (accessToken && refreshToken) {
+        // Optionally decode or verify tokens
+        setUser({ accessToken, refreshToken });
+      } else {
+        // Handle missing tokens (optional logout or token refresh)
+        authService.clearAuthData(); // Clear any partial tokens
+        setUser(null);
+      }
+      setIsLoading(false);
+    };
+    initializeAuth();
   }, []);
 
-  // Login function using loginService
-  const login = async ({ email, password }) => {
+  const login = async (credentials) => {
     try {
-      // Call loginService to authenticate
-      const userData = await loginService({ email, password });
+      const userData = await authService.login(credentials);
       console.log(userData);
-
-      // Save user data and tokens in state and localStorage
       setUser(userData);
       localStorage.setItem("user", JSON.stringify(userData));
-      localStorage.setItem("accessToken", userData.token);
-      localStorage.setItem("refreshToken", userData.refresh_token);
     } catch (error) {
       throw new Error(error.message || "Login failed");
     }
   };
 
-  // Logout function
-  const logout = () => {
-    setUser(null);
-    localStorage.removeItem("user");
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");
+  const logout = async () => {
+    try {
+      const logoutData = await authService.logout();
+      console.log(logoutData);
+      setUser(null);
+      localStorage.removeItem("user");
+    } catch (error) {
+      console.error("Logout failed:", error.message);
+    }
   };
 
   return (

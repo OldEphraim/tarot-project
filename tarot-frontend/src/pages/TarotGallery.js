@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { readTarotDeck } from "../services/apiService";
+import { readTarotDeck } from "../services/tarotService";
 import "./TarotGallery.css";
 
 const tarotCategories = [
@@ -55,7 +55,7 @@ const TarotGallery = () => {
           deckData.forEach((card) => {
             if (card.suit === tarotCategories[i].name) {
               const alreadyExists = tarotCategories[i].cards.some(
-                (existingCard) => existingCard.number === card.number,
+                (existingCard) => existingCard.number === card.number
               );
               if (!alreadyExists) {
                 tarotCategories[i].cards.push(card);

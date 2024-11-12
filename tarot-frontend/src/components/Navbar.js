@@ -155,8 +155,13 @@ const Navbar = () => {
               >
                 <Link to="/profile">Profile</Link>
               </li>
-              <li onClick={() => closeDropdowns()}>
-                <Link to="/create-account">Logout</Link>
+              <li
+                onClick={() => {
+                  closeDropdowns();
+                  logout(); // Call logout function from useAuth
+                }}
+              >
+                <Link to="/">Logout</Link>
               </li>
             </ul>
           )}

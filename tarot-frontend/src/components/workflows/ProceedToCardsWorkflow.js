@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import CardDisplay from "../CardDisplay";
 import Typewriter from "../Typewriter";
-import { drawMultipleCards } from "../../services/apiService";
+import { drawMultipleCards } from "../../services/tarotService";
 
 const ProceedToCardsWorkflow = ({ onExit }) => {
   const [artStyle, setArtStyle] = useState("");

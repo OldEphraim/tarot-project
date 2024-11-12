@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { createAccount } from "../services/apiService";
+import { createAccount } from "../services/authService";
 import "./CreateAccount.css";
 
 const CreateAccount = ({ onClose }) => {
