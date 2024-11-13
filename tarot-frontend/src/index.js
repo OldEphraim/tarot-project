@@ -4,15 +4,18 @@ import "./index.css";
 import App from "./App";
 import { AuthProvider } from "./context/AuthContext";
 import { ModalProvider } from "./context/ModalContext";
+import { TarotProvider } from "./context/TarotContext";
 import reportWebVitals from "./reportWebVitals";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <AuthProvider>
-      <ModalProvider>
-        <App />
-      </ModalProvider>
+      <TarotProvider>
+        <ModalProvider>
+          <App />
+        </ModalProvider>
+      </TarotProvider>
     </AuthProvider>
   </React.StrictMode>
 );

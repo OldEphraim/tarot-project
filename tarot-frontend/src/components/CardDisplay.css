@@ -96,6 +96,15 @@
   max-height: 100%;
 }
 
+.position-meaning {
+  font-size: 0.6em; /* Small text */
+  color: red; /* Subtle color */
+  margin-top: 5px; /* Space between card and label */
+  text-align: center;
+  max-width: 100%; /* Never wider than the card */
+  overflow-wrap: normal;
+}
+
 /* Responsive design */
 @media (max-width: 1024px) {
   .card {

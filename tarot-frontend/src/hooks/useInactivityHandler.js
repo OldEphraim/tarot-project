@@ -3,7 +3,7 @@ import { useEffect } from "react";
 export const useInactivityHandler = (
   cardsLength,
   setSkipAnimation,
-  setCurrentCardIndex,
+  setCurrentCardIndex
 ) => {
   useEffect(() => {
     let inactivityTimeout;

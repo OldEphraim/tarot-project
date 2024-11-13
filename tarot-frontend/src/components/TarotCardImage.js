@@ -13,6 +13,20 @@ const TarotCardImage = ({
   const spinnerRef = useRef(null);
   const { openModal } = useModal();
 
+  const handleScrollToExplanation = () => {
+    const targetElement = document.getElementById(
+      `explanation-text-${position}`
+    );
+    if (targetElement) {
+      const yOffset = -70;
+      const yPosition =
+        targetElement.getBoundingClientRect().top +
+        window.pageYOffset +
+        yOffset;
+      window.scrollTo({ top: yPosition, behavior: "smooth" });
+    }
+  };
+
   useEffect(() => {
     setImgSrc(imageUrl);
     let loadTimeout;
@@ -28,18 +42,24 @@ const TarotCardImage = ({
     }
   }, [imageUrl]);
 
-  const handleClick = () => {
+  const handleImageClick = () => {
     openModal({ card, imageUrl, position, positionMeaning, theme });
   };
 
   return (
-    <div>
+    <div className="card-container">
       {imgSrc ? (
-        <img src={imgSrc} alt={card.name} onClick={handleClick} />
+        <img src={imgSrc} alt={card.name} onClick={handleImageClick} />
       ) : (
         <Box ref={spinnerRef} sx={{ display: "flex", pointerEvents: "none" }}>
           <CircularProgress color="inherit" />
         </Box>
+      )}
+      {positionMeaning && (
+        <div onClick={handleScrollToExplanation}>
+          <div className="position-meaning">{positionMeaning.text}</div>
+          <div className="position-meaning">{positionMeaning.emoji}</div>
+        </div>
       )}
     </div>
   );

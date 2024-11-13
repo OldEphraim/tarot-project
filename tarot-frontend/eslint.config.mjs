@@ -4,23 +4,24 @@ import pluginReact from "eslint-plugin-react";
 import pluginPrettier from "eslint-plugin-prettier";
 import prettierConfig from "eslint-config-prettier";
 
-/** @type {import('eslint').Linter.Config[]} */
 export default [
-  { files: ["**/*.{js,jsx}"] },
-  { languageOptions: { globals: globals.browser } },
-
-  // ESLint Recommended Configs
-  pluginJs.configs.recommended,
-  pluginReact.configs.flat.recommended,
-
-  // Add Prettier Plugin and Configurations
   {
+    files: ["**/*.js", "**/*.jsx"],
+    languageOptions: { globals: globals.browser },
+    ...pluginJs.configs.recommended,
+    ...pluginReact.configs.flat.recommended,
     plugins: {
       prettier: pluginPrettier,
     },
     rules: {
-      ...prettierConfig.rules, // Disable ESLint rules that conflict with Prettier
-      "prettier/prettier": "error", // Treat Prettier issues as ESLint errors
+      ...prettierConfig.rules,
+      "prettier/prettier": [
+        "error",
+        {
+          singleQuote: false, // Match .prettierrc setting
+          trailingComma: "es5", // Match .prettierrc setting
+        },
+      ],
     },
   },
 ];

@@ -10,7 +10,8 @@
   background-color: #636363;
 }
 
-.spread-info, .spread-selector {
+.spread-info,
+.spread-selector {
   margin: 20px;
   padding: 20px;
   border-radius: 10px;

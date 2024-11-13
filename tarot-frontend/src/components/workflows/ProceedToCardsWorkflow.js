@@ -1,13 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import CardDisplay from "../CardDisplay";
 import Typewriter from "../Typewriter";
 import { useAuth } from "../../context/AuthContext";
+import { useTarot } from "../../context/TarotContext";
 import { drawMultipleCards } from "../../services/tarotService";
 
 const ProceedToCardsWorkflow = ({ onExit }) => {
   const [artStyle, setArtStyle] = useState("");
-  const [selectedSpread, setSelectedSpread] = useState(null);
   const [cards, setCards] = useState([]);
   const [isCardDisplayVisible, setIsCardDisplayVisible] = useState(false);
   const [isArtStyleSelectionTextVisible, setIsArtStyleSelectionTextVisible] =
@@ -20,10 +20,16 @@ const ProceedToCardsWorkflow = ({ onExit }) => {
     useState(false);
   const [areCardSelectionButtonsVisible, setAreCardSelectionButtonsVisible] =
     useState(false);
+  const [isReasonTextVisible, setIsReasonTextVisible] = useState(false);
+  const [isReasonMessageBoxVisible, setIsReasonMessageBoxVisible] =
+    useState(false);
   const [isFortunetellerTextVisible, setIsFortunetellerTextVisible] =
     useState(false);
+  const [userReasonEntry, setUserReasonEntry] = useState("");
 
   const { username } = useAuth();
+  const { selectedSpread, chooseSpread, userReason, submitReason } = useTarot();
+  const textareaRef = useRef(null);
 
   const handleArtStyleSelection = (style) => {
     setAreArtStyleSelectionButtonsVisible(false);
@@ -33,8 +39,8 @@ const ProceedToCardsWorkflow = ({ onExit }) => {
 
   const handleSpreadSelect = async (spread) => {
     setAreCardSelectionButtonsVisible(false);
-    setIsFortunetellerTextVisible(true);
-    setSelectedSpread(spread);
+    setIsReasonTextVisible(true);
+    chooseSpread(spread);
     let numCards;
 
     switch (spread) {
@@ -61,6 +67,54 @@ const ProceedToCardsWorkflow = ({ onExit }) => {
       console.error("Error fetching cards:", error);
     }
   };
+
+  const handleReasonSubmit = () => {
+    if (userReasonEntry.trim() && userReasonEntry.trim() !== "") {
+      submitReason(userReasonEntry);
+    }
+    setIsReasonMessageBoxVisible(false);
+    setIsFortunetellerTextVisible(true);
+  };
+
+  const getFortunetellerNowDrawingText = (spread) => {
+    switch (spread) {
+      case "One":
+        return "THE FORTUNETELLER will now draw a single tarot card for you.";
+      case "Three":
+        return "THE FORTUNETELLER will now draw a Three-Card Spread for you.";
+      case "Five":
+        return "THE FORTUNETELLER will now draw an Elemental Spread for you.";
+      case "Celtic Cross":
+        return "THE FORTUNETELLER will now draw a Celtic Cross for you.";
+      default:
+        return "You have not chosen a spread successfully for THE FORTUNETELLER.";
+    }
+  };
+
+  const handleInputChange = (e) => {
+    setUserReasonEntry(e.target.value);
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleReasonSubmit();
+    }
+  };
+
+  const adjustTextareaHeight = (reset = false) => {
+    if (textareaRef.current) {
+      if (reset) {
+        textareaRef.current.style.height = "auto";
+      }
+      textareaRef.current.style.height = "auto";
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+    }
+  };
+
+  useEffect(() => {
+    adjustTextareaHeight();
+  }, [userReasonEntry]);
 
   return (
     <div className="proceed-to-cards-workflow">
@@ -139,20 +193,56 @@ const ProceedToCardsWorkflow = ({ onExit }) => {
         </div>
       )}
 
+      {isReasonTextVisible && (
+        <Typewriter
+          text="WOULD you like to tell the fortuneteller about the reason you have chosen to consult the cards today?"
+          startAnimation
+          onEnd={() => setIsReasonMessageBoxVisible(true)}
+        />
+      )}
+
+      {isReasonMessageBoxVisible && (
+        <div className="message-input-box">
+          <textarea
+            ref={textareaRef}
+            value={userReasonEntry}
+            onChange={handleInputChange}
+            onKeyDown={handleKeyDown}
+            placeholder="Type your message..."
+            className="message-input"
+            style={{ resize: "none", overflow: "hidden" }}
+          />
+          <div className="below-text">
+            Type your message and press Enter to tell the Fortuneteller about
+            the reason for this drawing.
+          </div>
+          <div className="button-container">
+            <button className="spooky-button" onClick={handleReasonSubmit}>
+              SUBMIT
+            </button>
+            <button className="spooky-button" onClick={handleReasonSubmit}>
+              NO REASON
+            </button>
+          </div>
+        </div>
+      )}
+
+      {isFortunetellerTextVisible && (
+        <div className="user-message">
+          <p>{userReason}</p>
+        </div>
+      )}
+
       {isFortunetellerTextVisible && (
         <Typewriter
-          text={`THE FORTUNETELLER will now draw ${selectedSpread !== "One" ? "a" : ""}${selectedSpread === "Five" ? "n" : ""} ${selectedSpread !== "Five" ? `${selectedSpread}` : "Elemental"}${selectedSpread === "Three" ? "-Card" : ""}${selectedSpread === "Three" || selectedSpread === "Five" ? " Spread" : ""}${selectedSpread === "One" ? " tarot card" : ""} for you.`}
+          text={getFortunetellerNowDrawingText(selectedSpread)}
           startAnimation
           onEnd={() => setIsCardDisplayVisible(true)}
         />
       )}
 
       {isCardDisplayVisible && cards.length > 0 && (
-        <CardDisplay
-          cards={cards}
-          selectedSpread={selectedSpread}
-          artStyle={artStyle}
-        />
+        <CardDisplay cards={cards} artStyle={artStyle} />
       )}
     </div>
   );

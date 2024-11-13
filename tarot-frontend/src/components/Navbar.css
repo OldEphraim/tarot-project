@@ -2,7 +2,7 @@
 .navbar {
   background-color: black;
   color: white;
-  font-family: 'Fanwood Text', serif; 
+  font-family: "Fanwood Text", serif;
   text-transform: uppercase;
   justify-content: space-between;
   align-items: center;
@@ -91,21 +91,21 @@
 
 /* Responsive styles */
 @media (max-width: 600px) {
-.nav-links a {
-  font-size: 0.8rem;
-}
+  .nav-links a {
+    font-size: 0.8rem;
+  }
 
-.nav-links li div {
-  font-size: 0.8rem;
-}
+  .nav-links li div {
+    font-size: 0.8rem;
+  }
 }
 
 @media (max-width: 530px) {
-.nav-links a {
-  font-size: 0.7rem;
-}
+  .nav-links a {
+    font-size: 0.7rem;
+  }
 
-.nav-links li div {
-  font-size: 0.7rem;
-}
+  .nav-links li div {
+    font-size: 0.7rem;
+  }
 }

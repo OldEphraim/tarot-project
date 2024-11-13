@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useTarot } from "../context/TarotContext";
 import { useCardExplanations } from "../hooks/useCardExplanations";
 import { useCardImages } from "../hooks/useCardImages";
 import { useInactivityHandler } from "../hooks/useInactivityHandler";
@@ -7,9 +8,11 @@ import RowLayout from "./spreadLayouts/RowLayout";
 import Typewriter from "./Typewriter";
 import "./CardDisplay.css";
 
-const CardDisplay = ({ cards, selectedSpread, artStyle }) => {
+const CardDisplay = ({ cards, artStyle, userReason }) => {
   const [currentCardIndex, setCurrentCardIndex] = useState(1);
   const [skipAnimation, setSkipAnimation] = useState(false);
+
+  const { selectedSpread } = useTarot();
 
   useInactivityHandler(cards.length, setSkipAnimation, setCurrentCardIndex);
 

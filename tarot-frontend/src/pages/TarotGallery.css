@@ -1,46 +1,46 @@
 .tarot-gallery {
-    padding: 20px;
+  padding: 20px;
 }
 
 section {
-    margin-bottom: 40px;
+  margin-bottom: 40px;
 }
 
 .tarot-card-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 15px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 15px;
 }
 
 .tarot-card {
-    text-align: center;
+  text-align: center;
 }
 
 .tarot-card img {
-    width: 100%; 
-    height: auto; 
-    border-radius: 8px; 
-    object-fit: contain;
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  object-fit: contain;
 }
 
 .label {
-    color: black;
-    font-weight: bold;
-    font-family: 'Fanwood Text', serif; 
-    margin-top: -20px;
+  color: black;
+  font-weight: bold;
+  font-family: "Fanwood Text", serif;
+  margin-top: -20px;
 }
 
 .category-name {
-    font-family: 'Fanwood Text', serif; 
-    text-transform: uppercase;
+  font-family: "Fanwood Text", serif;
+  text-transform: uppercase;
 }
 
 .category-description {
-    font-family: 'Fanwood Text', serif; 
-    font-weight: normal;
+  font-family: "Fanwood Text", serif;
+  font-weight: normal;
 }
 
 .card-description {
-    font-style: italic;
-    font-family: 'Fanwood Text', serif;
+  font-style: italic;
+  font-family: "Fanwood Text", serif;
 }

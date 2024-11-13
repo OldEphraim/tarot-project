@@ -1,6 +1,6 @@
 import React from "react";
 import TarotCardImage from "../TarotCardImage";
-import celticCrossPositionMeanings from "../../constants/CelticCrossPositionMeanings";
+import elementalSpreadPositionMeanings from "../../constants/ElementalSpreadPositionMeanings";
 
 const RowLayout = ({ cards, imageRequests, currentCardIndex }) => {
   console.log(cards);
@@ -18,7 +18,7 @@ const RowLayout = ({ cards, imageRequests, currentCardIndex }) => {
             card={card}
             imageUrl={imageRequests[card.name]?.url}
             position={index}
-            positionMeaning={celticCrossPositionMeanings[index + 1]}
+            positionMeaning={elementalSpreadPositionMeanings[index + 1]}
             theme="Rider-Waite"
           />
         </div>

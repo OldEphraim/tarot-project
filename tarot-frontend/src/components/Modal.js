@@ -6,7 +6,7 @@ const Modal = ({ onClose, selectedCardData }) => {
 
   const handleScrollToExplanation = () => {
     const targetElement = document.getElementById(
-      `explanation-text-${selectedCardData.position}`,
+      `explanation-text-${selectedCardData.position}`
     );
     if (targetElement) {
       const yOffset = -70;
@@ -65,8 +65,8 @@ const Modal = ({ onClose, selectedCardData }) => {
           selectedCardData.card.name === "Wheel of Fortune"
             ? "the"
             : ""}{" "}
-          {selectedCardData.card.name} in the {selectedCardData.positionMeaning}{" "}
-          position.
+          {selectedCardData.card.name} in the{" "}
+          {selectedCardData.positionMeaning.text} position.
         </p>
         <div>
           <button
