@@ -4,7 +4,7 @@ import { useAuth } from "../context/AuthContext";
 import "./Login.css";
 
 const Login = () => {
-  const { login } = useAuth();
+  const { login, user } = useAuth();
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -44,7 +44,7 @@ const Login = () => {
       setServerError(error.message);
     } finally {
       setIsSubmitting(false);
-      navigate("/profile"); // Go to profile if logged in
+      navigate(`/${user.username}`);
     }
   };
 

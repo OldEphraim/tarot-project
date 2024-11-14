@@ -1,60 +1,57 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import * as authService from "../services/authService";
+import {
+  login as loginService,
+  logout as logoutService,
+  getUser as getUserService,
+  clearAuthData,
+} from "../services/authService";
 
-// Create the context
 const AuthContext = createContext();
 
-// Custom hook for accessing AuthContext
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [user, setUser] = useState(getUserService()); // Initialize user from localStorage
 
-  useEffect(() => {
-    const initializeAuth = () => {
-      const accessToken = authService.getAccessToken();
-      const refreshToken = authService.getRefreshToken();
-      const username = authService.getUsername();
-      if (accessToken && refreshToken && username) {
-        setUser({ accessToken, refreshToken, username });
-      } else {
-        authService.clearAuthData(); // Clear any partial information
-        setUser(null);
-      }
-      setIsLoading(false);
-    };
-    initializeAuth();
-  }, []);
-
-  const login = async (credentials) => {
+  // Login function
+  const login = async ({ username, password, expiresInSeconds = 3600 }) => {
     try {
-      console.log("credentials:", credentials);
-      const userData = await authService.login(credentials);
-      console.log(userData);
-      setUser(userData);
-      localStorage.setItem("user", JSON.stringify(userData));
+      const response = await loginService({
+        username,
+        password,
+        expiresInSeconds,
+      });
+      setUser(response); // Set user in context
     } catch (error) {
-      throw new Error(error.message || "Login failed");
+      throw error; // Handle errors outside of AuthContext
     }
   };
 
+  // Logout function
   const logout = async () => {
     try {
-      const logoutData = await authService.logout();
-      console.log(logoutData);
-      setUser(null);
-      localStorage.removeItem("user");
+      await logoutService();
+      setUser(null); // Clear user in context
+      clearAuthData(); // Clear localStorage
     } catch (error) {
-      console.error("Logout failed:", error.message);
+      throw error; // Handle errors outside of AuthContext
     }
   };
 
-  return (
-    <AuthContext.Provider
-      value={{ username: user?.username, login, logout, isLoading }}
-    >
-      {children}
-    </AuthContext.Provider>
-  );
+  // useEffect to initialize user from localStorage on first load
+  useEffect(() => {
+    const storedUser = getUserService();
+    if (storedUser) {
+      setUser(storedUser);
+    }
+  }, []);
+
+  const value = {
+    user,
+    login,
+    logout,
+    isAuthenticated: !!user?.token, // Boolean indicating if the user is logged in
+  };
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

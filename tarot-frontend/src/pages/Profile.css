@@ -1,0 +1,91 @@
+.profile-page {
+  display: flex;
+  padding: 20px;
+  gap: 20px;
+}
+
+.profile-left,
+.profile-right {
+  flex: 1;
+}
+
+.profile-image-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.profile-image {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  border: 3px solid #333;
+}
+
+.profile-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.spooky-button {
+  background-color: #222;
+  color: #fff;
+  padding: 8px 16px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.spooky-button:hover {
+  background-color: #444;
+}
+
+.saved-logs {
+  margin-top: 20px;
+}
+
+.saved-logs h2 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.saved-logs ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.saved-logs li {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+.profile-right h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.settings-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 15px;
+}
+
+.settings-section label {
+  display: block;
+  margin-bottom: 5px;
+  text-align: left;
+}
+
+.settings-section input[type="email"],
+.settings-section input[type="text"],
+.settings-section input[type="password"],
+.settings-section select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}

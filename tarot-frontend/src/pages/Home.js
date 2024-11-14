@@ -14,7 +14,7 @@ const Home = () => {
     useState(false);
   const [areTopButtonsVisible, setAreTopButtonsVisible] = useState(false);
 
-  const { username } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const { isModalOpen, selectedCardData, closeModal } = useModal();
   const { workflow, setWorkflowToCards, setWorkflowToFortuneteller } =
     useTarot();
@@ -26,13 +26,13 @@ const Home = () => {
       )}
       <h1 className="home-header">Tarot Card Reader</h1>
       <Typewriter
-        text={`WELCOME, ${username ? username : "dear visitor"}, to my tarot card reader. For more information regarding the meanings of specific tarot cards, or the spreads which can be used, please visit the resources which have been made available under ‘About Tarot’.`}
+        text={`WELCOME, ${user.username ? user.username : "dear visitor"}, to my tarot card reader. For more information regarding the meanings of specific tarot cards, or the spreads which can be used, please visit the resources which have been made available under ‘About Tarot’.`}
         startAnimation
         onEnd={() => setIsSecondParagraphVisible(true)}
       />
 
       <Typewriter
-        text={`WOULD you like to speak to the AI fortuneteller, Esmeralda, about the challenges you are facing, or would you like to proceed directly to a card drawing? ${username ? "You will be able to save your results and refer to them later." : "If you would like your results saved, so that you can use them for later and learn what the cards have meant for you, please log in."}`}
+        text={`WOULD you like to speak to the AI fortuneteller, Esmeralda, about the challenges you are facing, or would you like to proceed directly to a card drawing? ${isAuthenticated ? "You will be able to save your results and refer to them later." : "If you would like your results saved, so that you can use them for later and learn what the cards have meant for you, please log in."}`}
         startAnimation={isSecondParagraphVisible}
         onEnd={() => setAreTopButtonsVisible(true)}
       />
@@ -48,7 +48,7 @@ const Home = () => {
           <button className="spooky-button" onClick={setWorkflowToCards}>
             PROCEED TO CARDS
           </button>
-          {!username && (
+          {!isAuthenticated && (
             <button className="spooky-button">
               <Link to="/login" className="no-style-link">
                 LOGIN

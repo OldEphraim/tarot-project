@@ -9,7 +9,7 @@ export const useCardExplanations = (cards, currentCardIndex, skipAnimation) => {
   const [explanationTexts, setExplanationTexts] = useState([]);
   const explanationsFetched = useRef(new Set());
 
-  const { username } = useAuth();
+  const { user } = useAuth();
   const { selectedSpread, userReason } = useTarot();
 
   useEffect(() => {
@@ -48,7 +48,7 @@ export const useCardExplanations = (cards, currentCardIndex, skipAnimation) => {
             const explanation = await getCardAtPositionExplanation(
               card.name,
               esmeraldaFormattedMeaning,
-              username,
+              user.username,
               userReason
             );
             if (selectedSpread !== "One") {
@@ -74,7 +74,7 @@ export const useCardExplanations = (cards, currentCardIndex, skipAnimation) => {
     skipAnimation,
     selectedSpread,
     userReason,
-    username,
+    user.username,
   ]);
 
   return { explanationTexts };

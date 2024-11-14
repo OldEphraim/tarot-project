@@ -29,9 +29,11 @@ const ProceedToCardsWorkflow = ({ onExit }) => {
     useState(false);
   const [userReasonEntry, setUserReasonEntry] = useState("");
 
-  const { username } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const { selectedSpread, chooseSpread, userReason, submitReason } = useTarot();
   const textareaRef = useRef(null);
+
+  console.log("user:", user);
 
   const handleArtStyleSelection = (style) => {
     setAreArtStyleSelectionButtonsVisible(false);
@@ -128,7 +130,7 @@ const ProceedToCardsWorkflow = ({ onExit }) => {
 
       {isArtStyleSelectionTextVisible && !isArtStyleSelectionChoiceKnown && (
         <Typewriter
-          text={`WOULD you prefer the classic Rider-Waite designs, or AI-generated artwork for your cards in a randomly-chosen style? If you would like to customize the style of your AI-generated cards, ${username ? "you can do so in your Profile page." : "please log in."}`}
+          text={`WOULD you prefer the classic Rider-Waite designs, or AI-generated artwork for your cards in a randomly-chosen style? If you would like to customize the style of your AI-generated cards, ${user.username ? "you can do so in your Profile page." : "please log in."}`}
           startAnimation
           onEnd={() => setAreArtStyleSelectionButtonsVisible(true)}
         />
@@ -149,7 +151,7 @@ const ProceedToCardsWorkflow = ({ onExit }) => {
             >
               AI SURPRISE
             </button>
-            {!username && (
+            {!isAuthenticated && (
               <button className="spooky-button">
                 <Link to="/login" className="no-style-link">
                   LOGIN

@@ -16,7 +16,7 @@ FROM users
 WHERE email = $1;
 
 -- name: GetUserByUsername :one
-SELECT id, username, created_at, updated_at, hashed_password
+SELECT id, email, username, created_at, updated_at, hashed_password, art_style, profile_picture
 FROM users
 WHERE username = $1;
 

@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Navbar from "./components/Navbar";
+import ProtectedRoute from "./components/ProtectedRoute";
 import AboutTarot from "./pages/AboutTarot";
 import CreateAccount from "./pages/CreateAccount";
 import Home from "./pages/Home";
@@ -20,7 +21,9 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/create-account" element={<CreateAccount />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route path="/:username" element={<ProtectedRoute />}>
+            <Route index element={<Profile />} />
+          </Route>
           <Route path="/tarot" element={<AboutTarot />} />
           <Route path="/tarot/cards" element={<TarotGallery />} />
           <Route path="/tarot/cards/:cardName" element={<TarotCard />} />

@@ -14,7 +14,7 @@ const CreateAccount = () => {
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { login } = useAuth();
+  const { login, user } = useAuth();
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -56,7 +56,7 @@ const CreateAccount = () => {
           // This will eventually require Delete Account functionality to do right
           setErrors({ form: error.message });
         } finally {
-          navigate("/profile"); // Go to profile if logged in
+          navigate(`/${user.username}`); // Go to profile if logged in
         }
       }
     }

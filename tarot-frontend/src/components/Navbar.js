@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import "./Navbar.css";
 
 const Navbar = () => {
-  const { username, logout } = useAuth();
+  const { user, isAuthenticated, logout } = useAuth();
 
   const [showDropdown, setShowDropdown] = useState({
     tarot: false,
@@ -121,7 +121,7 @@ const Navbar = () => {
           >
             My Account
           </div>
-          {showDropdown.account && !username && (
+          {showDropdown.account && !isAuthenticated && (
             <ul
               className="dropdown-menu"
               style={{
@@ -140,7 +140,7 @@ const Navbar = () => {
               </li>
             </ul>
           )}
-          {showDropdown.account && username && (
+          {showDropdown.account && isAuthenticated && (
             <ul
               className="dropdown-menu"
               style={{
@@ -152,7 +152,7 @@ const Navbar = () => {
                 ref={(el) => (dropdownRefs.current.account.menuItem = el)}
                 onClick={() => closeDropdowns()}
               >
-                <Link to="/profile">Profile</Link>
+                <Link to={`/${user.username}`}>Profile</Link>
               </li>
               <li
                 onClick={() => {

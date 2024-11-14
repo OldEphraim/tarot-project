@@ -7,6 +7,7 @@ package database
 
 import (
 	"context"
+	"database/sql"
 	"time"
 
 	"github.com/google/uuid"
@@ -43,7 +44,7 @@ INSERT INTO users (id, username, created_at, updated_at, email, hashed_password)
 VALUES (
     gen_random_uuid(), $1, NOW(), NOW(), $2, $3
 )
-RETURNING id, username, created_at, updated_at, email, hashed_password
+RETURNING id, username, created_at, updated_at, email, hashed_password, art_style, profile_picture
 `
 
 type CreateUserParams struct {
@@ -62,22 +63,27 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 		&i.UpdatedAt,
 		&i.Email,
 		&i.HashedPassword,
+		&i.ArtStyle,
+		&i.ProfilePicture,
 	)
 	return i, err
 }
 
 const getUserByUsername = `-- name: GetUserByUsername :one
-SELECT id, username, created_at, updated_at, hashed_password
+SELECT id, email, username, created_at, updated_at, hashed_password, art_style, profile_picture
 FROM users
 WHERE username = $1
 `
 
 type GetUserByUsernameRow struct {
 	ID             uuid.UUID
+	Email          string
 	Username       string
 	CreatedAt      time.Time
 	UpdatedAt      time.Time
 	HashedPassword string
+	ArtStyle       sql.NullString
+	ProfilePicture sql.NullString
 }
 
 func (q *Queries) GetUserByUsername(ctx context.Context, username string) (GetUserByUsernameRow, error) {
@@ -85,10 +91,13 @@ func (q *Queries) GetUserByUsername(ctx context.Context, username string) (GetUs
 	var i GetUserByUsernameRow
 	err := row.Scan(
 		&i.ID,
+		&i.Email,
 		&i.Username,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 		&i.HashedPassword,
+		&i.ArtStyle,
+		&i.ProfilePicture,
 	)
 	return i, err
 }

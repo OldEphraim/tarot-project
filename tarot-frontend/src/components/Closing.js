@@ -5,16 +5,16 @@ import { useAuth } from "../context/AuthContext";
 import { useTarot } from "../context/TarotContext";
 
 const Closing = () => {
-  const { username } = useAuth();
+  const { isAuthenticated } = useAuth();
   const { workflow } = useTarot();
 
   const getMessage = () => {
     if (workflow === "cards") {
-      return username
+      return isAuthenticated
         ? "I hope you have found meaning in the cards today. You may save your results."
         : "I hope you have found meaning in the cards today. To save your results, please log in.";
     } else if (workflow === "fortuneteller") {
-      return username
+      return isAuthenticated
         ? "The fortuneteller has drawn your cards. While you may continue speaking to the fortuneteller, you may save your results."
         : "The fortuneteller has drawn your cards. While you may continue speaking to the fortuneteller, you can also log in to save your results.";
     }
@@ -26,7 +26,7 @@ const Closing = () => {
       <Typewriter text={getMessage()} startAnimation />
 
       <div className="button-container">
-        {username ? (
+        {isAuthenticated ? (
           <button className="spooky-button">SAVE READING</button>
         ) : (
           <button className="spooky-button">

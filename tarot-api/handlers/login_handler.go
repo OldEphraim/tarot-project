@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"database/sql"
 	"encoding/json"
 	"log"
 	"net/http"
@@ -8,8 +9,6 @@ import (
 
 	"tarot-api/internal/auth"
 	"tarot-api/internal/database"
-
-	"github.com/google/uuid"
 )
 
 func LoginHandler(w http.ResponseWriter, r *http.Request, dbQueries *database.Queries, jwtSecret []byte) {
@@ -73,21 +72,29 @@ func LoginHandler(w http.ResponseWriter, r *http.Request, dbQueries *database.Qu
 		return
 	}
 
+	// Helper function to handle sql.NullString conversion
+	toPointer := func(ns sql.NullString) *string {
+		if ns.Valid {
+			return &ns.String
+		}
+		return nil
+	}
+
 	type loginResponse struct {
-		ID           uuid.UUID `json:"id"`
-		CreatedAt    time.Time `json:"created_at"`
-		UpdatedAt    time.Time `json:"updated_at"`
-		Username     string    `json:"username"`
-		Token        string    `json:"token"`
-		RefreshToken string    `json:"refresh_token"`
+		Email          string     `json:"email"`
+		ArtStyle       *string    `json:"art_style"`
+		ProfilePicture *string    `json:"profile_picture"`
+		Username       string     `json:"username"`
+		Token          string     `json:"token"`
+		RefreshToken   string     `json:"refresh_token"`
 	}
 
 	respondWithJSON(w, http.StatusOK, loginResponse{
-		ID:           user.ID,
-		CreatedAt:    user.CreatedAt,
-		UpdatedAt:    user.UpdatedAt,
-		Username:     req.Username,
-		Token:        accessToken,
-		RefreshToken: refreshToken,
+		Email: 		    user.Email,
+		ArtStyle:       toPointer(user.ArtStyle),
+		ProfilePicture: toPointer(user.ProfilePicture),
+		Username:       user.Username,
+		Token:          accessToken,
+		RefreshToken:   refreshToken,
 	})
 }
