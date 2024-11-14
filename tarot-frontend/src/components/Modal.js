@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
+import { useTarot } from "../context/TarotContext";
 import "./Modal.css";
 
 const Modal = ({ onClose, selectedCardData }) => {
   const [fadeOut, setFadeOut] = useState(false);
+
+  const { selectedSpread, workflow } = useTarot();
 
   const handleScrollToExplanation = () => {
     const targetElement = document.getElementById(
@@ -65,8 +68,10 @@ const Modal = ({ onClose, selectedCardData }) => {
           selectedCardData.card.name === "Wheel of Fortune"
             ? "the"
             : ""}{" "}
-          {selectedCardData.card.name} in the{" "}
-          {selectedCardData.positionMeaning.text} position.
+          {selectedCardData.card.name}
+          {selectedSpread !== "One" && workflow !== "fortuneteller"
+            ? ` in the ${selectedCardData.positionMeaning.text} position.`
+            : "."}
         </p>
         <div>
           <button

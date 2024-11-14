@@ -1,0 +1,28 @@
+.closing {
+  text-align: center;
+  margin-top: 1em;
+  font-family: "EB Garamond", serif;
+  font-size: 1.2em;
+  color: #ffffff;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  gap: 1em;
+}
+
+.spooky-button {
+  background-color: #333;
+  color: #fff;
+  border: 1px solid #555;
+  padding: 0.5em 1em;
+  font-size: 1em;
+  font-family: "EB Garamond", serif;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.spooky-button:hover {
+  background-color: #444;
+}

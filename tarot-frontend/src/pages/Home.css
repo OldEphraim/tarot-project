@@ -81,7 +81,7 @@ p {
   align-items: center;
   justify-content: center;
   width: 60%;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   opacity: 0; /* Start with image hidden */
   transition: opacity 1.5s ease-in-out; /* Fade-in transition */
 }

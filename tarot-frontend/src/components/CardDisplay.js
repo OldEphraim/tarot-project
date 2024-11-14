@@ -5,10 +5,11 @@ import { useCardImages } from "../hooks/useCardImages";
 import { useInactivityHandler } from "../hooks/useInactivityHandler";
 import CelticCrossLayout from "./spreadLayouts/CelticCrossLayout";
 import RowLayout from "./spreadLayouts/RowLayout";
+import Closing from "./Closing";
 import Typewriter from "./Typewriter";
 import "./CardDisplay.css";
 
-const CardDisplay = ({ cards, artStyle, userReason }) => {
+const CardDisplay = ({ cards, artStyle }) => {
   const [currentCardIndex, setCurrentCardIndex] = useState(1);
   const [skipAnimation, setSkipAnimation] = useState(false);
 
@@ -24,13 +25,13 @@ const CardDisplay = ({ cards, artStyle, userReason }) => {
   const { imageRequests } = useCardImages(cards, artStyle);
 
   const handleTypewriterEnd = () => {
-    if (!skipAnimation && currentCardIndex < cards.length) {
+    if (!skipAnimation) {
       setCurrentCardIndex(currentCardIndex + 1);
     }
   };
 
   return (
-    <div>
+    <div className="card-display-wrapper">
       {selectedSpread === "Celtic Cross" ? (
         <CelticCrossLayout
           cards={cards}
@@ -62,6 +63,7 @@ const CardDisplay = ({ cards, artStyle, userReason }) => {
           ) : null}
         </div>
       ))}
+      {(currentCardIndex > cards.length || skipAnimation) && <Closing />}
     </div>
   );
 };

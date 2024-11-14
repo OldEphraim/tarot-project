@@ -16,6 +16,8 @@ const ProceedToCardsWorkflow = ({ onExit }) => {
     areArtStyleSelectionButtonsVisible,
     setAreArtStyleSelectionButtonsVisible,
   ] = useState(false);
+  const [isArtStyleSelectionChoiceKnown, setIsArtStyleSelectionChoiceKnown] =
+    useState(false);
   const [isCardSelectionTextVisible, setIsCardSelectionTextVisible] =
     useState(false);
   const [areCardSelectionButtonsVisible, setAreCardSelectionButtonsVisible] =
@@ -34,12 +36,12 @@ const ProceedToCardsWorkflow = ({ onExit }) => {
   const handleArtStyleSelection = (style) => {
     setAreArtStyleSelectionButtonsVisible(false);
     setArtStyle(style);
-    setIsCardSelectionTextVisible(true);
+    setIsArtStyleSelectionChoiceKnown(true);
   };
 
   const handleSpreadSelect = async (spread) => {
     setAreCardSelectionButtonsVisible(false);
-    setIsReasonTextVisible(true);
+    setIsFortunetellerTextVisible(true);
     chooseSpread(spread);
     let numCards;
 
@@ -73,7 +75,7 @@ const ProceedToCardsWorkflow = ({ onExit }) => {
       submitReason(userReasonEntry);
     }
     setIsReasonMessageBoxVisible(false);
-    setIsFortunetellerTextVisible(true);
+    setIsCardSelectionTextVisible(true);
   };
 
   const getFortunetellerNowDrawingText = (spread) => {
@@ -119,12 +121,12 @@ const ProceedToCardsWorkflow = ({ onExit }) => {
   return (
     <div className="proceed-to-cards-workflow">
       <Typewriter
-        text="SO YOU have chosen to proceed directly to the cards."
+        text="YOUR CARDS will be drawn, but only after you answer three questions."
         startAnimation
         onEnd={() => setIsArtStyleSelectionTextVisible(true)}
       />
 
-      {isArtStyleSelectionTextVisible && (
+      {isArtStyleSelectionTextVisible && !isArtStyleSelectionChoiceKnown && (
         <Typewriter
           text={`WOULD you prefer the classic Rider-Waite designs, or AI-generated artwork for your cards in a randomly-chosen style? If you would like to customize the style of your AI-generated cards, ${username ? "you can do so in your Profile page." : "please log in."}`}
           startAnimation
@@ -132,68 +134,40 @@ const ProceedToCardsWorkflow = ({ onExit }) => {
         />
       )}
 
-      {areArtStyleSelectionButtonsVisible && !isCardSelectionTextVisible && (
-        <div className="button-container">
-          <button
-            className="spooky-button"
-            onClick={() => handleArtStyleSelection("Rider-Waite")}
-          >
-            RIDER-WAITE CLASSIC
-          </button>
-          <button
-            className="spooky-button"
-            onClick={() => handleArtStyleSelection("Random")}
-          >
-            AI SURPRISE
-          </button>
-          {!username && (
-            <button className="spooky-button">
-              <Link to="/login" className="no-style-link">
-                LOGIN
-              </Link>
+      {areArtStyleSelectionButtonsVisible &&
+        !isArtStyleSelectionChoiceKnown && (
+          <div className="button-container">
+            <button
+              className="spooky-button"
+              onClick={() => handleArtStyleSelection("Rider-Waite")}
+            >
+              RIDER-WAITE CLASSIC
             </button>
-          )}
-        </div>
-      )}
+            <button
+              className="spooky-button"
+              onClick={() => handleArtStyleSelection("Random")}
+            >
+              AI SURPRISE
+            </button>
+            {!username && (
+              <button className="spooky-button">
+                <Link to="/login" className="no-style-link">
+                  LOGIN
+                </Link>
+              </button>
+            )}
+          </div>
+        )}
 
-      {isCardSelectionTextVisible && (
+      {isArtStyleSelectionChoiceKnown && (
         <Typewriter
-          text="WOULD you like to draw one card, three cards, a five-card Elemental spread, or an entire Celtic Cross?"
+          text={`You have chosen for the cards to be drawn in the ${artStyle} style.`}
           startAnimation
-          onEnd={() => setAreCardSelectionButtonsVisible(true)}
+          onEnd={() => setIsReasonTextVisible(true)}
         />
       )}
 
-      {areCardSelectionButtonsVisible && (
-        <div className="button-container">
-          <button
-            className="spooky-button"
-            onClick={() => handleSpreadSelect("One")}
-          >
-            ONE CARD
-          </button>
-          <button
-            className="spooky-button"
-            onClick={() => handleSpreadSelect("Three")}
-          >
-            THREE CARDS
-          </button>
-          <button
-            className="spooky-button"
-            onClick={() => handleSpreadSelect("Five")}
-          >
-            ELEMENTAL SPREAD
-          </button>
-          <button
-            className="spooky-button"
-            onClick={() => handleSpreadSelect("Celtic Cross")}
-          >
-            CELTIC CROSS
-          </button>
-        </div>
-      )}
-
-      {isReasonTextVisible && (
+      {isReasonTextVisible && !isCardSelectionTextVisible && (
         <Typewriter
           text="WOULD you like to tell the fortuneteller about the reason you have chosen to consult the cards today?"
           startAnimation
@@ -201,7 +175,7 @@ const ProceedToCardsWorkflow = ({ onExit }) => {
         />
       )}
 
-      {isReasonMessageBoxVisible && (
+      {isReasonMessageBoxVisible && !isCardSelectionTextVisible && (
         <div className="message-input-box">
           <textarea
             ref={textareaRef}
@@ -227,9 +201,46 @@ const ProceedToCardsWorkflow = ({ onExit }) => {
         </div>
       )}
 
-      {isFortunetellerTextVisible && (
+      {isCardSelectionTextVisible && (
         <div className="user-message">
           <p>{userReason}</p>
+        </div>
+      )}
+
+      {isCardSelectionTextVisible && !isFortunetellerTextVisible && (
+        <Typewriter
+          text="WOULD you like to draw one card, three cards, a five-card Elemental spread, or an entire Celtic Cross?"
+          startAnimation
+          onEnd={() => setAreCardSelectionButtonsVisible(true)}
+        />
+      )}
+
+      {areCardSelectionButtonsVisible && !isFortunetellerTextVisible && (
+        <div className="button-container">
+          <button
+            className="spooky-button"
+            onClick={() => handleSpreadSelect("One")}
+          >
+            ONE CARD
+          </button>
+          <button
+            className="spooky-button"
+            onClick={() => handleSpreadSelect("Three")}
+          >
+            THREE CARDS
+          </button>
+          <button
+            className="spooky-button"
+            onClick={() => handleSpreadSelect("Five")}
+          >
+            ELEMENTAL SPREAD
+          </button>
+          <button
+            className="spooky-button"
+            onClick={() => handleSpreadSelect("Celtic Cross")}
+          >
+            CELTIC CROSS
+          </button>
         </div>
       )}
 

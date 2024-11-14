@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import CelticCrossLayout from "./spreadLayouts/CelticCrossLayout";
 import RowLayout from "./spreadLayouts/RowLayout";
+import Closing from "./Closing";
 import Typewriter from "./Typewriter";
 import { useCardImages } from "../hooks/useCardImages";
 import { getEsmeraldaResponse } from "../services/openaiService";
@@ -12,8 +13,10 @@ const TarotChat = () => {
   const [showTextarea, setShowTextarea] = useState(true);
   const [loading, setLoading] = useState(false);
   const [startTyping, setStartTyping] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
   const [cards, setCards] = useState([]);
   const [pendingEntry, setPendingEntry] = useState(null);
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
   const textareaRef = useRef(null);
 
   const { imageRequests } = useCardImages(cards, "Rider-Waite");
@@ -24,31 +27,37 @@ const TarotChat = () => {
     adjustTextareaHeight();
   };
 
+  const handleSubmit = async () => {
+    if (!message.trim()) return;
+    setLoading(true);
+    setShowTextarea(false);
+    setConversation((prevConversation) => [
+      ...prevConversation,
+      { text: message, sender: "user" },
+    ]);
+
+    const aiResponse = await getEsmeraldaResponse(message);
+    setMessage("");
+    setLoading(false);
+
+    const newCards = aiResponse.cards || [];
+    setCards(newCards);
+
+    setPendingEntry({
+      text: aiResponse.response,
+      sender: "esmeralda",
+      cards: newCards,
+      celticCross: aiResponse.celticCross,
+    });
+
+    setStartTyping(true);
+    setIsTyping(true);
+  };
+
   const handleKeyDown = async (e) => {
     if (e.key === "Enter" && !e.shiftKey && message.trim()) {
       e.preventDefault();
-      setLoading(true);
-      setShowTextarea(false);
-      setConversation((prevConversation) => [
-        ...prevConversation,
-        { text: message, sender: "user" },
-      ]);
-
-      const aiResponse = await getEsmeraldaResponse(message);
-      setMessage("");
-      setLoading(false);
-
-      const newCards = aiResponse.cards || [];
-      setCards(newCards);
-
-      setPendingEntry({
-        text: aiResponse.response,
-        sender: "esmeralda",
-        cards: newCards,
-        celticCross: aiResponse.celticCross,
-      });
-
-      setStartTyping(true);
+      handleSubmit();
     }
   };
 
@@ -82,7 +91,16 @@ const TarotChat = () => {
   const handleTypewriterEnd = () => {
     setStartTyping(false);
     setShowTextarea(true);
+    setIsTyping(false);
   };
+
+  const hasLayout = conversation.some(
+    (msg) => msg.cards && msg.cards.length > 0
+  );
+
+  const esmeraldaMessageCount = conversation.filter(
+    (msg) => msg.sender === "esmeralda"
+  ).length;
 
   return (
     <div className="tarot-chat">
@@ -147,10 +165,34 @@ const TarotChat = () => {
           <div className="below-text">
             Type your message and press Enter to respond to Esmeralda.
           </div>
+          <div className="button-container">
+            <button className="spooky-button" onClick={handleSubmit}>
+              SUBMIT
+            </button>
+            {esmeraldaMessageCount >= 1 && (
+              <button
+                className="spooky-button"
+                onClick={() => setShowTextarea(false)}
+              >
+                END CONVERSATION
+              </button>
+            )}
+          </div>
         </div>
       )}
 
       {loading && <div className="loading-spinner">...</div>}
+      {(hasLayout || esmeraldaMessageCount >= 6) && !loading && !isTyping && (
+        <div style={{ border: "2px solid black", padding: "10px" }}>
+          <img
+            className={`esmeralda ${isImageLoaded ? "fade-in" : ""}`}
+            src="/esmeralda-universe-images/nighttime-spooky-forest-with-mushrooms.webp"
+            alt="spooky-mushroom-forest"
+            onLoad={() => setIsImageLoaded(true)}
+          />
+          <Closing />
+        </div>
+      )}
     </div>
   );
 };

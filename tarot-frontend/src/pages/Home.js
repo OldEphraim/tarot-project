@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useModal } from "../context/ModalContext";
+import { useTarot } from "../context/TarotContext";
 import Modal from "../components/Modal";
 import Typewriter from "../components/Typewriter";
 import ProceedToCardsWorkflow from "../components/workflows/ProceedToCardsWorkflow";
@@ -9,25 +10,17 @@ import SpeakToFortunetellerWorkflow from "../components/workflows/SpeakToFortune
 import "./Home.css";
 
 const Home = () => {
-  const { isModalOpen, selectedCardData, closeModal } = useModal();
-  const [workflow, setWorkflow] = useState(null);
   const [isSecondParagraphVisible, setIsSecondParagraphVisible] =
     useState(false);
   const [areTopButtonsVisible, setAreTopButtonsVisible] = useState(false);
 
   const { username } = useAuth();
-
-  const handleProceedToCards = () => {
-    setWorkflow("cards");
-  };
-
-  const handleProceedToFortuneteller = () => {
-    setWorkflow("fortuneteller");
-  };
+  const { isModalOpen, selectedCardData, closeModal } = useModal();
+  const { workflow, setWorkflowToCards, setWorkflowToFortuneteller } =
+    useTarot();
 
   return (
     <div className="home">
-      {/* Modal component */}
       {isModalOpen && (
         <Modal onClose={closeModal} selectedCardData={selectedCardData} />
       )}
@@ -48,14 +41,11 @@ const Home = () => {
         <div className="button-container">
           <button
             className="spooky-button"
-            onClick={() => handleProceedToFortuneteller()}
+            onClick={setWorkflowToFortuneteller}
           >
             SPEAK TO FORTUNETELLER
           </button>
-          <button
-            className="spooky-button"
-            onClick={() => handleProceedToCards()}
-          >
+          <button className="spooky-button" onClick={setWorkflowToCards}>
             PROCEED TO CARDS
           </button>
           {!username && (

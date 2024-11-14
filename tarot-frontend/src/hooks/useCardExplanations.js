@@ -19,34 +19,46 @@ export const useCardExplanations = (cards, currentCardIndex, skipAnimation) => {
       const endIndex = skipAnimation ? cards.length : currentCardIndex;
 
       for (let i = 0; i < endIndex; i++) {
-        const card = cards[i];
-        let esmeraldaFormattedMeaning;
-        let meaning;
-        if (selectedSpread === "Celtic Cross") {
-          esmeraldaFormattedMeaning =
-            " in the position " + celticCrossPositionMeanings[i + 1].text;
-          meaning = celticCrossPositionMeanings[i + 1].text;
-        } else if (selectedSpread === "Five") {
-          esmeraldaFormattedMeaning =
-            " in the " +
-            elementalSpreadPositionMeanings[i + 1].text +
-            " element";
-          meaning = elementalSpreadPositionMeanings[i + 1].text;
-        } else {
-          esmeraldaFormattedMeaning = "";
-          meaning = i;
-        }
-        const explanationKey = `${card.name}-${meaning}`;
+        if (cards[i]) {
+          const card = cards[i];
+          let esmeraldaFormattedMeaning;
+          let meaning;
+          if (selectedSpread === "Celtic Cross") {
+            esmeraldaFormattedMeaning =
+              " in the position " + celticCrossPositionMeanings[i + 1].text;
+            meaning = celticCrossPositionMeanings[i + 1].text;
+          } else if (selectedSpread === "Five") {
+            esmeraldaFormattedMeaning =
+              " in the " +
+              elementalSpreadPositionMeanings[i + 1].text +
+              " element";
+            meaning = elementalSpreadPositionMeanings[i + 1].text;
+          } else if (selectedSpread === "Three") {
+            esmeraldaFormattedMeaning =
+              "in the " + ["past", "present", "future"][i] + " position";
+            meaning = ["Past", "Present", "Future"][i];
+          } else {
+            esmeraldaFormattedMeaning = "";
+            meaning = i;
+          }
+          const explanationKey = `${card.name}-${meaning}`;
 
-        if (!explanationsFetched.current.has(explanationKey)) {
-          explanationsFetched.current.add(explanationKey);
-          const explanation = await getCardAtPositionExplanation(
-            card.name,
-            esmeraldaFormattedMeaning,
-            username,
-            userReason
-          );
-          newExplanations.push(`${meaning}: ${explanation}`);
+          if (!explanationsFetched.current.has(explanationKey)) {
+            explanationsFetched.current.add(explanationKey);
+            const explanation = await getCardAtPositionExplanation(
+              card.name,
+              esmeraldaFormattedMeaning,
+              username,
+              userReason
+            );
+            if (selectedSpread !== "One") {
+              newExplanations.push(`${meaning}: ${explanation}`);
+            } else {
+              newExplanations.push(`${explanation}`);
+            }
+          }
+        } else {
+          return;
         }
       }
 
