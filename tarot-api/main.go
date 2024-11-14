@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 
+	"tarot-api/config"
 	"tarot-api/handlers"
 	"tarot-api/internal/database"
 	"tarot-api/services"
@@ -21,6 +22,8 @@ func main() {
 	if envErr != nil {
 		log.Fatal("Error loading .env file")
 	}
+
+	config.InitAWS()
 
 	dbURL := os.Getenv("DB_URL")
 	db, dbErr := sql.Open("postgres", dbURL)

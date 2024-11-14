@@ -34,7 +34,7 @@ const RowLayout = ({ cards, imageRequests, currentCardIndex }) => {
             imageUrl={imageRequests[card.name]?.url}
             position={index}
             positionMeaning={getPositionMeaning(index)}
-            theme="Rider-Waite"
+            theme={imageRequests[card.name]?.theme}
           />
         </div>
       ))}

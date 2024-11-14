@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getRandomTheme } from "../constants/TarotThemes";
 import {
   generateCardImage,
@@ -7,9 +7,13 @@ import {
 
 export const useCardImages = (cards, artStyle) => {
   const [imageRequests, setImageRequests] = useState({});
+  const hasFetched = useRef(false);
 
   useEffect(() => {
     const fetchImages = async () => {
+      if (hasFetched.current) return;
+      hasFetched.current = true;
+
       const newImageRequests = {};
 
       for (const card of cards) {

@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 	"fmt"
+	"log"
 
 	openai "github.com/sashabaranov/go-openai"
 )
@@ -40,9 +41,23 @@ func GenerateCardImage(client *openai.Client, theme, card string) (string, error
 		N:              1,
 		Style:          "vivid",
 	}
+
+	// Request image generation
 	response, err := client.CreateImage(context.Background(), request)
 	if err != nil {
 		return "", err
 	}
-	return response.Data[0].URL, nil
+
+	// Get the URL from OpenAI response
+	openAIImageURL := response.Data[0].URL
+
+	// Upload the image to S3 and get S3 URL
+	s3URL, err := UploadImageToS3(openAIImageURL, "tarot-project-bucket")
+	if err != nil {
+		log.Printf("failed to upload image to S3: %v", err)
+		return "", err
+	}
+
+	// Return S3 URL
+	return s3URL, nil
 }
