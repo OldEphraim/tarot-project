@@ -50,6 +50,9 @@ func main() {
 	http.HandleFunc("/api/users", utils.WrapWithMiddleware(func(w http.ResponseWriter, r *http.Request) {
 		handlers.CreateUserHandler(w, r, dbQueries)
 	}, http.MethodPost))
+	http.HandleFunc("/api/users/{id}", utils.WrapWithMiddleware(func(w http.ResponseWriter, r *http.Request) {
+		handlers.UpdateUserHandler(w, r, dbQueries, jwtSecret)
+	}, http.MethodPut))
 
 	// Other handlers
 	http.HandleFunc("/api/chat", utils.WrapWithMiddleware(handlers.ChatHandler(client), http.MethodPost))

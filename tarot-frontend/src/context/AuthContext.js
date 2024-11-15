@@ -48,6 +48,7 @@ export const AuthProvider = ({ children }) => {
 
   const value = {
     user,
+    setUser,
     login,
     logout,
     isAuthenticated: !!user?.token, // Boolean indicating if the user is logged in

@@ -1,4 +1,3 @@
-// authService.js
 import axios from "axios";
 
 // Create an axios instance with a base URL
@@ -64,6 +63,7 @@ export const logout = async () => {
     return { success: true };
   } catch (error) {
     if (error.response) {
+      clearAuthData();
       throw new Error(error.response.data.error || "Failed to log out");
     }
     throw new Error("Network error");

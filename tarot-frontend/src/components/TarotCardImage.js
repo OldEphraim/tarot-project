@@ -43,7 +43,13 @@ const TarotCardImage = ({
   }, [imageUrl]);
 
   const handleImageClick = () => {
-    openModal({ card, imageUrl, position, positionMeaning, theme });
+    openModal("cardDetail", {
+      card,
+      imageUrl,
+      position,
+      positionMeaning,
+      theme,
+    });
   };
 
   return (

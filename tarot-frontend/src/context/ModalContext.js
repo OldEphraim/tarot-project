@@ -6,21 +6,26 @@ export const useModal = () => useContext(ModalContext);
 
 export const ModalProvider = ({ children }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedCardData, setSelectedCardData] = useState(null);
+  const [modalType, setModalType] = useState(null);
+  const [modalData, setModalData] = useState(null);
 
-  const openModal = (cardData) => {
-    setSelectedCardData(cardData);
+  console.log("modalData:", modalData);
+
+  const openModal = (type, data = null) => {
+    setModalType(type);
+    setModalData(data);
     setIsModalOpen(true);
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
-    setSelectedCardData(null);
+    setModalType(null);
+    setModalData(null);
   };
 
   return (
     <ModalContext.Provider
-      value={{ isModalOpen, selectedCardData, openModal, closeModal }}
+      value={{ isModalOpen, modalType, modalData, openModal, closeModal }}
     >
       {children}
     </ModalContext.Provider>

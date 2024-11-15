@@ -1,13 +1,39 @@
 import React, { useState } from "react";
+import { useAuth } from "../context/AuthContext";
+import { useModal } from "../context/ModalContext";
+import tarotThemes from "../constants/TarotThemes";
+import Modal from "../components/Modal"; // Assume you have a reusable modal component
 import "./Profile.css";
 
 const Profile = () => {
   const [artStyle, setArtStyle] = useState("Rider-Waite");
+  const [customArtStyle, setCustomArtStyle] = useState("");
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isConfirming, setIsConfirming] = useState(false);
+  const [emailEditable, setEmailEditable] = useState(false);
+  const [usernameEditable, setUsernameEditable] = useState(false);
 
-  const handleArtStyleChange = (e) => setArtStyle(e.target.value);
+  const { user } = useAuth();
+  const { openModal } = useModal();
+
+  const handleArtStyleChange = (e) => {
+    const selectedStyle = e.target.value;
+    setArtStyle(selectedStyle);
+    if (selectedStyle !== "Custom") {
+      setCustomArtStyle("");
+    }
+  };
+
+  const handleSaveClick = () => {
+    setIsModalOpen(true);
+    openModal("confirmChange", {
+      email,
+      username,
+      artStyle,
+    });
+  };
 
   return (
     <div className="profile-page">
@@ -39,45 +65,98 @@ const Profile = () => {
 
       <div className="profile-right">
         <h2>Settings</h2>
+
+        {/* Art Style */}
         <div className="settings-section">
-          <label>Art Style</label>
+          <label>
+            Art Style:{" "}
+            <strong>{user.artStyle ? user.artStyle : "Random"}</strong>
+          </label>
           <select value={artStyle} onChange={handleArtStyleChange}>
+            <option value="Random">Random</option>
+            <option value="Custom">Custom</option>
             <option value="Rider-Waite">Rider-Waite</option>
-            <option value="AI">AI-Generated</option>
-            <option value="Random">Random Style</option>
+            {tarotThemes.map((theme) => (
+              <option key={theme} value={theme}>
+                {theme}
+              </option>
+            ))}
           </select>
+          {artStyle === "Custom" && (
+            <input
+              type="text"
+              value={customArtStyle}
+              onChange={(e) => setCustomArtStyle(e.target.value)}
+              placeholder="Enter custom art style"
+              style={{ marginTop: "15px" }}
+            />
+          )}
         </div>
 
+        {/* Email */}
         <div className="settings-section">
-          <label>Email</label>
+          <label>
+            Email: {emailEditable ? email : <strong>{user.email}</strong>}
+          </label>
+          {emailEditable && (
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Update Email"
+            />
+          )}
           <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Update Email"
-          />
+            type="checkbox"
+            checked={emailEditable}
+            onChange={() => setEmailEditable(!emailEditable)}
+          />{" "}
+          Edit
         </div>
 
+        {/* Username */}
         <div className="settings-section">
-          <label>Username</label>
+          <label>
+            Username:{" "}
+            {usernameEditable ? username : <strong>{user.username}</strong>}
+          </label>
+          {usernameEditable && (
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="Update Username"
+            />
+          )}
           <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            placeholder="Update Username"
-          />
+            type="checkbox"
+            checked={usernameEditable}
+            onChange={() => setUsernameEditable(!usernameEditable)}
+          />{" "}
+          Edit
         </div>
 
+        {/* Save Button */}
+        <button
+          className="spooky-button"
+          onClick={handleSaveClick}
+          style={{ marginBottom: "20px" }}
+        >
+          Save
+        </button>
+
+        {/* Update Password Field */}
         <div className="settings-section">
-          <label>Password</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Update Password"
-          />
+          <label>
+            To change your password, enter your current password and we'll email
+            you a link.
+          </label>
+          <input type="password" placeholder="Password" />
         </div>
       </div>
+
+      {/* Confirmation Modal */}
+      {isModalOpen && <Modal onClose={() => setIsModalOpen(false)} />}
     </div>
   );
 };

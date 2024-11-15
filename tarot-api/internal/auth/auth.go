@@ -41,25 +41,36 @@ func MakeJWT(userID uuid.UUID, tokenSecret string, expiresIn time.Duration) (str
 	return token.SignedString([]byte(tokenSecret))
 }
 
+var ErrInvalidToken = errors.New("invalid token")
+
 // ValidateJWT validates the given token string and returns the user ID if valid.
-func ValidateJWT(tokenString, tokenSecret string) (uuid.UUID, error) {
-	token, err := jwt.ParseWithClaims(tokenString, &jwt.RegisteredClaims{}, func(token *jwt.Token) (any, error) {
+func ValidateJWT(tokenString string, tokenSecret []byte) (uuid.UUID, error) {
+	// Parse the token
+	token, err := jwt.ParseWithClaims(tokenString, &jwt.RegisteredClaims{}, func(token *jwt.Token) (interface{}, error) {
+		// Ensure the signing method is HMAC
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, jwt.NewValidationError("invalid signing method", jwt.ValidationErrorMalformed)
 		}
-		return []byte(tokenSecret), nil
+		return tokenSecret, nil
 	})
 
 	if err != nil || !token.Valid {
-		return uuid.Nil, err
+		return uuid.Nil, ErrInvalidToken
 	}
 
+	// Extract and verify claims
 	claims, ok := token.Claims.(*jwt.RegisteredClaims)
 	if !ok {
 		return uuid.Nil, jwt.NewValidationError("invalid claims", jwt.ValidationErrorClaimsInvalid)
 	}
 
-	return uuid.Parse(claims.Subject)
+	// Parse the subject (user ID) as UUID
+	userID, err := uuid.Parse(claims.Subject)
+	if err != nil {
+		return uuid.Nil, jwt.NewValidationError("invalid subject in token claims", jwt.ValidationErrorClaimsInvalid)
+	}
+
+	return userID, nil
 }
 
 // GetBearerToken extracts the token string from the Authorization header.

@@ -102,6 +102,34 @@ func (q *Queries) GetUserByUsername(ctx context.Context, username string) (GetUs
 	return i, err
 }
 
+const updateUserArtStyle = `-- name: UpdateUserArtStyle :exec
+UPDATE users SET art_style = $2, updated_at = NOW() WHERE id = $1
+`
+
+type UpdateUserArtStyleParams struct {
+	ID       uuid.UUID
+	ArtStyle sql.NullString
+}
+
+func (q *Queries) UpdateUserArtStyle(ctx context.Context, arg UpdateUserArtStyleParams) error {
+	_, err := q.db.ExecContext(ctx, updateUserArtStyle, arg.ID, arg.ArtStyle)
+	return err
+}
+
+const updateUserEmail = `-- name: UpdateUserEmail :exec
+UPDATE users SET email = $2, updated_at = NOW() WHERE id = $1
+`
+
+type UpdateUserEmailParams struct {
+	ID    uuid.UUID
+	Email string
+}
+
+func (q *Queries) UpdateUserEmail(ctx context.Context, arg UpdateUserEmailParams) error {
+	_, err := q.db.ExecContext(ctx, updateUserEmail, arg.ID, arg.Email)
+	return err
+}
+
 const updateUserLogoutTimestamp = `-- name: UpdateUserLogoutTimestamp :exec
 UPDATE users
 SET updated_at = NOW()
@@ -110,5 +138,19 @@ WHERE username = $1
 
 func (q *Queries) UpdateUserLogoutTimestamp(ctx context.Context, username string) error {
 	_, err := q.db.ExecContext(ctx, updateUserLogoutTimestamp, username)
+	return err
+}
+
+const updateUserUsername = `-- name: UpdateUserUsername :exec
+UPDATE users SET username = $2, updated_at = NOW() WHERE id = $1
+`
+
+type UpdateUserUsernameParams struct {
+	ID       uuid.UUID
+	Username string
+}
+
+func (q *Queries) UpdateUserUsername(ctx context.Context, arg UpdateUserUsernameParams) error {
+	_, err := q.db.ExecContext(ctx, updateUserUsername, arg.ID, arg.Username)
 	return err
 }

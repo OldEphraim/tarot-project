@@ -9,6 +9,8 @@ import (
 
 	"tarot-api/internal/auth"
 	"tarot-api/internal/database"
+
+	"github.com/google/uuid"
 )
 
 func LoginHandler(w http.ResponseWriter, r *http.Request, dbQueries *database.Queries, jwtSecret []byte) {
@@ -81,6 +83,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request, dbQueries *database.Qu
 	}
 
 	type loginResponse struct {
+		ID             uuid.UUID  `json:"id"`
 		Email          string     `json:"email"`
 		ArtStyle       *string    `json:"art_style"`
 		ProfilePicture *string    `json:"profile_picture"`
@@ -90,6 +93,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request, dbQueries *database.Qu
 	}
 
 	respondWithJSON(w, http.StatusOK, loginResponse{
+		ID:             user.ID,
 		Email: 		    user.Email,
 		ArtStyle:       toPointer(user.ArtStyle),
 		ProfilePicture: toPointer(user.ProfilePicture),

@@ -24,3 +24,12 @@ WHERE username = $1;
 UPDATE users
 SET updated_at = NOW()
 WHERE username = $1;
+
+-- name: UpdateUserEmail :exec
+UPDATE users SET email = $2, updated_at = NOW() WHERE id = $1;
+
+-- name: UpdateUserUsername :exec
+UPDATE users SET username = $2, updated_at = NOW() WHERE id = $1;
+
+-- name: UpdateUserArtStyle :exec
+UPDATE users SET art_style = $2, updated_at = NOW() WHERE id = $1;

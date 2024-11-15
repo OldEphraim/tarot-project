@@ -33,8 +33,6 @@ const ProceedToCardsWorkflow = ({ onExit }) => {
   const { selectedSpread, chooseSpread, userReason, submitReason } = useTarot();
   const textareaRef = useRef(null);
 
-  console.log("user:", user);
-
   const handleArtStyleSelection = (style) => {
     setAreArtStyleSelectionButtonsVisible(false);
     setArtStyle(style);
