@@ -1,6 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import CardDisplay from "../CardDisplay";
+import TextArea from "../TextArea";
 import Typewriter from "../Typewriter";
 import { useAuth } from "../../context/AuthContext";
 import { useTarot } from "../../context/TarotContext";
@@ -31,7 +32,6 @@ const ProceedToCardsWorkflow = ({ onExit }) => {
 
   const { isAuthenticated, user } = useAuth();
   const { selectedSpread, chooseSpread, userReason, submitReason } = useTarot();
-  const textareaRef = useRef(null);
 
   const handleArtStyleSelection = (style) => {
     setAreArtStyleSelectionButtonsVisible(false);
@@ -97,27 +97,6 @@ const ProceedToCardsWorkflow = ({ onExit }) => {
     setUserReasonEntry(e.target.value);
   };
 
-  const handleKeyDown = (e) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      handleReasonSubmit();
-    }
-  };
-
-  const adjustTextareaHeight = (reset = false) => {
-    if (textareaRef.current) {
-      if (reset) {
-        textareaRef.current.style.height = "auto";
-      }
-      textareaRef.current.style.height = "auto";
-      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
-    }
-  };
-
-  useEffect(() => {
-    adjustTextareaHeight();
-  }, [userReasonEntry]);
-
   return (
     <div className="proceed-to-cards-workflow">
       <Typewriter
@@ -177,19 +156,13 @@ const ProceedToCardsWorkflow = ({ onExit }) => {
 
       {isReasonMessageBoxVisible && !isCardSelectionTextVisible && (
         <div className="message-input-box">
-          <textarea
-            ref={textareaRef}
+          <TextArea
             value={userReasonEntry}
             onChange={handleInputChange}
-            onKeyDown={handleKeyDown}
-            placeholder="Type your message..."
-            className="message-input"
-            style={{ resize: "none", overflow: "hidden" }}
+            onSubmit={handleReasonSubmit}
+            belowText="Type your message and press Enter to tell the Fortuneteller about
+            the reason for this drawing."
           />
-          <div className="below-text">
-            Type your message and press Enter to tell the Fortuneteller about
-            the reason for this drawing.
-          </div>
           <div className="button-container">
             <button className="spooky-button" onClick={handleReasonSubmit}>
               SUBMIT
