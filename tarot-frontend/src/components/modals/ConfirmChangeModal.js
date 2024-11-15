@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { saveProfileChanges } from "../../services/profileService";
 import { useAuth } from "../../context/AuthContext";
 import { useModal } from "../../context/ModalContext";
@@ -7,9 +7,9 @@ import "../../components/Modal.css";
 const ConfirmChangeModal = ({ handleClose, setFadeOut }) => {
   const { user, setUser } = useAuth();
   const { modalData } = useModal();
+  const [isSaved, setIsSaved] = useState(false); // Tracks if changes are saved
 
   const handleConfirm = async () => {
-    setFadeOut(true);
     const updatedUser = {
       ...user,
       email: modalData.email,
@@ -21,6 +21,7 @@ const ConfirmChangeModal = ({ handleClose, setFadeOut }) => {
       await saveProfileChanges(updatedUser);
       setUser(updatedUser);
       localStorage.setItem("user", JSON.stringify(updatedUser));
+      setIsSaved(true);
     } catch (error) {
       console.error("Error saving changes:", error);
     }
@@ -28,19 +29,32 @@ const ConfirmChangeModal = ({ handleClose, setFadeOut }) => {
 
   return (
     <>
-      <h2>Are You Sure?</h2>
-      <p>Your new settings will be:</p>
-      <ul>
-        <li>Email: {modalData.email}</li>
-        <li>Username: {modalData.username}</li>
-        <li>Art Style: {modalData.artStyle}</li>
-      </ul>
-      <button onClick={handleConfirm} className="spooky-button">
-        I'm Sure
-      </button>
-      <button onClick={handleClose} className="spooky-button">
-        I Changed My Mind
-      </button>
+      <h2 style={{ color: "black" }}>Are You Sure?</h2>
+      <p style={{ color: "black" }}>Your new settings will be:</p>
+      <p style={{ color: "black" }}>
+        Email: <strong>{modalData.email}</strong>
+      </p>
+      <p style={{ color: "black" }}>
+        Username: <strong>{modalData.username}</strong>
+      </p>
+      <p style={{ color: "black" }}>
+        Art Style: <strong>{modalData.artStyle}</strong>
+      </p>
+
+      {isSaved ? (
+        <p style={{ color: "green", fontWeight: "bold", marginTop: "20px" }}>
+          Your changes have been saved.
+        </p>
+      ) : (
+        <div>
+          <button onClick={handleConfirm} className="spooky-button">
+            I'm Sure
+          </button>
+          <button onClick={handleClose} className="spooky-button">
+            I Changed My Mind
+          </button>
+        </div>
+      )}
     </>
   );
 };

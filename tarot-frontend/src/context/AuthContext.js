@@ -34,6 +34,7 @@ export const AuthProvider = ({ children }) => {
       setUser(null); // Clear user in context
       clearAuthData(); // Clear localStorage
     } catch (error) {
+      clearAuthData();
       throw error; // Handle errors outside of AuthContext
     }
   };

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useModal } from "../context/ModalContext";
 import tarotThemes from "../constants/TarotThemes";
-import Modal from "../components/Modal"; // Assume you have a reusable modal component
+import Modal from "../components/Modal";
 import "./Profile.css";
 
 const Profile = () => {
@@ -11,7 +11,6 @@ const Profile = () => {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isConfirming, setIsConfirming] = useState(false);
   const [emailEditable, setEmailEditable] = useState(false);
   const [usernameEditable, setUsernameEditable] = useState(false);
 
@@ -29,9 +28,16 @@ const Profile = () => {
   const handleSaveClick = () => {
     setIsModalOpen(true);
     openModal("confirmChange", {
-      email,
-      username,
-      artStyle,
+      email: email !== "" ? email : user.email,
+      username: username !== "" ? username : user.username,
+      artStyle:
+        artStyle === "Custom"
+          ? customArtStyle
+          : artStyle !== ""
+            ? artStyle
+            : user.art_style
+              ? user.art_style
+              : "Random",
     });
   };
 
@@ -70,7 +76,7 @@ const Profile = () => {
         <div className="settings-section">
           <label>
             Art Style:{" "}
-            <strong>{user.artStyle ? user.artStyle : "Random"}</strong>
+            <strong>{user.art_style ? user.art_style : "Random"}</strong>
           </label>
           <select value={artStyle} onChange={handleArtStyleChange}>
             <option value="Random">Random</option>
