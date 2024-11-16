@@ -57,11 +57,12 @@ export const login = async ({
 // Logout function
 export const logout = async () => {
   try {
-    const { refreshToken, username } = getUser();
-    await api.post("/logout", { username: username, token: refreshToken });
+    const { refresh_token, username } = getUser();
+    await api.post("/logout", { username: username, token: refresh_token });
     clearAuthData();
     return { success: true };
   } catch (error) {
+    clearAuthData();
     if (error.response) {
       clearAuthData();
       throw new Error(error.response.data.error || "Failed to log out");

@@ -141,6 +141,20 @@ func (q *Queries) UpdateUserLogoutTimestamp(ctx context.Context, username string
 	return err
 }
 
+const updateUserProfilePicture = `-- name: UpdateUserProfilePicture :exec
+UPDATE users SET profile_picture = $2, updated_at = NOW() WHERE id = $1
+`
+
+type UpdateUserProfilePictureParams struct {
+	ID             uuid.UUID
+	ProfilePicture sql.NullString
+}
+
+func (q *Queries) UpdateUserProfilePicture(ctx context.Context, arg UpdateUserProfilePictureParams) error {
+	_, err := q.db.ExecContext(ctx, updateUserProfilePicture, arg.ID, arg.ProfilePicture)
+	return err
+}
+
 const updateUserUsername = `-- name: UpdateUserUsername :exec
 UPDATE users SET username = $2, updated_at = NOW() WHERE id = $1
 `

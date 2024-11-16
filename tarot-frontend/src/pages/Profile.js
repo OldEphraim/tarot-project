@@ -57,11 +57,19 @@ const Profile = () => {
     <div className="profile-page">
       <div className="profile-left">
         <div className="profile-image-container">
-          <img
-            src="/default-profile.jpg"
-            alt="Profile"
-            className="profile-image"
-          />
+          {user.profile_picture ? (
+            <img
+              src={user.profile_picture}
+              alt="Profile"
+              className="profile-image"
+            />
+          ) : (
+            <img
+              src="/default-profile.jpg"
+              alt="Profile"
+              className="profile-circle"
+            />
+          )}
           <div className="profile-buttons">
             <button
               className="spooky-button"

@@ -33,3 +33,6 @@ UPDATE users SET username = $2, updated_at = NOW() WHERE id = $1;
 
 -- name: UpdateUserArtStyle :exec
 UPDATE users SET art_style = $2, updated_at = NOW() WHERE id = $1;
+
+-- name: UpdateUserProfilePicture :exec
+UPDATE users SET profile_picture = $2, updated_at = NOW() WHERE id = $1;

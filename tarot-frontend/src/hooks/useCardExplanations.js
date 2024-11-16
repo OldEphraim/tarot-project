@@ -48,7 +48,7 @@ export const useCardExplanations = (cards, currentCardIndex, skipAnimation) => {
             const explanation = await getCardAtPositionExplanation(
               card.name,
               esmeraldaFormattedMeaning,
-              user.username,
+              user?.username,
               userReason
             );
             if (selectedSpread !== "One") {

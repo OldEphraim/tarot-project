@@ -34,9 +34,10 @@ func UpdateUserHandler(w http.ResponseWriter, r *http.Request, dbQueries *databa
 
 	// Parse request body
 	var input struct {
-		Email    *string `json:"email,omitempty"`
-		Username *string `json:"username,omitempty"`
-		ArtStyle *string `json:"art_style,omitempty"`
+		Email          *string `json:"email,omitempty"`
+		Username       *string `json:"username,omitempty"`
+		ArtStyle       *string `json:"art_style,omitempty"`
+		ProfilePicture *string `json:"profile_picture,omitempty"`
 	}
 
 	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
@@ -78,6 +79,18 @@ func UpdateUserHandler(w http.ResponseWriter, r *http.Request, dbQueries *databa
 		if err != nil {
 			log.Printf("Error updating art style: %v\n", err)
 			http.Error(w, "Could not update art style", http.StatusInternalServerError)
+			return
+		}
+	}
+
+	if input.ProfilePicture != nil && *input.ProfilePicture != "" {
+		err := dbQueries.UpdateUserProfilePicture(r.Context(), database.UpdateUserProfilePictureParams{
+			ID:       userID,
+			ProfilePicture: sql.NullString{String: *input.ProfilePicture, Valid: true},
+		})
+		if err != nil {
+			log.Printf("Error updating profile picture: %v\n", err)
+			http.Error(w, "Could not update profile picture", http.StatusInternalServerError)
 			return
 		}
 	}

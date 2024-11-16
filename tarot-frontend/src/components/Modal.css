@@ -123,17 +123,6 @@
   gap: 15px;
 }
 
-.profile-picture-placeholder {
-  width: 200px;
-  height: 262.5px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.9em;
-  color: #666;
-  margin: 37.5px auto;
-}
-
 .profile-picture-placeholder.border-none {
   border: none;
 }
@@ -145,6 +134,29 @@
 .profile-picture {
   max-width: 100%;
   height: auto;
+}
+
+.profile-picture-flexbox {
+  display: flex;
+  flex-direction: row; /* Align items in a row */
+  justify-content: center; /* Center the content horizontally */
+  align-items: center; /* Center items vertically */
+  gap: 1px; /* Space between the items */
+  flex-wrap: wrap;
+}
+
+.profile-picture-dual,
+.profile-picture-placeholder {
+  width: 190px; /* Ensure both have the same width */
+  height: 329.5px; /* Ensure both have the same height */
+  display: flex;
+  align-items: center; /* Center content vertically */
+  justify-content: center; /* Center content horizontally */
+  font-size: 0.9em;
+  color: #666;
+  margin: 0 5px; /* Remove margin to ensure alignment */
+  border: 2px solid #ddd; /* Optional: Add a border to visualize proportions */
+  box-sizing: border-box; /* Include padding and border in width/height */
 }
 
 .dropdown {

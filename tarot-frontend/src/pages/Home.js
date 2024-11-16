@@ -31,7 +31,7 @@ const Home = () => {
       {isModalOpen && <Modal onClose={closeModal} />}
       <h1 className="home-header">Tarot Card Reader</h1>
       <Typewriter
-        text={`WELCOME, ${user.username ? user.username : "dear visitor"}, to my tarot card reader. For more information regarding the meanings of specific tarot cards, or the spreads which can be used, please visit the resources which have been made available under ‘About Tarot’.`}
+        text={`WELCOME, ${user?.username ? user.username : "dear visitor"}, to my tarot card reader. For more information regarding the meanings of specific tarot cards, or the spreads which can be used, please visit the resources which have been made available under ‘About Tarot’.`}
         startAnimation
         onEnd={() => setIsSecondParagraphVisible(true)}
       />

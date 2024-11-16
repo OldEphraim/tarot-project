@@ -15,11 +15,16 @@
   align-items: center;
 }
 
-.profile-image {
+.profile-circle {
   width: 150px;
   height: 150px;
   border-radius: 50%;
   border: 3px solid #333;
+}
+
+.profile-image {
+  width: 200px;
+  height: auto;
 }
 
 .profile-buttons {

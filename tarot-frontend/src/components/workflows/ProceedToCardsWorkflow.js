@@ -107,7 +107,7 @@ const ProceedToCardsWorkflow = ({ onExit }) => {
 
       {isArtStyleSelectionTextVisible && !isArtStyleSelectionChoiceKnown && (
         <Typewriter
-          text={`WOULD you prefer the classic Rider-Waite designs, or AI-generated artwork for your cards in a randomly-chosen style? If you would like to customize the style of your AI-generated cards, ${user.username ? "you can do so in your Profile page." : "please log in."}`}
+          text={`WOULD you prefer the classic Rider-Waite designs, or AI-generated artwork for your cards in a randomly-chosen style? If you would like to customize the style of your AI-generated cards, ${user?.username ? "you can do so in your Profile page." : "please log in."}`}
           startAnimation
           onEnd={() => setAreArtStyleSelectionButtonsVisible(true)}
         />
