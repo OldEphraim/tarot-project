@@ -4,7 +4,10 @@ import tarotCards from "../../constants/TarotCards";
 import tarotThemes from "../../constants/TarotThemes";
 import { useAuth } from "../../context/AuthContext";
 import { searchCardByName } from "../../services/tarotService";
-import { saveProfileChanges } from "../../services/profileService";
+import {
+  saveProfileChanges,
+  handleSaveImage,
+} from "../../services/profileService";
 import { useCardImages } from "../../hooks/useCardImages";
 import "../../components/Modal.css";
 
@@ -15,7 +18,7 @@ const ChangeProfilePictureModal = ({ handleClose }) => {
   const [selectedTheme, setSelectedTheme] = useState("");
   const [cardObject, setCardObject] = useState(null); // Holds the formatted card object
   const [isGenerating, setIsGenerating] = useState(false); // Tracks generation state
-  const [generatedPicture, setGeneratedPicture] = useState("");
+  const [generatedPicture, setGeneratedPicture] = useState([]);
   const [shouldFetchImages, setShouldFetchImages] = useState(false); // Control when to fetch images
   const [shouldClearRequests, setShouldClearRequests] = useState(false);
   const [isSaved, setIsSaved] = useState([]);
@@ -32,10 +35,10 @@ const ChangeProfilePictureModal = ({ handleClose }) => {
   useEffect(() => {
     let loadTimeout;
 
-    if (generatedPicture === "") {
+    if (generatedPicture.length === 0) {
       loadTimeout = setTimeout(() => {
         if (spinnerRef.current) {
-          setGeneratedPicture("/tarot-images/error.webp");
+          setGeneratedPicture(["/tarot-images/error.webp", "error", "Error"]);
         }
       }, 120000);
 
@@ -48,12 +51,22 @@ const ChangeProfilePictureModal = ({ handleClose }) => {
       // Save the generated picture (implement API logic as needed)
       const updatedUser = {
         ...user,
-        profile_picture: generatedPicture, // Assuming this is the URL of the generated image
+        profile_picture: generatedPicture[0], // Assuming this is the URL of the generated image
       };
       await saveProfileChanges(updatedUser); // Save changes via backend
       setUser(updatedUser); // Update frontend state
       setIsSaved(["Profile picture saved successfully!", "green"]);
-      setGeneratedPicture("");
+      setGeneratedPicture([]);
+      try {
+        await handleSaveImage(
+          user,
+          generatedPicture[0],
+          generatedPicture[1],
+          generatedPicture[2]
+        );
+      } catch (error) {
+        console.error("Error saving profile picture to saved images", error);
+      }
     } catch (error) {
       console.error("Error saving profile picture:", error);
       setIsSaved(["Failed to save profile picture. Please try again.", "red"]);
@@ -99,14 +112,13 @@ const ChangeProfilePictureModal = ({ handleClose }) => {
       imageRequests[cardObject.name] &&
       imageRequests[cardObject.name].status === "ready"
     ) {
-      setGeneratedPicture(imageRequests[cardObject.name].url);
+      setGeneratedPicture([
+        imageRequests[cardObject.name].url,
+        formatCardName(cardObject.name),
+        selectedTheme,
+      ]);
       setIsGenerating(false);
       setShouldFetchImages(false); // Reset fetch state
-
-      // Reset the dropdowns and related state
-      setCardObject(null);
-      setSelectedCard("");
-      setSelectedTheme("");
     }
   }, [imageRequests, cardObject, selectedCard, selectedTheme]);
 
@@ -125,7 +137,7 @@ const ChangeProfilePictureModal = ({ handleClose }) => {
       .join(""); // Join without spaces
   };
 
-  const isProfilePictureReady = generatedPicture !== "";
+  const isProfilePictureReady = generatedPicture.length > 0;
 
   return (
     <>
@@ -160,7 +172,7 @@ const ChangeProfilePictureModal = ({ handleClose }) => {
                 )}
                 {isProfilePictureReady && !isGenerating && (
                   <img
-                    src={generatedPicture}
+                    src={generatedPicture[0]}
                     alt="New Profile"
                     className="profile-picture-dual"
                   />
@@ -188,7 +200,7 @@ const ChangeProfilePictureModal = ({ handleClose }) => {
             )}
             {isProfilePictureReady && !isGenerating && (
               <img
-                src={generatedPicture}
+                src={generatedPicture[0]}
                 alt="New Profile"
                 className="profile-picture"
               />

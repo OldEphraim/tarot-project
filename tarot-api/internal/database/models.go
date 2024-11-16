@@ -11,6 +11,15 @@ import (
 	"github.com/google/uuid"
 )
 
+type Favorite struct {
+	ID        uuid.UUID
+	UserID    uuid.UUID
+	ImageUrl  string
+	CreatedAt time.Time
+	CardName  string
+	ArtStyle  string
+}
+
 type RefreshToken struct {
 	Token     string
 	CreatedAt time.Time
