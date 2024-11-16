@@ -37,6 +37,7 @@ export const useCardImages = (cards, artStyle) => {
       setImageRequests(newImageRequests);
     };
 
+    console.log(cards);
     if (cards.length > 0) {
       fetchImages();
     }

@@ -41,6 +41,11 @@ const Profile = () => {
     });
   };
 
+  const handleProfilePictureClick = () => {
+    setIsModalOpen(true);
+    openModal("profilePicture");
+  };
+
   return (
     <div className="profile-page">
       <div className="profile-left">
@@ -51,7 +56,10 @@ const Profile = () => {
             className="profile-image"
           />
           <div className="profile-buttons">
-            <button className="spooky-button">
+            <button
+              className="spooky-button"
+              onClick={handleProfilePictureClick}
+            >
               Generate New Profile Image
             </button>
             <button className="spooky-button">Personal Gallery</button>

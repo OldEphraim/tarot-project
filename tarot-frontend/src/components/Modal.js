@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useModal } from "../context/ModalContext";
 import CardDetailModal from "./modals/CardDetailModal";
+import ChangeProfilePictureModal from "./modals/ChangeProfilePictureModal";
 import ConfirmChangeModal from "./modals/ConfirmChangeModal";
 import "./Modal.css";
 
@@ -28,10 +29,10 @@ const Modal = ({ onClose }) => {
           <CardDetailModal setFadeOut={setFadeOut} />
         )}
         {modalType === "confirmChange" && (
-          <ConfirmChangeModal
-            handleClose={handleClose}
-            setFadeOut={setFadeOut}
-          />
+          <ConfirmChangeModal handleClose={handleClose} />
+        )}
+        {modalType === "profilePicture" && (
+          <ChangeProfilePictureModal handleClose={handleClose} />
         )}
       </div>
     </div>

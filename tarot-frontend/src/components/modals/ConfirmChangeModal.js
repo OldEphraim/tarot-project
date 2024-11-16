@@ -4,7 +4,7 @@ import { useAuth } from "../../context/AuthContext";
 import { useModal } from "../../context/ModalContext";
 import "../../components/Modal.css";
 
-const ConfirmChangeModal = ({ handleClose, setFadeOut }) => {
+const ConfirmChangeModal = ({ handleClose }) => {
   const { user, setUser } = useAuth();
   const { modalData } = useModal();
   const [isSaved, setIsSaved] = useState(false); // Tracks if changes are saved
