@@ -12,7 +12,6 @@ const TarotCard = () => {
     const fetchCard = async () => {
       try {
         const cardData = await searchCardByName(cardName);
-        console.log(cardName);
         setCard(cardData);
       } catch (err) {
         setError(err.message);

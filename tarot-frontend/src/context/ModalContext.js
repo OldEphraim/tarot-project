@@ -23,7 +23,14 @@ export const ModalProvider = ({ children }) => {
 
   return (
     <ModalContext.Provider
-      value={{ isModalOpen, modalType, modalData, openModal, closeModal }}
+      value={{
+        isModalOpen,
+        setIsModalOpen,
+        modalType,
+        modalData,
+        openModal,
+        closeModal,
+      }}
     >
       {children}
     </ModalContext.Provider>

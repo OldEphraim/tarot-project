@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useModal } from "../context/ModalContext";
 import tarotThemes from "../constants/TarotThemes";
@@ -15,7 +15,14 @@ const Profile = () => {
   const [usernameEditable, setUsernameEditable] = useState(false);
 
   const { user } = useAuth();
-  const { openModal } = useModal();
+  const { openModal, closeModal } = useModal();
+
+  const closeModalRef = useRef(closeModal);
+
+  // Close any open modal when Profile mounts
+  useEffect(() => {
+    closeModalRef.current();
+  }, [closeModalRef]);
 
   const handleArtStyleChange = (e) => {
     const selectedStyle = e.target.value;

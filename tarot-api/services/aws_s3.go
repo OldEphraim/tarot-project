@@ -39,7 +39,7 @@ func UploadImageToS3(imageURL string, bucketName string) (string, error) {
         Bucket:      aws.String(bucketName),
         Key:         aws.String(key),
         Body:        bytes.NewReader(buf.Bytes()),
-        ContentType: aws.String("image/png"),
+        ContentType: aws.String("image/webp"),
     })
     if err != nil {
         log.Println("Error uploading to S3:", err)

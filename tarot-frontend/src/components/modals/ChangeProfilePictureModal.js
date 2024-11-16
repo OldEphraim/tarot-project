@@ -1,16 +1,11 @@
-import React, { useState, useEffect } from "react";
-import tarotThemes from "../../constants/TarotThemes"; // Assuming tarotThemes is an array of theme names
+import React, { useEffect, useRef, useState } from "react";
+import { Box, CircularProgress } from "@mui/material";
+import tarotCards from "../../constants/TarotCards";
+import tarotThemes from "../../constants/TarotThemes";
 import { useAuth } from "../../context/AuthContext";
-import { searchCardByName } from "../../services/tarotService"; // Function to get card object
-import { useCardImages } from "../../hooks/useCardImages"; // Existing hook
+import { searchCardByName } from "../../services/tarotService";
+import { useCardImages } from "../../hooks/useCardImages";
 import "../../components/Modal.css";
-
-const tarotCards = [
-  "The Fool",
-  "The Magician",
-  "The High Priestess",
-  // Add all card names here...
-];
 
 const ChangeProfilePictureModal = ({ handleClose }) => {
   const { user, setUser } = useAuth();
@@ -20,16 +15,36 @@ const ChangeProfilePictureModal = ({ handleClose }) => {
   const [cardObject, setCardObject] = useState(null); // Holds the formatted card object
   const [isGenerating, setIsGenerating] = useState(false); // Tracks generation state
   const [generatedPicture, setGeneratedPicture] = useState("");
+  const [shouldFetchImages, setShouldFetchImages] = useState(false); // Control when to fetch images
+  const [shouldClearRequests, setShouldClearRequests] = useState(false);
 
-  console.log(cardObject);
+  const spinnerRef = useRef(null);
 
-  // Use the custom hook
+  // Use the custom hook conditionally
   const { imageRequests } = useCardImages(
-    cardObject ? [cardObject] : [],
-    selectedTheme || "Random"
+    shouldFetchImages ? [cardObject] : [],
+    shouldFetchImages ? selectedTheme : null,
+    shouldClearRequests
   );
 
-  console.log("imageRequests:", imageRequests);
+  useEffect(() => {
+    let loadTimeout;
+
+    if (generatedPicture === "") {
+      loadTimeout = setTimeout(() => {
+        if (spinnerRef.current) {
+          setGeneratedPicture("/tarot-images/error.webp");
+        }
+      }, 120000);
+
+      return () => clearTimeout(loadTimeout);
+    }
+  }, [generatedPicture]);
+
+  const handleSaveProfilePicture = () => {
+    // Saving logic will go here
+    return;
+  };
 
   // Handle card selection
   const handleCardChange = async (e) => {
@@ -55,7 +70,13 @@ const ChangeProfilePictureModal = ({ handleClose }) => {
 
   // Handle profile picture generation
   const handleGeneratePicture = () => {
-    setIsGenerating(true);
+    // Clear previous requests before generating a new one
+    setShouldClearRequests(true); // Trigger clear in the hook
+    setTimeout(() => {
+      setIsGenerating(true);
+      setShouldFetchImages(true); // Start fetching images
+      setShouldClearRequests(false); // Reset the clear flag
+    }, 0); // Allow state to reset before fetching
   };
 
   useEffect(() => {
@@ -66,8 +87,14 @@ const ChangeProfilePictureModal = ({ handleClose }) => {
     ) {
       setGeneratedPicture(imageRequests[cardObject.name].url);
       setIsGenerating(false);
+      setShouldFetchImages(false); // Reset fetch state
+
+      // Reset the dropdowns and related state
+      setCardObject(null);
+      setSelectedCard("");
+      setSelectedTheme("");
     }
-  }, [imageRequests, cardObject]);
+  }, [imageRequests, cardObject, selectedCard, selectedTheme]);
 
   const formatCardName = (cardName) => {
     // Remove "The" from the start of the card name (case-insensitive)
@@ -84,6 +111,8 @@ const ChangeProfilePictureModal = ({ handleClose }) => {
       .join(""); // Join without spaces
   };
 
+  const isProfilePictureReady = generatedPicture !== "";
+
   return (
     <>
       <h2 style={{ color: "black" }} className="profile-picture-header">
@@ -98,37 +127,55 @@ const ChangeProfilePictureModal = ({ handleClose }) => {
               alt="Current Profile"
               className="profile-picture"
             />
-            <div className="profile-picture-placeholder">
-              <p>New Profile Picture Preview</p>
-              {cardObject &&
-                imageRequests[cardObject.name] &&
-                imageRequests[cardObject.name].status === "ready" && (
-                  <img
-                    src={imageRequests[cardObject.name].url}
-                    alt="New Profile"
-                    className="profile-picture"
-                  />
-                )}
-            </div>
+            {!isProfilePictureReady && !isGenerating && (
+              <>
+                <div
+                  className={`profile-picture-placeholder ${
+                    isProfilePictureReady ? "border-none" : "border-dashed"
+                  }`}
+                >
+                  <p>New Profile Picture Preview</p>
+                </div>
+              </>
+            )}
+            {isProfilePictureReady && (
+              <img
+                src={generatedPicture}
+                alt="New Profile"
+                className="profile-picture"
+              />
+            )}
           </>
         ) : (
-          <div className="profile-picture-placeholder">
-            <p>No Profile Picture</p>
-            {cardObject &&
-              imageRequests[cardObject.name] &&
-              imageRequests[cardObject.name].status === "ready" && (
-                <img
-                  src={imageRequests[cardObject.name].url}
-                  alt="New Profile"
-                  className="profile-picture"
-                />
-              )}
+          <div
+            className={`profile-picture-placeholder ${
+              isProfilePictureReady ? "border-none" : "border-dashed"
+            }`}
+          >
+            {!isProfilePictureReady && !isGenerating && (
+              <p>No Profile Picture</p>
+            )}
+            {isGenerating && (
+              <Box
+                ref={spinnerRef}
+                sx={{ display: "flex", pointerEvents: "none" }}
+              >
+                <CircularProgress color="inherit" />
+              </Box>
+            )}
+            {isProfilePictureReady && !isGenerating && (
+              <img
+                src={generatedPicture}
+                alt="New Profile"
+                className="profile-picture"
+              />
+            )}
           </div>
         )}
       </div>
 
       <p style={{ color: "black" }}>
-        Your profile picture will be{" "}
+        Your profile picture can be{" "}
         <select
           value={selectedCard}
           onChange={handleCardChange}
@@ -158,16 +205,50 @@ const ChangeProfilePictureModal = ({ handleClose }) => {
       </p>
 
       <div className="button-container">
-        <button
-          onClick={handleGeneratePicture}
-          className="spooky-button"
-          disabled={!selectedCard || !selectedTheme || isGenerating} // Disable if not fully selected or already generating
-        >
-          {isGenerating ? "Generating..." : "Generate Picture"}
-        </button>
-        <button onClick={handleClose} className="spooky-button">
-          Go Back
-        </button>
+        <div className="button-container">
+          {/* Case 1: Generating is in progress */}
+          {isGenerating && (
+            <button className="spooky-button" disabled>
+              Generating...
+            </button>
+          )}
+
+          {/* Case 2: Profile picture is ready */}
+          {!isGenerating && isProfilePictureReady && (
+            <>
+              <button
+                onClick={handleSaveProfilePicture}
+                className="spooky-button"
+              >
+                Save New Profile Picture
+              </button>
+              <button
+                onClick={handleGeneratePicture}
+                className="spooky-button"
+                disabled={selectedCard === "" || selectedTheme === ""}
+              >
+                Generate New Picture
+              </button>
+            </>
+          )}
+
+          {/* Case 3: Ready to generate picture */}
+          {!isGenerating && !isProfilePictureReady && (
+            <button
+              onClick={handleGeneratePicture}
+              className="spooky-button"
+              disabled={selectedCard === "" || selectedTheme === ""} // Disable if inputs are incomplete
+            >
+              Generate Picture
+            </button>
+          )}
+        </div>
+
+        <div className="button-container">
+          <button onClick={handleClose} className="spooky-button">
+            Go Back
+          </button>
+        </div>
       </div>
     </>
   );

@@ -22,7 +22,7 @@ const CardDisplay = ({ cards, artStyle }) => {
     skipAnimation ? cards.length : currentCardIndex,
     skipAnimation
   );
-  const { imageRequests } = useCardImages(cards, artStyle);
+  const { imageRequests } = useCardImages(cards, artStyle, false);
 
   const handleTypewriterEnd = () => {
     if (!skipAnimation) {

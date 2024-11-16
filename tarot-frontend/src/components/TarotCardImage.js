@@ -36,7 +36,7 @@ const TarotCardImage = ({
         if (spinnerRef.current) {
           setImgSrc("/tarot-images/error.webp");
         }
-      }, 120000);
+      }, 240000);
 
       return () => clearTimeout(loadTimeout);
     }

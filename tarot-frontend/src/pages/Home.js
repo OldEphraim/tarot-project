@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useModal } from "../context/ModalContext";
@@ -15,9 +15,16 @@ const Home = () => {
   const [areTopButtonsVisible, setAreTopButtonsVisible] = useState(false);
 
   const { isAuthenticated, user } = useAuth();
-  const { isModalOpen, selectedCardData, closeModal } = useModal();
+  const { isModalOpen, closeModal } = useModal();
   const { workflow, setWorkflowToCards, setWorkflowToFortuneteller } =
     useTarot();
+
+  const closeModalRef = useRef(closeModal);
+
+  // Close any open modal when Home mounts
+  useEffect(() => {
+    closeModalRef.current();
+  }, [closeModalRef]);
 
   return (
     <div className="home">

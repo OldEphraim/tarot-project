@@ -5,9 +5,16 @@ import {
   retrieveCardImage,
 } from "../services/openaiService";
 
-export const useCardImages = (cards, artStyle) => {
+export const useCardImages = (cards, artStyle, shouldClear) => {
   const [imageRequests, setImageRequests] = useState({});
   const hasFetched = useRef(false);
+
+  useEffect(() => {
+    if (shouldClear) {
+      setImageRequests({});
+      hasFetched.current = false; // Reset hasFetched state
+    }
+  }, [shouldClear]);
 
   useEffect(() => {
     const fetchImages = async () => {
@@ -31,13 +38,19 @@ export const useCardImages = (cards, artStyle) => {
             status: "pending",
             theme: theme,
           };
+        } else {
+          const requestId = await generateCardImage(artStyle, card.name);
+          newImageRequests[card.name] = {
+            requestId,
+            status: "pending",
+            theme: artStyle,
+          };
         }
       }
 
       setImageRequests(newImageRequests);
     };
 
-    console.log(cards);
     if (cards.length > 0) {
       fetchImages();
     }
@@ -64,7 +77,7 @@ export const useCardImages = (cards, artStyle) => {
     };
 
     if (
-      artStyle === "Random" &&
+      artStyle !== "Rider-Waite" &&
       Object.values(imageRequests).some((req) => req.status === "pending")
     ) {
       const interval = setInterval(pollForImages, 3000);
@@ -72,5 +85,5 @@ export const useCardImages = (cards, artStyle) => {
     }
   }, [imageRequests, artStyle]);
 
-  return { imageRequests };
+  return { imageRequests, setImageRequests };
 };

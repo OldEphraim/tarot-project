@@ -43,6 +43,7 @@ const CardDetailModal = ({ setFadeOut }) => {
 
       {/* Modal Body */}
       <img
+        className="card-detail"
         src={
           modalData.imageUrl ? modalData.imageUrl : "/tarot-images/error.webp"
         }
