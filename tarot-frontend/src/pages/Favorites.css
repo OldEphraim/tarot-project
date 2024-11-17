@@ -1,17 +1,48 @@
-.favorites {
-  text-align: center;
+.favorites-container {
+  padding: 20px;
+}
+
+section {
+  margin-bottom: 40px;
 }
 
 .favorites-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 15px;
+}
+
+.favorite-item {
+  text-align: center;
+}
+
+.favorite-item img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  object-fit: contain;
+}
+
+.favorite-label {
+  color: black;
+  font-weight: bold;
+  font-family: "Fanwood Text", serif;
   margin-top: 20px;
 }
 
-.favorites-grid img {
-  width: 100%;
-  height: auto;
-  border: 2px solid #ddd;
-  border-radius: 8px;
+.favorite-art-style {
+  font-style: italic;
+  font-family: "Fanwood Text", serif;
+  color: #666;
+  font-size: 0.9em;
+}
+
+.category-name {
+  font-family: "Fanwood Text", serif;
+  text-transform: uppercase;
+}
+
+.category-description {
+  font-family: "Fanwood Text", serif;
+  font-weight: normal;
 }

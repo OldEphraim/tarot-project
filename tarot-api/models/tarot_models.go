@@ -112,7 +112,7 @@ var TarotDetails = []TarotDeck{
 
 var aceOfWands = TarotCard{
 	Emoji:         "1🕯️",
-	Name:          "aceofWands",
+	Name:          "aceOfWands",
 	Summary:       "The Ace of Wands represents the spark of inspiration, willpower, and potential for creativity. It’s the seed of fire, embodying raw enthusiasm, ambition, and the drive to turn ideas into action. This card often signifies the beginning of a journey or endeavor—perhaps an exciting project or a newfound passion. In essence, it’s the call to take bold steps and embrace opportunities that fuel your inner fire.",
 	Relationships: "When the Ace of Wands appears in a relationship reading, it signifies a burst of attraction, passion, or new potential in a romantic connection. It’s a positive sign for new relationships, hinting at a strong initial spark or chemistry. For established partnerships, it can signal a renewed sense of passion and adventure, encouraging both partners to explore and rediscover each other.",
 	Career:        "In a career reading, the Ace of Wands points to the beginning of a creative endeavor or a powerful drive to advance professionally. It could mean taking initiative on a project, stepping into a leadership role, or starting a new business. This card invites you to pursue your goals with courage and creativity, highlighting that this is a time for proactive, bold moves.",
