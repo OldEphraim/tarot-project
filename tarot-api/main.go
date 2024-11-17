@@ -41,6 +41,9 @@ func main() {
 	http.HandleFunc("/api/favorites", utils.WrapWithMiddleware(func(w http.ResponseWriter, r *http.Request) {
 		handlers.AddToFavoritesHandler(w, r, dbQueries, jwtSecret)
 	}, http.MethodPost))
+	http.HandleFunc("/api/favorites/{id}", utils.WrapWithMiddleware(func(w http.ResponseWriter, r *http.Request) {
+		handlers.GetFavoritesHandler(w, r, dbQueries, jwtSecret)
+	}, http.MethodGet))
 	http.HandleFunc("/api/login", utils.WrapWithMiddleware(func(w http.ResponseWriter, r *http.Request) {
 		handlers.LoginHandler(w, r, dbQueries, jwtSecret)
 	}, http.MethodPost))

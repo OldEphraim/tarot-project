@@ -44,7 +44,7 @@ const Login = () => {
       setServerError(error.message);
     } finally {
       setIsSubmitting(false);
-      navigate(`/${user.username}`);
+      navigate(`/${user?.username}`);
     }
   };
 

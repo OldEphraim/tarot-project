@@ -152,6 +152,12 @@ const Navbar = () => {
                 ref={(el) => (dropdownRefs.current.account.menuItem = el)}
                 onClick={() => closeDropdowns()}
               >
+                <Link to={`/${user.username}/favorites`}>Favorites</Link>
+              </li>
+              <li
+                ref={(el) => (dropdownRefs.current.account.menuItem = el)}
+                onClick={() => closeDropdowns()}
+              >
                 <Link to={`/${user.username}`}>Profile</Link>
               </li>
               <li

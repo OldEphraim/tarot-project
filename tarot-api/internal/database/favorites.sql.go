@@ -31,3 +31,43 @@ func (q *Queries) AddFavorite(ctx context.Context, arg AddFavoriteParams) error 
 	)
 	return err
 }
+
+const getFavoritesByUser = `-- name: GetFavoritesByUser :many
+SELECT 
+    image_url, 
+    card_name, 
+    art_style
+FROM 
+    favorites
+WHERE 
+    user_id = $1
+`
+
+type GetFavoritesByUserRow struct {
+	ImageUrl string
+	CardName string
+	ArtStyle string
+}
+
+func (q *Queries) GetFavoritesByUser(ctx context.Context, userID uuid.UUID) ([]GetFavoritesByUserRow, error) {
+	rows, err := q.db.QueryContext(ctx, getFavoritesByUser, userID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetFavoritesByUserRow
+	for rows.Next() {
+		var i GetFavoritesByUserRow
+		if err := rows.Scan(&i.ImageUrl, &i.CardName, &i.ArtStyle); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}

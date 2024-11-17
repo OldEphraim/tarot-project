@@ -19,13 +19,6 @@ export const saveProfileChanges = async (user) => {
 };
 
 export const handleSaveImage = async (user, imageUrl, cardName, artStyle) => {
-  console.log(
-    "You are reaching the inside of handleSaveImage",
-    user.id,
-    imageUrl,
-    cardName,
-    artStyle
-  );
   try {
     const response = await api.post(
       "/favorites",
@@ -42,6 +35,24 @@ export const handleSaveImage = async (user, imageUrl, cardName, artStyle) => {
       }
     );
     console.log("Image saved successfully:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Failed to save image:",
+      error.response?.data || error.message
+    );
+    throw error;
+  }
+};
+
+export const getSavedImage = async (user) => {
+  try {
+    const response = await api.get(`/favorites/${user.id}`, {
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
+    console.log("Images returned successfully:", response.data);
     return response.data;
   } catch (error) {
     console.error(

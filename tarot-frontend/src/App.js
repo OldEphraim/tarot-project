@@ -4,6 +4,7 @@ import Navbar from "./components/Navbar";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AboutTarot from "./pages/AboutTarot";
 import CreateAccount from "./pages/CreateAccount";
+import Favorites from "./pages/Favorites";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Profile from "./pages/Profile";
@@ -23,6 +24,9 @@ const App = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/:username" element={<ProtectedRoute />}>
             <Route index element={<Profile />} />
+          </Route>
+          <Route path="/:username/favorites" element={<ProtectedRoute />}>
+            <Route index element={<Favorites />} />
           </Route>
           <Route path="/tarot" element={<AboutTarot />} />
           <Route path="/tarot/cards" element={<TarotGallery />} />
