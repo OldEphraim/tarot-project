@@ -63,7 +63,9 @@ const CardDisplay = ({ cards, artStyle }) => {
           ) : null}
         </div>
       ))}
-      {(currentCardIndex > cards.length || skipAnimation) && <Closing />}
+      {(currentCardIndex > cards.length || skipAnimation) && (
+        <Closing artStyle={artStyle} />
+      )}
     </div>
   );
 };

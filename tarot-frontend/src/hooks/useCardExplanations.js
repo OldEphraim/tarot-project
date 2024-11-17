@@ -74,7 +74,7 @@ export const useCardExplanations = (cards, currentCardIndex, skipAnimation) => {
     skipAnimation,
     selectedSpread,
     userReason,
-    user.username,
+    user?.username,
   ]);
 
   return { explanationTexts };

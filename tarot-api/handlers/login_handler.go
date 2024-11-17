@@ -49,6 +49,8 @@ func LoginHandler(w http.ResponseWriter, r *http.Request, dbQueries *database.Qu
 		expiration = time.Duration(*req.ExpiresInSeconds) * time.Second
 	}
 
+	expirationTime := time.Now().Add(expiration)
+
 	// Generate JWT
 	accessToken, err := auth.MakeJWT(user.ID, string(jwtSecret), expiration)
 	if err != nil {
@@ -83,22 +85,24 @@ func LoginHandler(w http.ResponseWriter, r *http.Request, dbQueries *database.Qu
 	}
 
 	type loginResponse struct {
-		ID             uuid.UUID  `json:"id"`
-		Email          string     `json:"email"`
-		ArtStyle       *string    `json:"art_style"`
-		ProfilePicture *string    `json:"profile_picture"`
-		Username       string     `json:"username"`
-		Token          string     `json:"token"`
-		RefreshToken   string     `json:"refresh_token"`
+		ID             uuid.UUID `json:"id"`
+		Email          string    `json:"email"`
+		ArtStyle       *string   `json:"art_style"`
+		ProfilePicture *string   `json:"profile_picture"`
+		Username       string    `json:"username"`
+		Token          string    `json:"token"`
+		RefreshToken   string    `json:"refresh_token"`
+		Expiration     time.Time `json:"expiration"` // Include expiration as a timestamp
 	}
 
 	respondWithJSON(w, http.StatusOK, loginResponse{
 		ID:             user.ID,
-		Email: 		    user.Email,
+		Email:          user.Email,
 		ArtStyle:       toPointer(user.ArtStyle),
 		ProfilePicture: toPointer(user.ProfilePicture),
 		Username:       user.Username,
 		Token:          accessToken,
 		RefreshToken:   refreshToken,
+		Expiration:     expirationTime, // Pass the exact expiration time
 	})
 }

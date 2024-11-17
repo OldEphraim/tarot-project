@@ -1,12 +1,14 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import Typewriter from "./Typewriter";
+import { handleSaveReading } from "../services/profileService";
 import { useAuth } from "../context/AuthContext";
 import { useTarot } from "../context/TarotContext";
+import { extractWorkflowData } from "../utils/workflowUtils";
 
-const Closing = () => {
-  const { isAuthenticated } = useAuth();
-  const { workflow } = useTarot();
+const Closing = ({ artStyle }) => {
+  const { isAuthenticated, user } = useAuth();
+  const { selectedSpread, userReason, workflow } = useTarot();
 
   const getMessage = () => {
     if (workflow === "cards") {
@@ -21,13 +23,32 @@ const Closing = () => {
     return "";
   };
 
+  const saveReading = async () => {
+    try {
+      const workflowData =
+        workflow === "cards"
+          ? extractWorkflowData(workflow, {
+              artStyle: artStyle,
+              userReason: userReason,
+              layout: selectedSpread,
+            })
+          : extractWorkflowData(workflow);
+      const response = await handleSaveReading(user, workflowData);
+      console.log(response);
+    } catch (error) {
+      console.error("Error saving log:", error);
+    }
+  };
+
   return (
     <div className={`closing ${workflow}`}>
       <Typewriter text={getMessage()} startAnimation />
 
       <div className="button-container">
         {isAuthenticated ? (
-          <button className="spooky-button">SAVE READING</button>
+          <button className="spooky-button" onClick={saveReading}>
+            SAVE READING
+          </button>
         ) : (
           <button className="spooky-button">
             <Link to="/login" className="no-style-link">

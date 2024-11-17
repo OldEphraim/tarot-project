@@ -6,7 +6,7 @@ const api = axios.create({
 });
 
 // Store tokens and user info in localStorage
-const setAuthData = (user) => {
+export const setAuthData = (user) => {
   localStorage.setItem("user", JSON.stringify(user));
 };
 
@@ -68,6 +68,24 @@ export const logout = async () => {
       throw new Error(error.response.data.error || "Failed to log out");
     }
     throw new Error("Network error");
+  }
+};
+
+export const refreshAccessToken = async (refreshToken) => {
+  try {
+    const response = await api.post(
+      "/refresh",
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${refreshToken}`,
+        },
+      }
+    );
+    return response.data.token;
+  } catch (error) {
+    console.error("Failed to refresh access token:", error);
+    throw error; // Re-throw the error to handle it where this function is called
   }
 };
 

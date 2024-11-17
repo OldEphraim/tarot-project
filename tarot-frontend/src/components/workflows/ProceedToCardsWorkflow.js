@@ -33,6 +33,8 @@ const ProceedToCardsWorkflow = ({ onExit }) => {
   const { isAuthenticated, user } = useAuth();
   const { selectedSpread, chooseSpread, userReason, submitReason } = useTarot();
 
+  console.log(user);
+
   const handleArtStyleSelection = (style) => {
     setAreArtStyleSelectionButtonsVisible(false);
     setArtStyle(style);
@@ -107,7 +109,15 @@ const ProceedToCardsWorkflow = ({ onExit }) => {
 
       {isArtStyleSelectionTextVisible && !isArtStyleSelectionChoiceKnown && (
         <Typewriter
-          text={`WOULD you prefer the classic Rider-Waite designs, or AI-generated artwork for your cards in a randomly-chosen style? If you would like to customize the style of your AI-generated cards, ${user?.username ? "you can do so in your Profile page." : "please log in."}`}
+          text={`WOULD you prefer the classic Rider-Waite designs, or AI-generated artwork for your cards in a randomly-chosen style${
+            !user?.art_style
+              ? `? If you would like to customize the style of your AI-generated cards, ${
+                  user?.username
+                    ? "you can do so in your Profile page."
+                    : "please log in."
+                }`
+              : `, or perhaps the ${user.art_style} style, which you chose for yourself?`
+          }`}
           startAnimation
           onEnd={() => setAreArtStyleSelectionButtonsVisible(true)}
         />
@@ -133,6 +143,14 @@ const ProceedToCardsWorkflow = ({ onExit }) => {
                 <Link to="/login" className="no-style-link">
                   LOGIN
                 </Link>
+              </button>
+            )}
+            {user.art_style && (
+              <button
+                className="spooky-button"
+                onClick={() => handleArtStyleSelection(`${user.art_style}`)}
+              >
+                {user.art_style.toUpperCase()}
               </button>
             )}
           </div>

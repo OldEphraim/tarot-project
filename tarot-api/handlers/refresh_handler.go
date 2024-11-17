@@ -25,14 +25,18 @@ func RefreshHandler(w http.ResponseWriter, r *http.Request, dbQueries *database.
 	}
 
 	// Generate new JWT
-	newAccessToken, err := auth.MakeJWT(refreshToken.UserID, string(jwtSecret), time.Hour)
+	expiration := time.Hour
+	expirationTime := time.Now().Add(expiration)
+
+	newAccessToken, err := auth.MakeJWT(refreshToken.UserID, string(jwtSecret), expiration)
 	if err != nil {
 		respondWithError(w, http.StatusInternalServerError, "Could not create token")
 		return
 	}
 
-	// Send the new access token
+	// Send the new access token and expiration time
 	respondWithJSON(w, http.StatusOK, map[string]interface{}{
-		"token": newAccessToken,
+		"token":      newAccessToken,
+		"expiration": expirationTime.Format(time.RFC3339), // ISO 8601 format for consistency
 	})
 }

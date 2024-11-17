@@ -88,7 +88,7 @@ const TarotChat = () => {
             alt="spooky-mushroom-forest"
             onLoad={() => setIsImageLoaded(true)}
           />
-          <Closing />
+          <Closing artStyle={"Rider-Waite"} />
         </div>
       )}
     </div>

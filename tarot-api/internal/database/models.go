@@ -6,6 +6,7 @@ package database
 
 import (
 	"database/sql"
+	"encoding/json"
 	"time"
 
 	"github.com/google/uuid"
@@ -18,6 +19,15 @@ type Favorite struct {
 	CreatedAt time.Time
 	CardName  string
 	ArtStyle  string
+}
+
+type Reading struct {
+	ID          uuid.UUID
+	UserID      uuid.UUID
+	CreatedAt   time.Time
+	WorkflowLog json.RawMessage
+	Title       string
+	Slug        string
 }
 
 type RefreshToken struct {

@@ -4,6 +4,8 @@ import {
   logout as logoutService,
   getUser as getUserService,
   clearAuthData,
+  setAuthData,
+  refreshAccessToken,
 } from "../services/authService";
 
 const AuthContext = createContext();
@@ -11,7 +13,44 @@ const AuthContext = createContext();
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(getUserService()); // Initialize user from localStorage
+  const [user, setUser] = useState(getUserService()); // Load from localStorage
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  // Refresh token logic
+  useEffect(() => {
+    if (!user?.token || !user?.expiration) return;
+
+    const expirationTime = new Date(user.expiration).getTime();
+    const currentTime = Date.now();
+    const timeUntilRefresh = expirationTime - currentTime - 60000; // Refresh 1 min before expiry
+
+    if (timeUntilRefresh > 0) {
+      const refreshTimeout = setTimeout(async () => {
+        try {
+          setIsRefreshing(true);
+          const newTokenData = await refreshAccessToken(user.refresh_token);
+          console.log(newTokenData); // Call backend
+
+          const updatedUser = {
+            ...user,
+            token: newTokenData.token,
+            expiration: newTokenData.expiration, // Update expiration
+          };
+
+          setUser(updatedUser);
+          setAuthData(updatedUser);
+          console.log(user);
+        } catch (error) {
+          console.error("Token refresh failed. Logging out...");
+          logout(); // Handle failure
+        } finally {
+          setIsRefreshing(false);
+        }
+      }, timeUntilRefresh);
+
+      return () => clearTimeout(refreshTimeout); // Cleanup
+    }
+  }, [user]);
 
   // Login function
   const login = async ({ username, password, expiresInSeconds = 3600 }) => {
@@ -21,9 +60,10 @@ export const AuthProvider = ({ children }) => {
         password,
         expiresInSeconds,
       });
-      setUser(response); // Set user in context
+      setUser(response); // Set user in state
+      setAuthData(response); // Persist to localStorage
     } catch (error) {
-      throw error; // Handle errors outside of AuthContext
+      throw error; // Handle login error
     }
   };
 
@@ -31,28 +71,21 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     try {
       await logoutService();
-      setUser(null); // Clear user in context
-      clearAuthData(); // Clear localStorage
     } catch (error) {
-      clearAuthData();
-      throw error; // Handle errors outside of AuthContext
+      console.error("Error during logout:", error);
+    } finally {
+      setUser(null); // Clear state
+      clearAuthData(); // Clear localStorage
     }
   };
-
-  // useEffect to initialize user from localStorage on first load
-  useEffect(() => {
-    const storedUser = getUserService();
-    if (storedUser) {
-      setUser(storedUser);
-    }
-  }, []);
 
   const value = {
     user,
     setUser,
     login,
     logout,
-    isAuthenticated: !!user?.token, // Boolean indicating if the user is logged in
+    isAuthenticated: !!user?.token,
+    isRefreshing, // Optional: Track refresh state
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

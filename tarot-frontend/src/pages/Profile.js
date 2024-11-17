@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useModal } from "../context/ModalContext";
+import { getSavedReading } from "../services/profileService";
 import tarotThemes from "../constants/TarotThemes";
 import Modal from "../components/Modal";
 import "./Profile.css";
@@ -13,16 +15,34 @@ const Profile = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [emailEditable, setEmailEditable] = useState(false);
   const [usernameEditable, setUsernameEditable] = useState(false);
+  const [readings, setReadings] = useState([]);
+  const [error, setError] = useState(null);
 
   const { user } = useAuth();
   const { openModal, closeModal } = useModal();
 
   const closeModalRef = useRef(closeModal);
 
-  // Close any open modal when Profile mounts
   useEffect(() => {
     closeModalRef.current();
   }, [closeModalRef]);
+
+  useEffect(() => {
+    const fetchReadings = async () => {
+      try {
+        const data = await getSavedReading(user); // Fetch saved readings
+        console.log(data);
+        setReadings(data); // Update state with readings
+      } catch (error) {
+        console.error("Failed to fetch readings:", error);
+        setError("Could not load saved readings.");
+      }
+    };
+
+    if (user) {
+      fetchReadings();
+    }
+  }, [user]);
 
   const handleArtStyleChange = (e) => {
     const selectedStyle = e.target.value;
@@ -84,11 +104,22 @@ const Profile = () => {
 
         <div className="saved-logs">
           <h2>Saved Logs</h2>
-          <ul>
-            <li>Log Entry 1 - 10/24/2024</li>
-            <li>Log Entry 2 - 10/18/2024</li>
-            <li>Log Entry 3 - 10/05/2024</li>
-          </ul>
+          {error ? (
+            <p className="error">{error}</p>
+          ) : readings.length === 0 ? (
+            <p>No saved logs yet.</p>
+          ) : (
+            <ul>
+              {readings.map((reading, index) => (
+                <li key={index}>
+                  <Link to={`/${user.username}/readings/${reading.slug}`}>
+                    {reading.title} -{" "}
+                    {new Date(reading.created_at).toLocaleDateString()}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       </div>
 
