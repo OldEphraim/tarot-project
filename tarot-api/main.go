@@ -47,6 +47,9 @@ func main() {
 	http.HandleFunc("/api/favorites/{id}", utils.WrapWithMiddleware(func(w http.ResponseWriter, r *http.Request) {
 		handlers.GetFavoritesHandler(w, r, dbQueries, jwtSecret)
 	}, http.MethodGet))
+	http.HandleFunc("/api/favorites/delete/{id}", utils.WrapWithMiddleware(func(w http.ResponseWriter, r *http.Request) {
+		handlers.DeleteFavoriteHandler(w, r, dbQueries, jwtSecret)
+	}, http.MethodDelete))
 	http.HandleFunc("/api/favorites/entry/{id}", utils.WrapWithMiddleware(func(w http.ResponseWriter, r *http.Request) {
 		handlers.GetFavoriteByIdHandler(w, r, dbQueries, jwtSecret)
 	}, http.MethodGet))

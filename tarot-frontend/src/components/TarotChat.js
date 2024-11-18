@@ -62,6 +62,7 @@ const TarotChat = () => {
             onChange={handleInputChange}
             onSubmit={handleSubmit}
             belowText="Type your message and press Enter to respond to Esmeralda."
+            placeholder="Type your message..."
           />
           <div className="button-container">
             <button className="spooky-button" onClick={handleSubmit}>

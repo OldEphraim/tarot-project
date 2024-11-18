@@ -82,7 +82,8 @@ export const refreshAccessToken = async (refreshToken) => {
         },
       }
     );
-    return response.data.token;
+    console.log("refreshAccessToken response:", response.data);
+    return response.data;
   } catch (error) {
     console.error("Failed to refresh access token:", error);
     throw error; // Re-throw the error to handle it where this function is called

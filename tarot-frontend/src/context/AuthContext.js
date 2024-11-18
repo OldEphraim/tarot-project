@@ -23,10 +23,12 @@ export const AuthProvider = ({ children }) => {
     const expirationTime = new Date(user.expiration).getTime();
     const currentTime = Date.now();
     const timeUntilRefresh = expirationTime - currentTime - 60000; // Refresh 1 min before expiry
+    console.log(timeUntilRefresh);
 
     if (timeUntilRefresh > 0) {
       const refreshTimeout = setTimeout(async () => {
         try {
+          console.log("old user:", user);
           setIsRefreshing(true);
           const newTokenData = await refreshAccessToken(user.refresh_token);
           console.log(newTokenData); // Call backend
@@ -37,9 +39,10 @@ export const AuthProvider = ({ children }) => {
             expiration: newTokenData.expiration, // Update expiration
           };
 
+          console.log("new user:", updatedUser);
+
           setUser(updatedUser);
           setAuthData(updatedUser);
-          console.log(user);
         } catch (error) {
           console.error("Token refresh failed. Logging out...");
           logout(); // Handle failure

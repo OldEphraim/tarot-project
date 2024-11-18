@@ -145,10 +145,9 @@ export const getFavoriteById = async (user, id) => {
 };
 
 export const updateJournalEntry = async (user, id, journalText) => {
-  console.log(journalText);
   const response = await api.put(
     `/favorites/journal/${id}`,
-    { journal_entry: journalText }, // Pass the string directly
+    { journal_entry: journalText },
     {
       headers: {
         Authorization: `Bearer ${user.token}`,
@@ -163,4 +162,21 @@ export const updateJournalEntry = async (user, id, journalText) => {
   }
 
   return response.json();
+};
+
+export const deleteFavoriteById = async (user, id) => {
+  try {
+    const response = await api.delete(`/favorites/delete/${id}`, {
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
+    console.log("Image deleted successfully:", response.data);
+    return response;
+  } catch (error) {
+    console.error(
+      "Failed to delete image:",
+      error.response?.data || error.message
+    );
+  }
 };

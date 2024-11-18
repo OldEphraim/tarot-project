@@ -35,7 +35,6 @@ func (q *Queries) AddReading(ctx context.Context, arg AddReadingParams) error {
 }
 
 const getReadingBySlugAndUser = `-- name: GetReadingBySlugAndUser :one
-
 SELECT workflow_log, title, created_at, slug
 FROM readings
 WHERE slug = $1 AND user_id = $2
@@ -53,7 +52,6 @@ type GetReadingBySlugAndUserRow struct {
 	Slug        string
 }
 
-// To get the most recent readings first
 func (q *Queries) GetReadingBySlugAndUser(ctx context.Context, arg GetReadingBySlugAndUserParams) (GetReadingBySlugAndUserRow, error) {
 	row := q.db.QueryRowContext(ctx, getReadingBySlugAndUser, arg.Slug, arg.UserID)
 	var i GetReadingBySlugAndUserRow

@@ -109,8 +109,9 @@ const JournalEntry = () => {
         onChange={handleChange}
         onSubmit={handleSave}
         belowText=""
+        placeholder="Add your journal entry..."
       />
-      <div className="button-container">
+      <div className="button-container" style={{ textTransform: "uppercase" }}>
         <button className="spooky-button" onClick={handleSave}>
           SAVE JOURNAL ENTRY
         </button>

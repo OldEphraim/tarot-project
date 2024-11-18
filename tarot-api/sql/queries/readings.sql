@@ -8,7 +8,7 @@ FROM
 WHERE 
     user_id = $1
 ORDER BY 
-    created_at DESC; -- To get the most recent readings first
+    created_at DESC; 
 
 -- name: GetReadingBySlugAndUser :one
 SELECT workflow_log, title, created_at, slug

@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from "react";
 
-const TextArea = ({ value, onChange, onSubmit, belowText }) => {
+const TextArea = ({ value, onChange, onSubmit, belowText, placeholder }) => {
   const textareaRef = useRef(null);
 
   const handleChange = (e) => {
@@ -33,7 +33,7 @@ const TextArea = ({ value, onChange, onSubmit, belowText }) => {
         value={value}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
-        placeholder="Type your message..."
+        placeholder={placeholder}
         className="message-input"
         style={{ resize: "none", overflow: "hidden" }}
       />

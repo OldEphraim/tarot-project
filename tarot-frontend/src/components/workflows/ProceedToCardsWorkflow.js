@@ -180,6 +180,7 @@ const ProceedToCardsWorkflow = () => {
             onSubmit={handleReasonSubmit}
             belowText="Type your message and press Enter to tell the Fortuneteller about
             the reason for this drawing."
+            placeholder="Type your message..."
           />
           <div className="button-container">
             <button className="spooky-button" onClick={handleReasonSubmit}>

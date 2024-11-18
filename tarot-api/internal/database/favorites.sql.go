@@ -60,6 +60,21 @@ func (q *Queries) AddFavorite(ctx context.Context, arg AddFavoriteParams) (AddFa
 	return i, err
 }
 
+const deleteFavoriteById = `-- name: DeleteFavoriteById :exec
+DELETE FROM favorites
+WHERE id = $1 AND user_id = $2
+`
+
+type DeleteFavoriteByIdParams struct {
+	ID     uuid.UUID
+	UserID uuid.UUID
+}
+
+func (q *Queries) DeleteFavoriteById(ctx context.Context, arg DeleteFavoriteByIdParams) error {
+	_, err := q.db.ExecContext(ctx, deleteFavoriteById, arg.ID, arg.UserID)
+	return err
+}
+
 const getFavoriteById = `-- name: GetFavoriteById :one
 SELECT 
     id,
@@ -109,11 +124,14 @@ SELECT
     card_name, 
     art_style,
     journal_entry,
-    updated_at
+    updated_at,
+    id
 FROM 
     favorites
 WHERE 
     user_id = $1
+ORDER BY 
+    updated_at DESC
 `
 
 type GetFavoritesByUserRow struct {
@@ -122,6 +140,7 @@ type GetFavoritesByUserRow struct {
 	ArtStyle     string
 	JournalEntry sql.NullString
 	UpdatedAt    time.Time
+	ID           uuid.UUID
 }
 
 func (q *Queries) GetFavoritesByUser(ctx context.Context, userID uuid.UUID) ([]GetFavoritesByUserRow, error) {
@@ -139,6 +158,7 @@ func (q *Queries) GetFavoritesByUser(ctx context.Context, userID uuid.UUID) ([]G
 			&i.ArtStyle,
 			&i.JournalEntry,
 			&i.UpdatedAt,
+			&i.ID,
 		); err != nil {
 			return nil, err
 		}

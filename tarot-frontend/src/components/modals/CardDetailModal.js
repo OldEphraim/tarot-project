@@ -15,6 +15,8 @@ const CardDetailModal = ({ setFadeOut }) => {
   const { modalData } = useModal();
   const { selectedSpread, workflow } = useTarot();
 
+  console.log(modalData);
+
   useEffect(() => {
     const fetchFavorites = async () => {
       try {
@@ -97,34 +99,45 @@ const CardDetailModal = ({ setFadeOut }) => {
         }
         alt={modalData.card.name}
       />
-      <p className="art-style">
-        You drew{" "}
-        {modalData.card.arcana === "Minor Arcana" ||
-        modalData.card.name === "Wheel of Fortune"
-          ? "the"
-          : ""}{" "}
-        {modalData.card.name}
-        {selectedSpread !== "One" && workflow !== "fortuneteller"
-          ? ` in the ${modalData.positionMeaning.text} position.`
-          : "."}
-        {hasSaved && (
-          <strong>{" This image has been saved to your favorites."}</strong>
-        )}
-        {isFavorite && "This image has already been saved to your favorites."}
-      </p>
-      <div>
-        <button
-          className="spooky-button"
-          onClick={() => handleScrollToExplanation()}
-        >
-          See Explanation
-        </button>
-        {!isFavorite && (
-          <button className="spooky-button" onClick={() => handleSaveClick()}>
-            Save to Favorites
-          </button>
-        )}
-      </div>
+      {modalData.position !== "" && modalData.positionMeaning !== "" ? (
+        <>
+          {" "}
+          <p className="art-style">
+            You drew{" "}
+            {modalData.card.arcana === "Minor Arcana" ||
+            modalData.card.name === "Wheel of Fortune"
+              ? "the"
+              : ""}{" "}
+            {modalData.card.name}
+            {selectedSpread !== "One" && workflow !== "fortuneteller"
+              ? ` in the ${modalData.positionMeaning.text} position.`
+              : "."}
+            {hasSaved && (
+              <strong>{" This image has been saved to your favorites."}</strong>
+            )}
+            {isFavorite &&
+              "This image has already been saved to your favorites."}
+          </p>
+          <div>
+            <button
+              className="spooky-button"
+              onClick={() => handleScrollToExplanation()}
+            >
+              See Explanation
+            </button>
+            {!isFavorite && (
+              <button
+                className="spooky-button"
+                onClick={() => handleSaveClick()}
+              >
+                Save to Favorites
+              </button>
+            )}
+          </div>{" "}
+        </>
+      ) : (
+        <div style={{ marginTop: "60px" }}></div>
+      )}
     </>
   );
 };

@@ -9,11 +9,14 @@ SELECT
     card_name, 
     art_style,
     journal_entry,
-    updated_at
+    updated_at,
+    id
 FROM 
     favorites
 WHERE 
-    user_id = $1;
+    user_id = $1
+ORDER BY 
+    updated_at DESC;
 
 -- name: GetFavoriteById :one
 SELECT 
@@ -37,3 +40,7 @@ SET
     updated_at = NOW()
 WHERE 
     id = $2 AND user_id = $3;
+
+-- name: DeleteFavoriteById :exec
+DELETE FROM favorites
+WHERE id = $1 AND user_id = $2;
