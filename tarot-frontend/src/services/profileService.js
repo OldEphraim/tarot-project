@@ -143,3 +143,24 @@ export const getFavoriteById = async (user, id) => {
     throw error;
   }
 };
+
+export const updateJournalEntry = async (user, id, journalText) => {
+  console.log(journalText);
+  const response = await api.put(
+    `/favorites/journal/${id}`,
+    { journal_entry: journalText }, // Pass the string directly
+    {
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    }
+  );
+
+  console.log(response);
+
+  if (!response.ok) {
+    throw new Error("Failed to update journal entry");
+  }
+
+  return response.json();
+};

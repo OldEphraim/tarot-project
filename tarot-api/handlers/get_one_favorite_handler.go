@@ -62,5 +62,6 @@ func GetFavoriteByIdHandler(w http.ResponseWriter, r *http.Request, dbQueries *d
 		"art_style":     favorite.ArtStyle,
 		"journal_entry": favorite.JournalEntry,
 		"created_at":    favorite.CreatedAt,
+		"updated_at":    favorite.UpdatedAt,
 	})
 }

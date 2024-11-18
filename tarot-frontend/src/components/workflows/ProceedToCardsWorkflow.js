@@ -7,7 +7,7 @@ import { useAuth } from "../../context/AuthContext";
 import { useTarot } from "../../context/TarotContext";
 import { drawMultipleCards } from "../../services/tarotService";
 
-const ProceedToCardsWorkflow = ({ onExit }) => {
+const ProceedToCardsWorkflow = () => {
   const [artStyle, setArtStyle] = useState("");
   const [cards, setCards] = useState([]);
   const [isCardDisplayVisible, setIsCardDisplayVisible] = useState(false);

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Typewriter from "../Typewriter";
 import TarotChat from "../TarotChat";
 
-const SpeakToFortunetellerWorkflow = ({ onExit }) => {
+const SpeakToFortunetellerWorkflow = () => {
   const [isChatVisible, setIsChatVisible] = useState(false);
   const [isFortunetellerVisible, setIsFortunetellerVisible] = useState(false);
   const [isImageLoaded, setIsImageLoaded] = useState(false);

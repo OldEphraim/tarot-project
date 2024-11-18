@@ -50,6 +50,9 @@ func main() {
 	http.HandleFunc("/api/favorites/entry/{id}", utils.WrapWithMiddleware(func(w http.ResponseWriter, r *http.Request) {
 		handlers.GetFavoriteByIdHandler(w, r, dbQueries, jwtSecret)
 	}, http.MethodGet))
+	http.HandleFunc("/api/favorites/journal/{id}", utils.WrapWithMiddleware(func(w http.ResponseWriter, r *http.Request) {
+		handlers.UpdateJournalEntryHandler(w, r, dbQueries, jwtSecret)
+	}, http.MethodPut))
 	http.HandleFunc("/api/readings/{id}", utils.WrapWithMiddleware(func(w http.ResponseWriter, r *http.Request) {
 		handlers.GetReadingsHandler(w, r, dbQueries, jwtSecret)
 	}, http.MethodGet))

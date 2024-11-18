@@ -1,0 +1,92 @@
+.journal-entry-page {
+  text-align: center;
+  font-family: "Fanwood Text", serif;
+}
+
+.journal-entry-header {
+  font-family: "Fanwood Text", serif;
+  text-transform: uppercase;
+  color: black;
+  font-weight: bold;
+  font-size: 50px;
+  letter-spacing: 0.2rem;
+  text-shadow:
+    -1px 0,
+    0 1px,
+    1px 0,
+    0 -1px,
+    -1px -1px,
+    1px 1px,
+    -1px 1px,
+    1px -1px;
+}
+
+.journal-entry-art-style {
+  font-family: "Fanwood Text", serif;
+  text-transform: uppercase;
+  color: black;
+  font-weight: bold;
+  font-size: 15px;
+  letter-spacing: 0.2rem;
+  text-shadow:
+    -1px 0,
+    0 1px,
+    1px 0,
+    0 -1px,
+    -1px -1px,
+    1px 1px,
+    -1px 1px,
+    1px -1px;
+}
+
+.tarot-card img {
+  max-height: 33vh;
+  width: auto;
+  padding-bottom: 20px;
+}
+
+.emoji {
+  font-size: 50px;
+}
+
+.journal-entry.editable {
+  min-height: 100px;
+  padding: 10px;
+  font-size: 16px;
+  outline: none;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  margin: 20px;
+}
+
+.blinking-cursor {
+  display: inline-block;
+  width: 1ch;
+  background-color: black;
+  animation: blink 1s steps(2, start) infinite;
+}
+
+@keyframes blink {
+  50% {
+    background-color: transparent;
+  }
+}
+
+.spooky-button {
+  margin: 10px auto;
+  display: block;
+  padding: 10px 20px;
+  background: #111;
+  color: #fff;
+  border: 2px solid #444;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition:
+    background 0.3s ease,
+    color 0.3s ease;
+}
+
+.spooky-button:hover {
+  background: #444;
+  color: #fff;
+}

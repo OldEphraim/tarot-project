@@ -4,6 +4,7 @@ CREATE TABLE favorites (
     user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     image_url TEXT NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT now(),
+    updated_at TIMESTAMP NOT NULL DEFAULT now(),
     card_name TEXT NOT NULL,
     art_style TEXT NOT NULL,
     journal_entry TEXT DEFAULT NULL

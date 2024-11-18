@@ -17,6 +17,7 @@ type Favorite struct {
 	UserID       uuid.UUID
 	ImageUrl     string
 	CreatedAt    time.Time
+	UpdatedAt    time.Time
 	CardName     string
 	ArtStyle     string
 	JournalEntry sql.NullString
