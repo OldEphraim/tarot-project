@@ -12,9 +12,8 @@ import (
 
 func GetReadingBySlugHandler(w http.ResponseWriter, r *http.Request, dbQueries *database.Queries, jwtSecret []byte) {
     // Extract user ID and slug from the URL path
-	log.Println(r.URL.Path)
     pathParts := strings.Split(r.URL.Path, "/")
-    if len(pathParts) < 7 || pathParts[3] == "" || pathParts[6] == "" {
+    if len(pathParts) < 7 || pathParts[4] == "" || pathParts[6] == "" {
         http.Error(w, "Invalid user ID or slug in URL", http.StatusBadRequest)
         return
     }

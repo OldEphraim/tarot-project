@@ -5,7 +5,8 @@ CREATE TABLE favorites (
     image_url TEXT NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT now(),
     card_name TEXT NOT NULL,
-    art_style TEXT NOT NULL
+    art_style TEXT NOT NULL,
+    journal_entry TEXT DEFAULT NULL
 );
 
 -- +goose Down

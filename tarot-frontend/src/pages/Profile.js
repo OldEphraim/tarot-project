@@ -68,6 +68,11 @@ const Profile = () => {
     });
   };
 
+  const handleJournalEntryClick = () => {
+    setIsModalOpen(true);
+    openModal("journalEntry");
+  };
+
   const handleProfilePictureClick = () => {
     setIsModalOpen(true);
     openModal("profilePicture");
@@ -97,8 +102,12 @@ const Profile = () => {
             >
               Generate New Profile Image
             </button>
-            <button className="spooky-button">Personal Gallery</button>
-            <button className="spooky-button">Calendar</button>
+            <Link to={`/${user.username}/favorites`}>
+              <button className="spooky-button">Personal Gallery</button>
+            </Link>
+            <button className="spooky-button" onClick={handleJournalEntryClick}>
+              Create New Journal Entry
+            </button>
           </div>
         </div>
 

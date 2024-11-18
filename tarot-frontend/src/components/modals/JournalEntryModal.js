@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Box, CircularProgress } from "@mui/material";
 import tarotCards from "../../constants/TarotCards";
 import tarotThemes from "../../constants/TarotThemes";
@@ -11,7 +12,7 @@ import {
 import { useCardImages } from "../../hooks/useCardImages";
 import "../../components/Modal.css";
 
-const ChangeProfilePictureModal = ({ handleClose }) => {
+const JournalEntryModal = ({ handleClose }) => {
   const { user, setUser } = useAuth();
 
   const [selectedCard, setSelectedCard] = useState("");
@@ -24,6 +25,7 @@ const ChangeProfilePictureModal = ({ handleClose }) => {
   const [isSaved, setIsSaved] = useState([]);
 
   const spinnerRef = useRef(null);
+  const navigate = useNavigate();
 
   // Use the custom hook conditionally
   const { imageRequests } = useCardImages(
@@ -46,30 +48,18 @@ const ChangeProfilePictureModal = ({ handleClose }) => {
     }
   }, [generatedPicture]);
 
-  const handleSaveProfilePicture = async () => {
+  const handleStartJournalEntry = async () => {
     try {
-      // Save the generated picture (implement API logic as needed)
-      const updatedUser = {
-        ...user,
-        profile_picture: generatedPicture[0], // Assuming this is the URL of the generated image
-      };
-      await saveProfileChanges(updatedUser); // Save changes via backend
-      setUser(updatedUser); // Update frontend state
-      setIsSaved(["Profile picture saved successfully!", "green"]);
-      setGeneratedPicture([]);
-      try {
-        await handleSaveImage(
-          user,
-          generatedPicture[0],
-          generatedPicture[1],
-          generatedPicture[2]
-        );
-      } catch (error) {
-        console.error("Error saving profile picture to saved images", error);
-      }
+      const response = await handleSaveImage(
+        user,
+        generatedPicture[0],
+        generatedPicture[1],
+        generatedPicture[2]
+      );
+      console.log(response);
+      navigate(`/${user.username}/favorites/${response.id}`);
     } catch (error) {
-      console.error("Error saving profile picture:", error);
-      setIsSaved(["Failed to save profile picture. Please try again.", "red"]);
+      console.error("Error saving profile picture to saved images", error);
     }
   };
 
@@ -95,7 +85,7 @@ const ChangeProfilePictureModal = ({ handleClose }) => {
     setSelectedTheme(e.target.value);
   };
 
-  // Handle profile picture generation
+  // Handle picture generation
   const handleGeneratePicture = () => {
     // Clear previous requests before generating a new one
     setShouldClearRequests(true); // Trigger clear in the hook
@@ -137,59 +127,22 @@ const ChangeProfilePictureModal = ({ handleClose }) => {
       .join(""); // Join without spaces
   };
 
-  const isProfilePictureReady = generatedPicture.length > 0;
+  const isPictureReady = generatedPicture.length > 0;
 
   return (
     <>
       <h2 style={{ color: "black" }} className="profile-picture-header">
-        Generate New Profile Picture
+        Generate New Journal Entry
       </h2>
 
       <div className="profile-picture-preview">
-        {user.profile_picture && isSaved.length === 0 && (
-          <>
-            <div className="profile-picture-flexbox">
-              <img
-                src={user.profile_picture}
-                alt="Current Profile"
-                className="profile-picture-dual"
-              />
-              <div
-                className={`profile-picture-placeholder ${
-                  isProfilePictureReady ? "border-none" : "border-dashed"
-                }`}
-              >
-                {!isProfilePictureReady && !isGenerating && (
-                  <p>New Profile Picture Preview</p>
-                )}
-                {isGenerating && (
-                  <Box
-                    ref={spinnerRef}
-                    sx={{ display: "flex", pointerEvents: "none" }}
-                  >
-                    <CircularProgress color="inherit" />
-                  </Box>
-                )}
-                {isProfilePictureReady && !isGenerating && (
-                  <img
-                    src={generatedPicture[0]}
-                    alt="New Profile"
-                    className="profile-picture-dual"
-                  />
-                )}
-              </div>
-            </div>
-          </>
-        )}
-        {!user.profile_picture && isSaved.length === 0 && (
+        {isSaved.length === 0 && (
           <div
             className={`profile-picture-placeholder ${
-              isProfilePictureReady ? "border-none" : "border-dashed"
+              isPictureReady ? "border-none" : "border-dashed"
             }`}
           >
-            {!isProfilePictureReady && !isGenerating && (
-              <p>No Profile Picture</p>
-            )}
+            {!isPictureReady && !isGenerating && <p>No Image Generated</p>}
             {isGenerating && (
               <Box
                 ref={spinnerRef}
@@ -198,7 +151,7 @@ const ChangeProfilePictureModal = ({ handleClose }) => {
                 <CircularProgress color="inherit" />
               </Box>
             )}
-            {isProfilePictureReady && !isGenerating && (
+            {isPictureReady && !isGenerating && (
               <img
                 src={generatedPicture[0]}
                 alt="New Profile"
@@ -207,17 +160,10 @@ const ChangeProfilePictureModal = ({ handleClose }) => {
             )}
           </div>
         )}
-        {isSaved.length === 2 && (
-          <img
-            src={user.profile_picture}
-            alt="New Profile"
-            className="profile-picture-dual"
-          />
-        )}
       </div>
 
       <p style={{ color: "black" }}>
-        Your profile picture can be{" "}
+        Your journal entry's header will be a{" "}
         <select
           value={selectedCard}
           onChange={handleCardChange}
@@ -262,13 +208,13 @@ const ChangeProfilePictureModal = ({ handleClose }) => {
               )}
 
               {/* Case 2: Profile picture is ready */}
-              {!isGenerating && isProfilePictureReady && (
+              {!isGenerating && isPictureReady && (
                 <>
                   <button
-                    onClick={handleSaveProfilePicture}
+                    onClick={handleStartJournalEntry}
                     className="spooky-button modal-button"
                   >
-                    Save New Profile Picture
+                    Begin New Journal Entry
                   </button>
                   <button
                     onClick={handleGeneratePicture}
@@ -281,7 +227,7 @@ const ChangeProfilePictureModal = ({ handleClose }) => {
               )}
 
               {/* Case 3: Ready to generate picture */}
-              {!isGenerating && !isProfilePictureReady && (
+              {!isGenerating && !isPictureReady && (
                 <button
                   onClick={handleGeneratePicture}
                   className="spooky-button modal-button"
@@ -307,4 +253,4 @@ const ChangeProfilePictureModal = ({ handleClose }) => {
   );
 };
 
-export default ChangeProfilePictureModal;
+export default JournalEntryModal;

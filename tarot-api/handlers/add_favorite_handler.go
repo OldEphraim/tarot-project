@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"database/sql"
 	"encoding/json"
 	"log"
 	"net/http"
@@ -14,10 +15,11 @@ import (
 func AddToFavoritesHandler(w http.ResponseWriter, r *http.Request, dbQueries *database.Queries, jwtSecret []byte) {
 	// Parse request body
 	var input struct {
-		UserID   uuid.UUID    `json:"user_id"`
-		ImageURL string       `json:"image_url"`
-		CardName string       `json:"card_name"`
-		ArtStyle string       `json:"art_style"`
+		UserID       uuid.UUID    `json:"user_id"`
+		ImageURL     string       `json:"image_url"`
+		CardName     string       `json:"card_name"`
+		ArtStyle     string       `json:"art_style"`
+		JournalEntry *string      `json:"journal_entry,omitempty"`
 	}
 
 	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
@@ -38,12 +40,25 @@ func AddToFavoritesHandler(w http.ResponseWriter, r *http.Request, dbQueries *da
 		return
 	}
 
+	// Convert *string to sql.NullString
+	journalEntry := sql.NullString{
+		String: "",
+		Valid:  false,
+	}
+	if input.JournalEntry != nil {
+		journalEntry = sql.NullString{
+			String: *input.JournalEntry,
+			Valid:  true,
+		}
+	}
+
 	// Add to favorites in the database
-	err = dbQueries.AddFavorite(r.Context(), database.AddFavoriteParams{
-		UserID:   userID,
-		ImageUrl: input.ImageURL,
-		CardName: input.CardName,
-		ArtStyle: input.ArtStyle,
+	newFavorite, err := dbQueries.AddFavorite(r.Context(), database.AddFavoriteParams{
+		UserID:       userID,
+		ImageUrl:     input.ImageURL,
+		CardName:     input.CardName,
+		ArtStyle:     input.ArtStyle,
+		JournalEntry: journalEntry,
 	})
 	if err != nil {
 		log.Printf("Error adding to favorites: %v\n", err)
@@ -51,12 +66,16 @@ func AddToFavoritesHandler(w http.ResponseWriter, r *http.Request, dbQueries *da
 		return
 	}
 
-	// Respond with success
+	// Respond with success and include the newly created favorite details
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(map[string]string{
-		"message":    "Image added to favorites",
-		"ImageUrl": input.ImageURL,
-		"CardName": input.CardName,
-		"ArtStyle": input.ArtStyle,
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"message":      "Image added to favorites",
+		"id":           newFavorite.ID,
+		"user_id":      newFavorite.UserID,
+		"image_url":    newFavorite.ImageUrl,
+		"card_name":    newFavorite.CardName,
+		"art_style":    newFavorite.ArtStyle,
+		"journal_entry": newFavorite.JournalEntry.String,
+		"created_at":   newFavorite.CreatedAt,
 	})
 }

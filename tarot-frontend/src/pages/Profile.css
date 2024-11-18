@@ -41,6 +41,7 @@
   border: none;
   cursor: pointer;
   transition: background 0.3s ease;
+  width: 200px;
 }
 
 .spooky-button:hover {

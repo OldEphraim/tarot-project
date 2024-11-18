@@ -125,3 +125,21 @@ export const getReadingBySlug = async (user, slug) => {
     throw error;
   }
 };
+
+export const getFavoriteById = async (user, id) => {
+  try {
+    const response = await api.get(`/favorites/entry/${id}`, {
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
+    console.log("Journal entry fetched successfully:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Failed to fetch journal entry:",
+      error.response?.data || error.message
+    );
+    throw error;
+  }
+};

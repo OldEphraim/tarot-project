@@ -3,6 +3,7 @@ import { useModal } from "../context/ModalContext";
 import CardDetailModal from "./modals/CardDetailModal";
 import ChangeProfilePictureModal from "./modals/ChangeProfilePictureModal";
 import ConfirmChangeModal from "./modals/ConfirmChangeModal";
+import JournalEntryModal from "./modals/JournalEntryModal";
 import "./Modal.css";
 
 const Modal = ({ onClose }) => {
@@ -22,9 +23,9 @@ const Modal = ({ onClose }) => {
   return (
     <div className={`modal-overlay ${fadeOut ? "fade-out" : ""}`}>
       <div className="modal-content">
-        <button className="modal-close" onClick={handleClose}>
+        <div className="modal-close" onClick={handleClose}>
           X
-        </button>
+        </div>
         {modalType === "cardDetail" && (
           <CardDetailModal setFadeOut={setFadeOut} />
         )}
@@ -33,6 +34,9 @@ const Modal = ({ onClose }) => {
         )}
         {modalType === "profilePicture" && (
           <ChangeProfilePictureModal handleClose={handleClose} />
+        )}
+        {modalType === "journalEntry" && (
+          <JournalEntryModal handleClose={handleClose} />
         )}
       </div>
     </div>

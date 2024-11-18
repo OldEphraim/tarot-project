@@ -7,36 +7,103 @@ package database
 
 import (
 	"context"
+	"database/sql"
+	"time"
 
 	"github.com/google/uuid"
 )
 
-const addFavorite = `-- name: AddFavorite :exec
-INSERT INTO favorites (user_id, image_url, card_name, art_style) VALUES ($1, $2, $3, $4)
+const addFavorite = `-- name: AddFavorite :one
+INSERT INTO favorites (id, user_id, image_url, card_name, art_style, journal_entry) 
+VALUES (gen_random_uuid(), $1, $2, $3, $4, $5) 
+RETURNING id, user_id, image_url, card_name, art_style, journal_entry, created_at
 `
 
 type AddFavoriteParams struct {
-	UserID   uuid.UUID
-	ImageUrl string
-	CardName string
-	ArtStyle string
+	UserID       uuid.UUID
+	ImageUrl     string
+	CardName     string
+	ArtStyle     string
+	JournalEntry sql.NullString
 }
 
-func (q *Queries) AddFavorite(ctx context.Context, arg AddFavoriteParams) error {
-	_, err := q.db.ExecContext(ctx, addFavorite,
+type AddFavoriteRow struct {
+	ID           uuid.UUID
+	UserID       uuid.UUID
+	ImageUrl     string
+	CardName     string
+	ArtStyle     string
+	JournalEntry sql.NullString
+	CreatedAt    time.Time
+}
+
+func (q *Queries) AddFavorite(ctx context.Context, arg AddFavoriteParams) (AddFavoriteRow, error) {
+	row := q.db.QueryRowContext(ctx, addFavorite,
 		arg.UserID,
 		arg.ImageUrl,
 		arg.CardName,
 		arg.ArtStyle,
+		arg.JournalEntry,
 	)
-	return err
+	var i AddFavoriteRow
+	err := row.Scan(
+		&i.ID,
+		&i.UserID,
+		&i.ImageUrl,
+		&i.CardName,
+		&i.ArtStyle,
+		&i.JournalEntry,
+		&i.CreatedAt,
+	)
+	return i, err
+}
+
+const getFavoriteById = `-- name: GetFavoriteById :one
+SELECT 
+    id,
+    user_id,
+    image_url, 
+    card_name, 
+    art_style,
+    journal_entry,
+    created_at
+FROM 
+    favorites
+WHERE 
+    id = $1
+`
+
+type GetFavoriteByIdRow struct {
+	ID           uuid.UUID
+	UserID       uuid.UUID
+	ImageUrl     string
+	CardName     string
+	ArtStyle     string
+	JournalEntry sql.NullString
+	CreatedAt    time.Time
+}
+
+func (q *Queries) GetFavoriteById(ctx context.Context, id uuid.UUID) (GetFavoriteByIdRow, error) {
+	row := q.db.QueryRowContext(ctx, getFavoriteById, id)
+	var i GetFavoriteByIdRow
+	err := row.Scan(
+		&i.ID,
+		&i.UserID,
+		&i.ImageUrl,
+		&i.CardName,
+		&i.ArtStyle,
+		&i.JournalEntry,
+		&i.CreatedAt,
+	)
+	return i, err
 }
 
 const getFavoritesByUser = `-- name: GetFavoritesByUser :many
 SELECT 
     image_url, 
     card_name, 
-    art_style
+    art_style,
+    journal_entry
 FROM 
     favorites
 WHERE 
@@ -44,9 +111,10 @@ WHERE
 `
 
 type GetFavoritesByUserRow struct {
-	ImageUrl string
-	CardName string
-	ArtStyle string
+	ImageUrl     string
+	CardName     string
+	ArtStyle     string
+	JournalEntry sql.NullString
 }
 
 func (q *Queries) GetFavoritesByUser(ctx context.Context, userID uuid.UUID) ([]GetFavoritesByUserRow, error) {
@@ -58,7 +126,12 @@ func (q *Queries) GetFavoritesByUser(ctx context.Context, userID uuid.UUID) ([]G
 	var items []GetFavoritesByUserRow
 	for rows.Next() {
 		var i GetFavoritesByUserRow
-		if err := rows.Scan(&i.ImageUrl, &i.CardName, &i.ArtStyle); err != nil {
+		if err := rows.Scan(
+			&i.ImageUrl,
+			&i.CardName,
+			&i.ArtStyle,
+			&i.JournalEntry,
+		); err != nil {
 			return nil, err
 		}
 		items = append(items, i)

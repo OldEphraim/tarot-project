@@ -13,12 +13,13 @@ import (
 )
 
 type Favorite struct {
-	ID        uuid.UUID
-	UserID    uuid.UUID
-	ImageUrl  string
-	CreatedAt time.Time
-	CardName  string
-	ArtStyle  string
+	ID           uuid.UUID
+	UserID       uuid.UUID
+	ImageUrl     string
+	CreatedAt    time.Time
+	CardName     string
+	ArtStyle     string
+	JournalEntry sql.NullString
 }
 
 type Reading struct {

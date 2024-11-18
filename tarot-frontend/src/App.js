@@ -6,6 +6,7 @@ import AboutTarot from "./pages/AboutTarot";
 import CreateAccount from "./pages/CreateAccount";
 import Favorites from "./pages/Favorites";
 import Home from "./pages/Home";
+import JournalEntry from "./pages/JournalEntry";
 import Login from "./pages/Login";
 import Profile from "./pages/Profile";
 import SavedReading from "./pages/SavedReading";
@@ -28,6 +29,9 @@ const App = () => {
           </Route>
           <Route path="/:username/favorites" element={<ProtectedRoute />}>
             <Route index element={<Favorites />} />
+          </Route>
+          <Route path="/:username/favorites/:id" element={<ProtectedRoute />}>
+            <Route index element={<JournalEntry />} />
           </Route>
           <Route path="/:username/readings/:slug" element={<ProtectedRoute />}>
             <Route index element={<SavedReading />} />
