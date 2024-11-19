@@ -8,3 +8,6 @@ SELECT * FROM refresh_tokens WHERE token = $1 AND (expires_at > NOW());
 
 -- name: DeleteRefreshToken :exec
 DELETE FROM refresh_tokens WHERE token = $1;
+
+-- name: DeleteRefreshTokensFromUser :exec
+DELETE FROM refresh_tokens WHERE user_id = $1;

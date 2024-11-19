@@ -192,7 +192,11 @@ const JournalEntryModal = ({ handleClose }) => {
         <div className="button-container">
           {/* Case 1: Generating is in progress */}
           {isGenerating && (
-            <button className="spooky-button modal-button" disabled>
+            <button
+              className="spooky-button modal-button"
+              disabled
+              style={{ margin: "10px" }}
+            >
               Generating...
             </button>
           )}
@@ -203,6 +207,7 @@ const JournalEntryModal = ({ handleClose }) => {
               <button
                 onClick={handleStartJournalEntry}
                 className="spooky-button modal-button"
+                style={{ margin: "10px" }}
               >
                 Begin New Journal Entry
               </button>
@@ -210,6 +215,7 @@ const JournalEntryModal = ({ handleClose }) => {
                 onClick={handleGeneratePicture}
                 className="spooky-button modal-button"
                 disabled={selectedCard === "" || selectedTheme === ""}
+                style={{ margin: "10px" }}
               >
                 Generate New Picture
               </button>
@@ -221,7 +227,8 @@ const JournalEntryModal = ({ handleClose }) => {
             <button
               onClick={handleGeneratePicture}
               className="spooky-button modal-button"
-              disabled={selectedCard === "" || selectedTheme === ""} // Disable if inputs are incomplete
+              disabled={selectedCard === "" || selectedTheme === ""}
+              style={{ margin: "10px" }}
             >
               Generate Picture
             </button>
@@ -229,7 +236,11 @@ const JournalEntryModal = ({ handleClose }) => {
         </div>
 
         <div className="button-container">
-          <button onClick={handleClose} className="spooky-button modal-button">
+          <button
+            onClick={handleClose}
+            className="spooky-button modal-button"
+            style={{ margin: "10px" }}
+          >
             Go Back
           </button>
         </div>

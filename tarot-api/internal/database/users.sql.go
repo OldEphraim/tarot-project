@@ -69,6 +69,39 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 	return i, err
 }
 
+const getUserByID = `-- name: GetUserByID :one
+SELECT id, email, username, created_at, updated_at, hashed_password, art_style, profile_picture
+FROM users
+WHERE id = $1
+`
+
+type GetUserByIDRow struct {
+	ID             uuid.UUID
+	Email          string
+	Username       string
+	CreatedAt      time.Time
+	UpdatedAt      time.Time
+	HashedPassword string
+	ArtStyle       sql.NullString
+	ProfilePicture sql.NullString
+}
+
+func (q *Queries) GetUserByID(ctx context.Context, id uuid.UUID) (GetUserByIDRow, error) {
+	row := q.db.QueryRowContext(ctx, getUserByID, id)
+	var i GetUserByIDRow
+	err := row.Scan(
+		&i.ID,
+		&i.Email,
+		&i.Username,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+		&i.HashedPassword,
+		&i.ArtStyle,
+		&i.ProfilePicture,
+	)
+	return i, err
+}
+
 const getUserByUsername = `-- name: GetUserByUsername :one
 SELECT id, email, username, created_at, updated_at, hashed_password, art_style, profile_picture
 FROM users
@@ -133,11 +166,27 @@ func (q *Queries) UpdateUserEmail(ctx context.Context, arg UpdateUserEmailParams
 const updateUserLogoutTimestamp = `-- name: UpdateUserLogoutTimestamp :exec
 UPDATE users
 SET updated_at = NOW()
-WHERE username = $1
+WHERE id = $1
 `
 
-func (q *Queries) UpdateUserLogoutTimestamp(ctx context.Context, username string) error {
-	_, err := q.db.ExecContext(ctx, updateUserLogoutTimestamp, username)
+func (q *Queries) UpdateUserLogoutTimestamp(ctx context.Context, id uuid.UUID) error {
+	_, err := q.db.ExecContext(ctx, updateUserLogoutTimestamp, id)
+	return err
+}
+
+const updateUserPassword = `-- name: UpdateUserPassword :exec
+UPDATE users
+SET hashed_password = $2, updated_at = now()
+WHERE id = $1
+`
+
+type UpdateUserPasswordParams struct {
+	ID             uuid.UUID
+	HashedPassword string
+}
+
+func (q *Queries) UpdateUserPassword(ctx context.Context, arg UpdateUserPasswordParams) error {
+	_, err := q.db.ExecContext(ctx, updateUserPassword, arg.ID, arg.HashedPassword)
 	return err
 }
 

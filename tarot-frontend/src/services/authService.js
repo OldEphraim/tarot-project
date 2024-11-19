@@ -56,8 +56,8 @@ export const login = async ({
 // Logout function
 export const logout = async () => {
   try {
-    const { refresh_token, username } = getUser();
-    await api.post("/logout", { username: username, token: refresh_token });
+    const { refresh_token, id } = getUser();
+    await api.post("/logout", { user_id: id, token: refresh_token });
     clearAuthData();
     return { success: true };
   } catch (error) {

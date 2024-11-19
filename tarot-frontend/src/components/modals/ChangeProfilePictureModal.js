@@ -287,7 +287,8 @@ const ChangeProfilePictureModal = ({ handleClose }) => {
                 <button
                   onClick={handleGeneratePicture}
                   className="spooky-button modal-button"
-                  disabled={selectedCard === "" || selectedTheme === ""} // Disable if inputs are incomplete
+                  disabled={selectedCard === "" || selectedTheme === ""}
+                  style={{ margin: "10px" }}
                 >
                   Generate Picture
                 </button>
@@ -298,6 +299,7 @@ const ChangeProfilePictureModal = ({ handleClose }) => {
               <button
                 onClick={handleClose}
                 className="spooky-button modal-button"
+                style={{ margin: "10px" }}
               >
                 Go Back
               </button>

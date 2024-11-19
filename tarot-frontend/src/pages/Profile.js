@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useModal } from "../context/ModalContext";
-import { getSavedReading } from "../services/profileService";
+import { getSavedReading, updatePassword } from "../services/profileService";
 import tarotThemes from "../constants/TarotThemes";
 import Modal from "../components/Modal";
 import "./Profile.css";
@@ -17,8 +17,12 @@ const Profile = () => {
   const [usernameEditable, setUsernameEditable] = useState(false);
   const [readings, setReadings] = useState([]);
   const [error, setError] = useState(null);
+  const [passwordEditable, setPasswordEditable] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const { openModal, closeModal } = useModal();
 
   const closeModalRef = useRef(closeModal);
@@ -42,6 +46,23 @@ const Profile = () => {
       fetchReadings();
     }
   }, [user]);
+
+  const handleChangePassword = async () => {
+    try {
+      const result = await updatePassword(
+        user, // User object
+        currentPassword, // Current password entered by the user
+        newPassword, // New password entered by the user
+        confirmPassword // Confirmation of the new password
+      );
+      logout();
+      console.log("Password updated successfully:", result);
+      alert("Password updated successfully!");
+    } catch (error) {
+      console.error("Error updating password:", error);
+      alert("Failed to update password. Please try again.");
+    }
+  };
 
   const handleArtStyleChange = (e) => {
     const selectedStyle = e.target.value;
@@ -216,10 +237,69 @@ const Profile = () => {
         {/* Update Password Field */}
         <div className="settings-section">
           <label>
-            To change your password, enter your current password and we'll email
-            you a link.
+            Password:{" "}
+            {!passwordEditable ? (
+              <strong>********</strong>
+            ) : (
+              <>
+                <strong>
+                  {newPassword === "" && confirmPassword === "" ? (
+                    "No new password entered"
+                  ) : newPassword !== confirmPassword ? (
+                    "You have entered multiple values for your new password."
+                  ) : (
+                    <span style={{ color: "green" }}>
+                      You may make this value your new password.
+                    </span>
+                  )}
+                </strong>
+                <span>
+                  <input
+                    type="password"
+                    value={currentPassword}
+                    onChange={(e) => setCurrentPassword(e.target.value)}
+                    placeholder="Enter Current Password"
+                  />
+                  <input
+                    type="password"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    placeholder="Enter New Password"
+                    style={{ marginTop: "10px" }}
+                  />
+                  <input
+                    type="password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    placeholder="Confirm New Password"
+                    style={{ marginTop: "10px" }}
+                  />
+                  <div className="button-container">
+                    <button
+                      className="spooky-button"
+                      onClick={handleChangePassword}
+                      style={{ marginTop: "10px" }}
+                    >
+                      Change Password
+                    </button>
+                    <button
+                      className="spooky-button"
+                      onClick={() => setPasswordEditable(false)}
+                      style={{ marginTop: "10px" }}
+                    >
+                      Keep As Is
+                    </button>
+                  </div>
+                </span>
+              </>
+            )}
           </label>
-          <input type="password" placeholder="Password" />
+          <input
+            type="checkbox"
+            checked={passwordEditable}
+            onChange={() => setPasswordEditable(!passwordEditable)}
+          />{" "}
+          Edit
         </div>
       </div>
 

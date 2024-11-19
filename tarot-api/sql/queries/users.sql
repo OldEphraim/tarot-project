@@ -20,10 +20,15 @@ SELECT id, email, username, created_at, updated_at, hashed_password, art_style, 
 FROM users
 WHERE username = $1;
 
+-- name: GetUserByID :one
+SELECT id, email, username, created_at, updated_at, hashed_password, art_style, profile_picture
+FROM users
+WHERE id = $1;
+
 -- name: UpdateUserLogoutTimestamp :exec
 UPDATE users
 SET updated_at = NOW()
-WHERE username = $1;
+WHERE id = $1;
 
 -- name: UpdateUserEmail :exec
 UPDATE users SET email = $2, updated_at = NOW() WHERE id = $1;
@@ -36,3 +41,8 @@ UPDATE users SET art_style = $2, updated_at = NOW() WHERE id = $1;
 
 -- name: UpdateUserProfilePicture :exec
 UPDATE users SET profile_picture = $2, updated_at = NOW() WHERE id = $1;
+
+-- name: UpdateUserPassword :exec
+UPDATE users
+SET hashed_password = $2, updated_at = now()
+WHERE id = $1;

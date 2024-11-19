@@ -163,7 +163,7 @@ const Navbar = () => {
               <li
                 onClick={() => {
                   closeDropdowns();
-                  logout(); // Call logout function from useAuth
+                  logout();
                 }}
               >
                 <Link to="/">Logout</Link>

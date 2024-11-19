@@ -77,6 +77,9 @@ func main() {
 	http.HandleFunc("/api/users/{id}", utils.WrapWithMiddleware(func(w http.ResponseWriter, r *http.Request) {
 		handlers.UpdateUserHandler(w, r, dbQueries, jwtSecret)
 	}, http.MethodPut))
+	http.HandleFunc("/api/users/password/{id}", utils.WrapWithMiddleware(func(w http.ResponseWriter, r *http.Request) {
+		handlers.UpdatePasswordHandler(w, r, dbQueries, jwtSecret)
+	}, http.MethodPut))
 
 	// Other handlers
 	http.HandleFunc("/api/chat", utils.WrapWithMiddleware(handlers.ChatHandler(client), http.MethodPost))

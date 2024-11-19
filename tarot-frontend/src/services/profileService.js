@@ -170,3 +170,33 @@ export const deleteFavoriteById = async (user, id) => {
     );
   }
 };
+
+export const updatePassword = async (
+  user,
+  currentPassword,
+  newPassword,
+  confirmPassword
+) => {
+  try {
+    const response = await api.put(
+      `/users/password/${user.id}`,
+      {
+        current_password: currentPassword,
+        new_password: newPassword,
+        confirm_password: confirmPassword,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Failed to update password:",
+      error.response?.data || error.message
+    );
+    throw error;
+  }
+};

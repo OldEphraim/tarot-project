@@ -79,15 +79,25 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Logout function
   const logout = async () => {
+    let logoutError = null;
+
     try {
       await logoutService();
+      clearAuthData();
     } catch (error) {
+      logoutError = error;
       console.error("Error during logout:", error);
+      clearAuthData();
     } finally {
       setUser(null);
       clearAuthData();
+
+      if (logoutError) {
+        console.warn("Proceeding to clear auth data despite logout failure.");
+      }
+
+      window.location.reload();
     }
   };
 
