@@ -34,7 +34,6 @@ export const handleSaveImage = async (user, imageUrl, cardName, artStyle) => {
         },
       }
     );
-    console.log("Image saved successfully:", response.data);
     return response.data;
   } catch (error) {
     console.error(
@@ -52,7 +51,6 @@ export const getSavedImage = async (user) => {
         Authorization: `Bearer ${user.token}`,
       },
     });
-    console.log("Images returned successfully:", response.data);
     return response.data;
   } catch (error) {
     console.error(
@@ -77,7 +75,6 @@ export const handleSaveReading = async (user, workflowData) => {
         },
       }
     );
-    console.log("Reading saved successfully:", response.data);
     return response;
   } catch (error) {
     console.error(
@@ -94,7 +91,6 @@ export const getSavedReading = async (user) => {
         Authorization: `Bearer ${user.token}`,
       },
     });
-    console.log("Readings returned successfully:", response.data);
     return response.data;
   } catch (error) {
     console.error(
@@ -115,7 +111,6 @@ export const getReadingBySlug = async (user, slug) => {
         },
       }
     );
-    console.log("Reading fetched successfully:", response.data);
     return response.data;
   } catch (error) {
     console.error(
@@ -133,7 +128,6 @@ export const getFavoriteById = async (user, id) => {
         Authorization: `Bearer ${user.token}`,
       },
     });
-    console.log("Journal entry fetched successfully:", response.data);
     return response.data;
   } catch (error) {
     console.error(
@@ -155,8 +149,6 @@ export const updateJournalEntry = async (user, id, journalText) => {
     }
   );
 
-  console.log(response);
-
   if (!response.ok) {
     throw new Error("Failed to update journal entry");
   }
@@ -171,7 +163,6 @@ export const deleteFavoriteById = async (user, id) => {
         Authorization: `Bearer ${user.token}`,
       },
     });
-    console.log("Image deleted successfully:", response.data);
     return response;
   } catch (error) {
     console.error(

@@ -34,7 +34,6 @@ const Favorites = () => {
       try {
         const favoriteData = await getSavedImage(user); // Fetch user's favorites
         setFavorites(favoriteData);
-        console.log(favorites);
       } catch (error) {
         console.error("Failed to fetch favorites:", error);
         setError("Failed to fetch favorites.");
@@ -52,7 +51,6 @@ const Favorites = () => {
       try {
         const deckData = await readTarotDeck(); // Fetch deck details
         setDeck(deckData);
-        console.log(deck);
       } catch (err) {
         console.error("Failed to fetch tarot deck:", err);
         setError("Failed to load tarot deck.");
@@ -102,7 +100,6 @@ const Favorites = () => {
           <div className="favorites-grid">
             {favorites.map((favorite, index) => {
               const cardDetails = getCardDetails(favorite.CardName);
-              console.log("cardDetails:", cardDetails);
               return (
                 <div key={index} className="favorite-item">
                   <img src={favorite.ImageUrl} alt={favorite.CardName} />

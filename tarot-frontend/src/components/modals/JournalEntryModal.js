@@ -5,15 +5,12 @@ import tarotCards from "../../constants/TarotCards";
 import tarotThemes from "../../constants/TarotThemes";
 import { useAuth } from "../../context/AuthContext";
 import { searchCardByName } from "../../services/tarotService";
-import {
-  saveProfileChanges,
-  handleSaveImage,
-} from "../../services/profileService";
+import { handleSaveImage } from "../../services/profileService";
 import { useCardImages } from "../../hooks/useCardImages";
 import "../../components/Modal.css";
 
 const JournalEntryModal = ({ handleClose }) => {
-  const { user, setUser } = useAuth();
+  const { user } = useAuth();
 
   const [selectedCard, setSelectedCard] = useState("");
   const [selectedTheme, setSelectedTheme] = useState("");
@@ -22,7 +19,6 @@ const JournalEntryModal = ({ handleClose }) => {
   const [generatedPicture, setGeneratedPicture] = useState([]);
   const [shouldFetchImages, setShouldFetchImages] = useState(false); // Control when to fetch images
   const [shouldClearRequests, setShouldClearRequests] = useState(false);
-  const [isSaved, setIsSaved] = useState([]);
 
   const spinnerRef = useRef(null);
   const navigate = useNavigate();
@@ -56,7 +52,6 @@ const JournalEntryModal = ({ handleClose }) => {
         generatedPicture[1],
         generatedPicture[2]
       );
-      console.log(response);
       navigate(`/${user.username}/favorites/${response.id}`);
     } catch (error) {
       console.error("Error saving profile picture to saved images", error);
@@ -136,30 +131,28 @@ const JournalEntryModal = ({ handleClose }) => {
       </h2>
 
       <div className="profile-picture-preview">
-        {isSaved.length === 0 && (
-          <div
-            className={`profile-picture-placeholder ${
-              isPictureReady ? "border-none" : "border-dashed"
-            }`}
-          >
-            {!isPictureReady && !isGenerating && <p>No Image Generated</p>}
-            {isGenerating && (
-              <Box
-                ref={spinnerRef}
-                sx={{ display: "flex", pointerEvents: "none" }}
-              >
-                <CircularProgress color="inherit" />
-              </Box>
-            )}
-            {isPictureReady && !isGenerating && (
-              <img
-                src={generatedPicture[0]}
-                alt="New Profile"
-                className="profile-picture"
-              />
-            )}
-          </div>
-        )}
+        <div
+          className={`profile-picture-placeholder ${
+            isPictureReady ? "border-none" : "border-dashed"
+          }`}
+        >
+          {!isPictureReady && !isGenerating && <p>No Image Generated</p>}
+          {isGenerating && (
+            <Box
+              ref={spinnerRef}
+              sx={{ display: "flex", pointerEvents: "none" }}
+            >
+              <CircularProgress color="inherit" />
+            </Box>
+          )}
+          {isPictureReady && !isGenerating && (
+            <img
+              src={generatedPicture[0]}
+              alt="New Profile"
+              className="profile-picture"
+            />
+          )}
+        </div>
       </div>
 
       <p style={{ color: "black" }}>
@@ -192,63 +185,52 @@ const JournalEntryModal = ({ handleClose }) => {
         style.
       </p>
 
-      {isSaved.length === 2 ? (
-        <p style={{ color: isSaved[1], fontWeight: "bold", marginTop: "20px" }}>
-          {isSaved[0]}
-        </p>
-      ) : (
-        <>
-          <div className="button-container">
-            <div className="button-container">
-              {/* Case 1: Generating is in progress */}
-              {isGenerating && (
-                <button className="spooky-button modal-button" disabled>
-                  Generating...
-                </button>
-              )}
+      <div className="button-container">
+        <div className="button-container">
+          {/* Case 1: Generating is in progress */}
+          {isGenerating && (
+            <button className="spooky-button modal-button" disabled>
+              Generating...
+            </button>
+          )}
 
-              {/* Case 2: Profile picture is ready */}
-              {!isGenerating && isPictureReady && (
-                <>
-                  <button
-                    onClick={handleStartJournalEntry}
-                    className="spooky-button modal-button"
-                  >
-                    Begin New Journal Entry
-                  </button>
-                  <button
-                    onClick={handleGeneratePicture}
-                    className="spooky-button modal-button"
-                    disabled={selectedCard === "" || selectedTheme === ""}
-                  >
-                    Generate New Picture
-                  </button>
-                </>
-              )}
-
-              {/* Case 3: Ready to generate picture */}
-              {!isGenerating && !isPictureReady && (
-                <button
-                  onClick={handleGeneratePicture}
-                  className="spooky-button modal-button"
-                  disabled={selectedCard === "" || selectedTheme === ""} // Disable if inputs are incomplete
-                >
-                  Generate Picture
-                </button>
-              )}
-            </div>
-
-            <div className="button-container">
+          {/* Case 2: Profile picture is ready */}
+          {!isGenerating && isPictureReady && (
+            <>
               <button
-                onClick={handleClose}
+                onClick={handleStartJournalEntry}
                 className="spooky-button modal-button"
               >
-                Go Back
+                Begin New Journal Entry
               </button>
-            </div>
-          </div>
-        </>
-      )}
+              <button
+                onClick={handleGeneratePicture}
+                className="spooky-button modal-button"
+                disabled={selectedCard === "" || selectedTheme === ""}
+              >
+                Generate New Picture
+              </button>
+            </>
+          )}
+
+          {/* Case 3: Ready to generate picture */}
+          {!isGenerating && !isPictureReady && (
+            <button
+              onClick={handleGeneratePicture}
+              className="spooky-button modal-button"
+              disabled={selectedCard === "" || selectedTheme === ""} // Disable if inputs are incomplete
+            >
+              Generate Picture
+            </button>
+          )}
+        </div>
+
+        <div className="button-container">
+          <button onClick={handleClose} className="spooky-button modal-button">
+            Go Back
+          </button>
+        </div>
+      </div>
     </>
   );
 };

@@ -38,8 +38,7 @@ const CreateAccount = () => {
     if (username && email && password === confirmPassword) {
       try {
         setIsSubmitting(true);
-        const response = await createAccount(formData);
-        console.log(response);
+        await createAccount(formData);
       } catch (error) {
         if (error.message.includes("Username is already taken")) {
           setErrors((prev) => ({ ...prev, username: error.message }));

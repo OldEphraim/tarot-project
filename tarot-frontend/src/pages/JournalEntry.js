@@ -23,7 +23,6 @@ const JournalEntry = () => {
     const fetchFavorite = async () => {
       try {
         const data = await getFavoriteById(user, id);
-        console.log(data);
         setFavorite(data);
 
         // Initialize journal text
@@ -36,7 +35,6 @@ const JournalEntry = () => {
         try {
           const cardData = await searchCardByName(data.card_name);
           setCard(cardData);
-          console.log(cardData);
         } catch (err) {
           console.error("Failed to fetch card details:", err);
           setError("Failed to load card details.");
@@ -51,8 +49,7 @@ const JournalEntry = () => {
 
   const handleSave = async () => {
     try {
-      await updateJournalEntry(user, id, journalText); // Call backend to save
-      console.log("Journal entry saved successfully!");
+      await updateJournalEntry(user, id, journalText);
     } catch (err) {
       console.error("Failed to save journal entry:", err);
     }

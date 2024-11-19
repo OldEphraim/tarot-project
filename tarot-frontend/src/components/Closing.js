@@ -33,8 +33,7 @@ const Closing = ({ artStyle }) => {
               layout: selectedSpread,
             })
           : extractWorkflowData(workflow);
-      const response = await handleSaveReading(user, workflowData);
-      console.log(response);
+      await handleSaveReading(user, workflowData);
     } catch (error) {
       console.error("Error saving log:", error);
     }

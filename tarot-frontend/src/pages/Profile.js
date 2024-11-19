@@ -30,9 +30,8 @@ const Profile = () => {
   useEffect(() => {
     const fetchReadings = async () => {
       try {
-        const data = await getSavedReading(user); // Fetch saved readings
-        console.log(data);
-        setReadings(data); // Update state with readings
+        const data = await getSavedReading(user);
+        setReadings(data);
       } catch (error) {
         console.error("Failed to fetch readings:", error);
         setError("Could not load saved readings.");

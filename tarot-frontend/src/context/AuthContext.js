@@ -22,18 +22,14 @@ export const AuthProvider = ({ children }) => {
 
     const refreshToken = async () => {
       try {
-        console.log("Old user:", user);
         setIsRefreshing(true);
         const newTokenData = await refreshAccessToken(user.refresh_token);
-        console.log(newTokenData);
 
         const updatedUser = {
           ...user,
           token: newTokenData.token,
-          expiration: newTokenData.expiration, // Update expiration
+          expiration: newTokenData.expiration,
         };
-
-        console.log("New user:", updatedUser);
 
         setUser(updatedUser);
         setAuthData(updatedUser);
@@ -48,7 +44,6 @@ export const AuthProvider = ({ children }) => {
     const expirationTime = new Date(user.expiration).getTime();
     const currentTime = Date.now();
     const timeUntilRefresh = expirationTime - currentTime - 60000; // Refresh 1 min before expiry
-    console.log(timeUntilRefresh);
 
     if (timeUntilRefresh > 0) {
       const timeoutId = setTimeout(() => {

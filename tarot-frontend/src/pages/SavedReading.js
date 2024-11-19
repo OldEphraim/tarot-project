@@ -7,6 +7,7 @@ import { readTarotDeck } from "../services/tarotService";
 import Modal from "../components/Modal";
 import CelticCrossLayout from "../components/spreadLayouts/CelticCrossLayout";
 import RowLayout from "../components/spreadLayouts/RowLayout";
+import "./SavedReading.css";
 
 const SavedReading = () => {
   const { username, slug } = useParams();
@@ -22,7 +23,6 @@ const SavedReading = () => {
     const fetchReading = async () => {
       try {
         const data = await getReadingBySlug(user, slug);
-        console.log("reading:", data);
         setReading(data);
       } catch (error) {
         console.error("Error fetching reading:", error);
@@ -37,7 +37,6 @@ const SavedReading = () => {
       try {
         const deckData = await readTarotDeck();
         setDeck(deckData);
-        console.log(deck);
       } catch (err) {
         console.error("Failed to fetch tarot deck:", err);
         setError("Failed to load tarot deck.");
@@ -91,11 +90,6 @@ const SavedReading = () => {
 
   return (
     <>
-      <div>
-        <h1>{reading.title}</h1>
-        <p>{reading.created_at}</p>
-        <div>{JSON.stringify(reading.workflow_log)}</div>
-      </div>
       <div className="home">
         {isModalOpen && <Modal onClose={closeModal} />}
         <h1 className="home-header">{reading.title}</h1>

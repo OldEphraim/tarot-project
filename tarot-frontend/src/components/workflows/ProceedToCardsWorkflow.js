@@ -33,8 +33,6 @@ const ProceedToCardsWorkflow = () => {
   const { isAuthenticated, user } = useAuth();
   const { selectedSpread, chooseSpread, userReason, submitReason } = useTarot();
 
-  console.log(user);
-
   const handleArtStyleSelection = (style) => {
     setAreArtStyleSelectionButtonsVisible(false);
     setArtStyle(style);

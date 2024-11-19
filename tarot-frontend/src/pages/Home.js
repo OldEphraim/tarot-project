@@ -26,8 +26,6 @@ const Home = () => {
     closeModalRef.current();
   }, [closeModalRef]);
 
-  console.log(user);
-
   return (
     <div className="home">
       {isModalOpen && <Modal onClose={closeModal} />}

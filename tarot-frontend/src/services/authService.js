@@ -44,7 +44,6 @@ export const login = async ({
       expires_in_seconds: expiresInSeconds,
     });
     setAuthData(response.data);
-    console.log(response.data);
     return response.data;
   } catch (error) {
     if (error.response) {
@@ -82,7 +81,6 @@ export const refreshAccessToken = async (refreshToken) => {
         },
       }
     );
-    console.log("refreshAccessToken response:", response.data);
     return response.data;
   } catch (error) {
     console.error("Failed to refresh access token:", error);

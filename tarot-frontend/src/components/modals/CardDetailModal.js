@@ -15,13 +15,10 @@ const CardDetailModal = ({ setFadeOut }) => {
   const { modalData } = useModal();
   const { selectedSpread, workflow } = useTarot();
 
-  console.log(modalData);
-
   useEffect(() => {
     const fetchFavorites = async () => {
       try {
         const favoriteData = await getSavedImage(user);
-        console.log(favoriteData);
 
         const isImageAlreadyFavorite = favoriteData.some(
           (favorite) => favorite.ImageUrl === modalData.imageUrl
