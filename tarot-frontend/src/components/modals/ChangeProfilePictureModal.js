@@ -35,7 +35,10 @@ const ChangeProfilePictureModal = ({ handleClose }) => {
   useEffect(() => {
     let loadTimeout;
 
-    if (generatedPicture.length === 0) {
+    if (
+      generatedPicture.length === 0 ||
+      !generatedPicture[0].includes("images/")
+    ) {
       loadTimeout = setTimeout(() => {
         if (spinnerRef.current) {
           setGeneratedPicture(["/tarot-images/error.webp", "error", "Error"]);

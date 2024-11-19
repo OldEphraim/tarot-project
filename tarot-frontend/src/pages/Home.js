@@ -16,13 +16,19 @@ const Home = () => {
 
   const { isAuthenticated, user } = useAuth();
   const { isModalOpen, closeModal } = useModal();
-  const { workflow, setWorkflowToCards, setWorkflowToFortuneteller } =
-    useTarot();
+  const {
+    workflow,
+    setWorkflowToCards,
+    setWorkflowToFortuneteller,
+    clearWorkflow,
+  } = useTarot();
 
   const closeModalRef = useRef(closeModal);
 
-  // Close any open modal when Home mounts
   useEffect(() => {
+    setIsSecondParagraphVisible(false);
+    setAreTopButtonsVisible(false);
+    clearWorkflow();
     closeModalRef.current();
   }, [closeModalRef]);
 

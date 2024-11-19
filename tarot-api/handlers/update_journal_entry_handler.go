@@ -64,7 +64,6 @@ func UpdateJournalEntryHandler(w http.ResponseWriter, r *http.Request, dbQueries
 		UserID:       userID,
 	})
 	if err != nil {
-		log.Println("this is the error the journal entry is hitting, likely to do with the sql.nullStrin data type:", err)
 		log.Printf("Error updating journal entry: %v\n", err)
 		http.Error(w, "Failed to update journal entry", http.StatusInternalServerError)
 		return

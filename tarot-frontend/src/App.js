@@ -1,5 +1,11 @@
-import React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import React, { useEffect } from "react";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  useLocation,
+} from "react-router-dom";
+import { useModal } from "./context/ModalContext";
 import Navbar from "./components/Navbar";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AboutTarot from "./pages/AboutTarot";
@@ -15,9 +21,16 @@ import TarotGallery from "./pages/TarotGallery";
 import TarotSpreads from "./pages/TarotSpreads";
 import "./App.css";
 
-const App = () => {
+const AppContent = () => {
+  const location = useLocation();
+  const { setIsModalOpen } = useModal();
+
+  useEffect(() => {
+    setIsModalOpen(false);
+  }, [location, setIsModalOpen]);
+
   return (
-    <Router>
+    <>
       <Navbar />
       <div className={`app`}>
         <Routes>
@@ -42,6 +55,14 @@ const App = () => {
           <Route path="/tarot/spreads" element={<TarotSpreads />} />
         </Routes>
       </div>
+    </>
+  );
+};
+
+const App = () => {
+  return (
+    <Router>
+      <AppContent />
     </Router>
   );
 };

@@ -41,7 +41,11 @@ const Closing = ({ artStyle }) => {
 
   return (
     <div className={`closing ${workflow}`}>
-      <Typewriter text={getMessage()} startAnimation />
+      {workflow === "cards" ? (
+        <Typewriter text={getMessage()} startAnimation />
+      ) : (
+        <div className="saved-typewriter">{getMessage()}</div>
+      )}
 
       <div className="button-container">
         {isAuthenticated ? (
