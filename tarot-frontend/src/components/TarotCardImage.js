@@ -55,7 +55,12 @@ const TarotCardImage = ({
   return (
     <div className="card-container">
       {imgSrc ? (
-        <img src={imgSrc} alt={card.name} onClick={handleImageClick} />
+        <img
+          src={imgSrc}
+          alt={card.name}
+          onClick={handleImageClick}
+          className={theme}
+        />
       ) : (
         <Box ref={spinnerRef} sx={{ display: "flex", pointerEvents: "none" }}>
           <CircularProgress color="inherit" />

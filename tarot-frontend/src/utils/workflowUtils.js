@@ -21,11 +21,23 @@ export function extractWorkflowData(workflow, options = {}) {
         let esmeraldaMessage = {
           text: esmeraldaDiv.textContent.trim(),
           images: [],
+          names: [],
+          themes: [],
         };
 
         const imgs = esmeraldaDiv.querySelectorAll("img");
         imgs.forEach((img) => {
           esmeraldaMessage.images.push(sanitizeImageUrl(img.src));
+        });
+
+        const names = esmeraldaDiv.querySelectorAll("img");
+        names.forEach((img) => {
+          esmeraldaMessage.names.push(img.alt);
+        });
+
+        const themes = esmeraldaDiv.querySelectorAll("img");
+        themes.forEach((img) => {
+          esmeraldaMessage.names.push(img.class);
         });
 
         payload.messages.push({
@@ -41,10 +53,22 @@ export function extractWorkflowData(workflow, options = {}) {
     payload.userReason = userReason;
     payload.layout = layout;
 
+    payload.cardNames = [];
+    const cardDisplayNames = document.querySelectorAll(".card-display img");
+    cardDisplayNames.forEach((img) => {
+      payload.cardNames.push(img.alt);
+    });
+
     payload.cardImages = [];
     const cardDisplayImages = document.querySelectorAll(".card-display img");
     cardDisplayImages.forEach((img) => {
       payload.cardImages.push(sanitizeImageUrl(img.src));
+    });
+
+    payload.cardThemes = [];
+    const cardDisplayThemes = document.querySelectorAll(".card-display img");
+    cardDisplayThemes.forEach((img) => {
+      payload.cardThemes.push(img.class);
     });
 
     payload.explanations = [];
