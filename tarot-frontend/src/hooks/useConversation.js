@@ -18,6 +18,7 @@ const useConversation = () => {
       cards.forEach((card) => {
         updatedImageRequests[card.name] = {
           url: `/tarot-images/card_${card.number}.jpg`,
+          theme: "Rider-Waite",
         };
       });
       setImageRequests(updatedImageRequests);

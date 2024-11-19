@@ -59,7 +59,7 @@ const TarotCardImage = ({
           src={imgSrc}
           alt={card.name}
           onClick={handleImageClick}
-          className={theme}
+          data-theme={theme}
         />
       ) : (
         <Box ref={spinnerRef} sx={{ display: "flex", pointerEvents: "none" }}>

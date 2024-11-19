@@ -32,12 +32,14 @@ export function extractWorkflowData(workflow, options = {}) {
 
         const names = esmeraldaDiv.querySelectorAll("img");
         names.forEach((img) => {
-          esmeraldaMessage.names.push(img.alt);
+          if (img.alt && img.alt.trim() !== "") {
+            esmeraldaMessage.names.push(img.alt.trim());
+          }
         });
 
         const themes = esmeraldaDiv.querySelectorAll("img");
         themes.forEach((img) => {
-          esmeraldaMessage.names.push(img.class);
+          esmeraldaMessage.themes.push(img.dataset.theme);
         });
 
         payload.messages.push({
@@ -68,7 +70,7 @@ export function extractWorkflowData(workflow, options = {}) {
     payload.cardThemes = [];
     const cardDisplayThemes = document.querySelectorAll(".card-display img");
     cardDisplayThemes.forEach((img) => {
-      payload.cardThemes.push(img.class);
+      payload.cardThemes.push(img.dataset.theme);
     });
 
     payload.explanations = [];

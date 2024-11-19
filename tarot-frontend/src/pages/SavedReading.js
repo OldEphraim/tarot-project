@@ -80,22 +80,14 @@ const SavedReading = () => {
     return <h2>Loading...</h2>;
   }
 
-  console.log("this is deck:", deck);
-  console.log(
-    "this is being sent as `cards`:",
-    reading.workflow_log.cardNames.map(getCardDetails)
-  );
-  console.log(
-    "this is beign sent as `imageRequests`:",
-    reading.workflow_log.cardNames.reduce((acc, cardName, index) => {
-      acc[cardName] = {
-        status: "ready",
-        url: reading.workflow_log.cardImages[index],
-        theme: reading.workflow_log.cardThemes[index],
-      };
-      return acc;
-    }, {})
-  );
+  const esmeraldaIntro = `
+  Ah, you've come seeking answers, have you? 
+  They call me Esmeralda Nightshade, and I've been reading these cards longer than most have been alive.
+  Sit yourself down, breathe deep, and let the incense clear your mind—I'll tell you this now: 
+  I don't sugarcoat. Life’s like a garden, you see—sometimes you've got to pull up the pretty weeds 
+  to let the useful ones grow. So, speak freely, or let me do the talking, 
+  but I promise, I'll tell you what you need to hear—not just what you want.
+`;
 
   return (
     <>
@@ -176,9 +168,54 @@ const SavedReading = () => {
             ))}
           </div>
         )}
-        {/*  {reading.workflow_log.workflow === "fortuneteller" && (
-          <SpeakToFortunetellerWorkflow />
-        )} */}
+        {reading.workflow_log.workflow === "fortuneteller" && (
+          <div className="proceed-to-cards-workflow">
+            <div className="saved-typewriter">
+              SO YOU have chosen to speak with the fortuneteller.
+            </div>
+
+            <div className="speak-to-fortuneteller-workflow">
+              <img
+                className={`esmeralda fade-in`}
+                src="/esmeralda-universe-images/esmeralda.webp"
+                alt="esmeralda"
+              />
+
+              <div className="saved-typewriter">{esmeraldaIntro}</div>
+
+              {reading.workflow_log.messages.map((message, index) => (
+                <React.Fragment key={index}>
+                  {/* Render user message */}
+                  <div className="user-message">{message.user}</div>
+
+                  {/* Conditionally render the RowLayout if esmeralda.images is not empty */}
+                  {message.esmeralda.images.length > 0 && (
+                    <RowLayout
+                      cards={message.esmeralda.names.map(getCardDetails)}
+                      imageRequests={message.esmeralda.names.reduce(
+                        (acc, cardName, index) => {
+                          acc[cardName] = {
+                            status: "ready",
+                            url: message.esmeralda.images[index],
+                            theme: message.esmeralda.themes[index],
+                          };
+                          return acc;
+                        },
+                        {}
+                      )}
+                      currentCardIndex={message.esmeralda.names.length}
+                    />
+                  )}
+
+                  {/* Render esmeralda text */}
+                  <div className="saved-typewriter">
+                    {message.esmeralda.text}
+                  </div>
+                </React.Fragment>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </>
   );

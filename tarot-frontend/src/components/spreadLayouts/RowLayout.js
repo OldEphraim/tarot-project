@@ -22,6 +22,8 @@ const RowLayout = ({ cards, imageRequests, currentCardIndex }) => {
     return "";
   };
 
+  console.log(imageRequests);
+
   return (
     <div className={`card-display row-layout`}>
       {cards.map((card, index) => (

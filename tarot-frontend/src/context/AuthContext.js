@@ -20,38 +20,44 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     if (!user?.token || !user?.expiration) return;
 
+    const refreshToken = async () => {
+      try {
+        console.log("Old user:", user);
+        setIsRefreshing(true);
+        const newTokenData = await refreshAccessToken(user.refresh_token);
+        console.log(newTokenData);
+
+        const updatedUser = {
+          ...user,
+          token: newTokenData.token,
+          expiration: newTokenData.expiration, // Update expiration
+        };
+
+        console.log("New user:", updatedUser);
+
+        setUser(updatedUser);
+        setAuthData(updatedUser);
+      } catch (error) {
+        console.error("Token refresh failed. Logging out...");
+        logout(); // Handle failure
+      } finally {
+        setIsRefreshing(false);
+      }
+    };
+
     const expirationTime = new Date(user.expiration).getTime();
     const currentTime = Date.now();
     const timeUntilRefresh = expirationTime - currentTime - 60000; // Refresh 1 min before expiry
     console.log(timeUntilRefresh);
 
     if (timeUntilRefresh > 0) {
-      const refreshTimeout = setTimeout(async () => {
-        try {
-          console.log("old user:", user);
-          setIsRefreshing(true);
-          const newTokenData = await refreshAccessToken(user.refresh_token);
-          console.log(newTokenData); // Call backend
-
-          const updatedUser = {
-            ...user,
-            token: newTokenData.token,
-            expiration: newTokenData.expiration, // Update expiration
-          };
-
-          console.log("new user:", updatedUser);
-
-          setUser(updatedUser);
-          setAuthData(updatedUser);
-        } catch (error) {
-          console.error("Token refresh failed. Logging out...");
-          logout(); // Handle failure
-        } finally {
-          setIsRefreshing(false);
-        }
+      const timeoutId = setTimeout(() => {
+        refreshToken();
       }, timeUntilRefresh);
 
-      return () => clearTimeout(refreshTimeout); // Cleanup
+      return () => clearTimeout(timeoutId); // Cleanup timeout
+    } else {
+      refreshToken();
     }
   }, [user]);
 
