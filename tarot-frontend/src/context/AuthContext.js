@@ -13,8 +13,18 @@ const AuthContext = createContext();
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(getUserService()); // Load from localStorage
+  const [user, setUserState] = useState(getUserService());
   const [isRefreshing, setIsRefreshing] = useState(false);
+
+  // Wrapper around setUserState to update both state and local storage
+  const setUser = (updatedUser) => {
+    if (updatedUser) {
+      setAuthData(updatedUser); // Save to local storage
+      setUserState(updatedUser); // Update state
+    } else {
+      clearAuthData(); // Clear local storage if user is null
+    }
+  };
 
   // Refresh token logic
   useEffect(() => {
@@ -32,7 +42,6 @@ export const AuthProvider = ({ children }) => {
         };
 
         setUser(updatedUser);
-        setAuthData(updatedUser);
       } catch (error) {
         console.error("Token refresh failed. Logging out...");
         logout(); // Handle failure
@@ -64,10 +73,9 @@ export const AuthProvider = ({ children }) => {
         password,
         expiresInSeconds,
       });
-      setUser(response); // Set user in state
-      setAuthData(response); // Persist to localStorage
+      setUser(response);
     } catch (error) {
-      throw error; // Handle login error
+      throw error;
     }
   };
 
@@ -78,8 +86,8 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       console.error("Error during logout:", error);
     } finally {
-      setUser(null); // Clear state
-      clearAuthData(); // Clear localStorage
+      setUser(null);
+      clearAuthData();
     }
   };
 
@@ -89,7 +97,7 @@ export const AuthProvider = ({ children }) => {
     login,
     logout,
     isAuthenticated: !!user?.token,
-    isRefreshing, // Optional: Track refresh state
+    isRefreshing,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -27,8 +27,8 @@ section {
 .favorites-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 180px;
-  margin: 0 60px;
+  gap: 280px;
+  margin: 0 120px;
 }
 
 .favorite-item {

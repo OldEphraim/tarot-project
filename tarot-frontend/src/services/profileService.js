@@ -139,21 +139,20 @@ export const getFavoriteById = async (user, id) => {
 };
 
 export const updateJournalEntry = async (user, id, journalText) => {
-  const response = await api.put(
-    `/favorites/journal/${id}`,
-    { journal_entry: journalText },
-    {
-      headers: {
-        Authorization: `Bearer ${user.token}`,
-      },
-    }
-  );
-
-  if (!response.ok) {
-    throw new Error("Failed to update journal entry");
+  try {
+    const response = await api.put(
+      `/favorites/journal/${id}`,
+      { journal_entry: journalText },
+      {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (err) {
+    console.error("Failed to save journal entry", err);
   }
-
-  return response.json();
 };
 
 export const deleteFavoriteById = async (user, id) => {

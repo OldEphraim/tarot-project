@@ -48,13 +48,12 @@ const ChangeProfilePictureModal = ({ handleClose }) => {
 
   const handleSaveProfilePicture = async () => {
     try {
-      // Save the generated picture (implement API logic as needed)
       const updatedUser = {
         ...user,
-        profile_picture: generatedPicture[0], // Assuming this is the URL of the generated image
+        profile_picture: generatedPicture[0],
       };
-      await saveProfileChanges(updatedUser); // Save changes via backend
-      setUser(updatedUser); // Update frontend state
+      await saveProfileChanges(updatedUser);
+      setUser(updatedUser);
       setIsSaved(["Profile picture saved successfully!", "green"]);
       setGeneratedPicture([]);
       try {

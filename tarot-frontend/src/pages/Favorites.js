@@ -4,11 +4,12 @@ import { useAuth } from "../context/AuthContext";
 import { useModal } from "../context/ModalContext";
 import { getSavedImage, deleteFavoriteById } from "../services/profileService";
 import { readTarotDeck } from "../services/tarotService";
+import { saveProfileChanges } from "../services/profileService";
 import Modal from "../components/Modal";
 import "./Favorites.css";
 
 const Favorites = () => {
-  const { user } = useAuth();
+  const { user, setUser } = useAuth();
   const [favorites, setFavorites] = useState([]);
   const [deck, setDeck] = useState(null);
   const [error, setError] = useState(null);
@@ -26,6 +27,19 @@ const Favorites = () => {
     } catch (error) {
       console.error("Failed to delete favorite:", error);
       alert("Failed to delete favorite. Please try again.");
+    }
+  };
+
+  const setAsProfilePicture = async (url) => {
+    try {
+      const updatedUser = {
+        ...user,
+        profile_picture: url,
+      };
+      await saveProfileChanges(updatedUser);
+      setUser(updatedUser);
+    } catch (error) {
+      console.error("Error saving profile picture:", error);
     }
   };
 
@@ -137,6 +151,12 @@ const Favorites = () => {
                         Card Details
                       </button>
                     )}
+                    <button
+                      className="spooky-button"
+                      onClick={() => setAsProfilePicture(favorite.ImageUrl)}
+                    >
+                      Set As Profile Picture
+                    </button>
                     <button
                       className="spooky-button"
                       onClick={() => handleDeleteFavorite(favorite.ID)}
