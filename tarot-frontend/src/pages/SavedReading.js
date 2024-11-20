@@ -1,9 +1,9 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useModal } from "../context/ModalContext";
 import { getReadingBySlug } from "../services/profileService";
-import { readTarotDeck } from "../services/tarotService";
+import { useTarotDeck } from "../hooks/useTarotDeck";
 import Modal from "../components/Modal";
 import CelticCrossLayout from "../components/spreadLayouts/CelticCrossLayout";
 import RowLayout from "../components/spreadLayouts/RowLayout";
@@ -13,11 +13,10 @@ const SavedReading = () => {
   const { username, slug } = useParams();
   const { user } = useAuth();
   const { closeModal, isModalOpen } = useModal();
-  const hasFetchedDeck = useRef(false);
 
   const [reading, setReading] = useState(null);
   const [error, setError] = useState(null);
-  const [deck, setDeck] = useState(null);
+  const { deck, error: deckError } = useTarotDeck();
 
   useEffect(() => {
     const fetchReading = async () => {
@@ -26,28 +25,12 @@ const SavedReading = () => {
         setReading(data);
       } catch (error) {
         console.error("Error fetching reading:", error);
+        setError("Failed to fetch saved reading.");
       }
     };
 
     fetchReading();
   }, [slug, user]);
-
-  useEffect(() => {
-    const fetchDeck = async () => {
-      try {
-        const deckData = await readTarotDeck();
-        setDeck(deckData);
-      } catch (err) {
-        console.error("Failed to fetch tarot deck:", err);
-        setError("Failed to load tarot deck.");
-      }
-    };
-
-    if (!hasFetchedDeck.current) {
-      hasFetchedDeck.current = true;
-      fetchDeck();
-    }
-  }, [hasFetchedDeck, deck]);
 
   const getCardDetails = (cardName) => {
     const card = deck.find((card) => card.name === cardName);
@@ -71,8 +54,10 @@ const SavedReading = () => {
     }
   };
 
-  if (error) {
-    return <h2>{error}</h2>;
+  const combinedError = error || deckError;
+
+  if (combinedError) {
+    return <h2>{combinedError}</h2>;
   }
 
   if (!reading) {

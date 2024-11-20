@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { readTarotDeck } from "../services/tarotService";
+import { useTarotDeck } from "../hooks/useTarotDeck";
 import "./TarotGallery.css";
 
 const tarotCategories = [
@@ -37,47 +37,30 @@ const tarotCategories = [
 ];
 
 function formatKeywords(description) {
-  return description
-    .split(",") // Split the string into an array by commas
-    .map((keyword) => keyword.trim().toLowerCase()); // Trim whitespace and convert to lowercase
+  return description.split(",").map((keyword) => keyword.trim().toLowerCase());
 }
 
 const TarotGallery = () => {
-  const [deck, setDeck] = useState(null);
-  const [error, setError] = useState(null);
+  const { deck, error } = useTarotDeck();
+  const [groupedDeck, setGroupedDeck] = useState(null);
 
   useEffect(() => {
-    const fetchDeck = async () => {
-      try {
-        const deckData = await readTarotDeck();
-
-        for (let i = 0; i < tarotCategories.length; i++) {
-          deckData.forEach((card) => {
-            if (card.suit === tarotCategories[i].name) {
-              const alreadyExists = tarotCategories[i].cards.some(
-                (existingCard) => existingCard.number === card.number
-              );
-              if (!alreadyExists) {
-                tarotCategories[i].cards.push(card);
-              }
-              return;
-            }
-          });
-        }
-        setDeck(tarotCategories);
-      } catch (err) {
-        setError(err.message);
-      }
-    };
-
-    fetchDeck();
-  }, []);
+    if (deck) {
+      const categorizedDeck = tarotCategories.map((category) => {
+        return {
+          ...category,
+          cards: deck.filter((card) => card.suit === category.name),
+        };
+      });
+      setGroupedDeck(categorizedDeck);
+    }
+  }, [deck]);
 
   if (error) {
     return <h2>{error}</h2>;
   }
 
-  if (!deck) {
+  if (!groupedDeck) {
     return <h2>Loading...</h2>;
   }
 
@@ -88,7 +71,7 @@ const TarotGallery = () => {
 
   return (
     <div className="tarot-gallery">
-      {deck.map((category) => (
+      {groupedDeck.map((category) => (
         <section key={category.name}>
           <h1 className="category-name">{category.name}</h1>
           <h3 className="category-description">{category.description}</h3>

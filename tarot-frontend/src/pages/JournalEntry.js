@@ -5,19 +5,19 @@ import {
   getFavoriteById,
   updateJournalEntry,
 } from "../services/profileService";
-import { searchCardByName } from "../services/tarotService";
-import TextArea from "../components/TextArea"; // Import your TextArea component
+import { useCardDetails } from "../hooks/useCardDetails";
+import TextArea from "../components/TextArea";
 import "./JournalEntry.css";
 
 const JournalEntry = () => {
-  const { id } = useParams();
-  const { user } = useAuth();
-  const navigate = useNavigate(); // Used for navigation
-
   const [favorite, setFavorite] = useState(null);
-  const [card, setCard] = useState(null);
   const [error, setError] = useState(null);
   const [journalText, setJournalText] = useState(""); // Tracks user input
+
+  const { id } = useParams();
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const { card, error: cardError } = useCardDetails(favorite?.card_name);
 
   useEffect(() => {
     const fetchFavorite = async () => {
@@ -28,19 +28,11 @@ const JournalEntry = () => {
         // Initialize journal text
         const initialText = data.journal_entry.Valid
           ? data.journal_entry.String
-          : ""; // Use the journal entry string if valid, otherwise an empty string
+          : "";
         setJournalText(initialText);
-
-        // Fetch card data
-        try {
-          const cardData = await searchCardByName(data.card_name);
-          setCard(cardData);
-        } catch (err) {
-          console.error("Failed to fetch card details:", err);
-          setError("Failed to load card details.");
-        }
       } catch (error) {
         console.error("Error fetching favorite:", error);
+        setError("Error fetching journal entry.");
       }
     };
 
@@ -56,15 +48,17 @@ const JournalEntry = () => {
   };
 
   const handleAbandon = () => {
-    navigate(`/${user.username}/favorites`); // Redirect to favorites
+    navigate(`/${user.username}/favorites`);
   };
 
   const handleChange = (e) => {
-    setJournalText(e.target.value); // Update state as user types
+    setJournalText(e.target.value);
   };
 
-  if (error) {
-    return <h2>{error}</h2>;
+  const combinedError = error || cardError;
+
+  if (combinedError) {
+    return <h2>{combinedError}</h2>;
   }
 
   if (!favorite || !card) {

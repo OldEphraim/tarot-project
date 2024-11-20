@@ -7,7 +7,7 @@ import "../../components/Modal.css";
 const ConfirmChangeModal = ({ handleClose }) => {
   const { user, setUser } = useAuth();
   const { modalData } = useModal();
-  const [isSaved, setIsSaved] = useState(false); // Tracks if changes are saved
+  const [isSaved, setIsSaved] = useState(false);
 
   const handleConfirm = async () => {
     const updatedUser = {
@@ -20,7 +20,6 @@ const ConfirmChangeModal = ({ handleClose }) => {
     try {
       await saveProfileChanges(updatedUser);
       setUser(updatedUser);
-      localStorage.setItem("user", JSON.stringify(updatedUser));
       setIsSaved(true);
     } catch (error) {
       console.error("Error saving changes:", error);

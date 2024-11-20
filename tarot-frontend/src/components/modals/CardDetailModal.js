@@ -1,45 +1,24 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { useModal } from "../../context/ModalContext";
 import { useTarot } from "../../context/TarotContext";
+import { useFavorites } from "../../hooks/useFavorites";
 import "../../components/Modal.css";
-import { getSavedImage, handleSaveImage } from "../../services/profileService";
+import { handleSaveImage } from "../../services/profileService";
 
 const CardDetailModal = ({ setFadeOut }) => {
   const [hasSaved, setHasSaved] = useState(false);
-  const [isFavorite, setIsFavored] = useState(false);
-
-  const hasFetchedFavorites = useRef(false);
 
   const { user } = useAuth();
   const { modalData, closeModal } = useModal();
   const { selectedSpread, workflow } = useTarot();
 
-  useEffect(() => {
-    const fetchFavorites = async () => {
-      try {
-        const favoriteData = await getSavedImage(user);
+  const { favorites } = useFavorites(user, modalData.card.name);
 
-        const isImageAlreadyFavorite = favoriteData.some(
-          (favorite) => favorite.ImageUrl === modalData.imageUrl
-        );
-
-        if (isImageAlreadyFavorite) {
-          setIsFavored(true);
-        } else {
-          setIsFavored(false);
-        }
-      } catch (error) {
-        console.error("Failed to fetch favorites:", error);
-      }
-    };
-
-    if (user && !hasFetchedFavorites.current) {
-      hasFetchedFavorites.current = true;
-      fetchFavorites();
-    }
-  });
+  const isFavorite = favorites.some(
+    (favorite) => favorite.ImageUrl === modalData.imageUrl
+  );
 
   const handleScrollToExplanation = () => {
     const targetElement = document.getElementById(
@@ -123,7 +102,7 @@ const CardDetailModal = ({ setFadeOut }) => {
             >
               See Explanation
             </button>
-            {!isFavorite && (
+            {!isFavorite && !hasSaved && (
               <button
                 className="spooky-button"
                 onClick={() => handleSaveClick()}

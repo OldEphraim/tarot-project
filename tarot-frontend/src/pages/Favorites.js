@@ -1,72 +1,28 @@
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useModal } from "../context/ModalContext";
-import { getSavedImage, deleteFavoriteById } from "../services/profileService";
-import { readTarotDeck } from "../services/tarotService";
+import { useFavorites } from "../hooks/useFavorites";
+import { useTarotDeck } from "../hooks/useTarotDeck";
 import { setAsProfilePicture } from "../utils/updateProfilePicture";
 import Modal from "../components/Modal";
 import "./Favorites.css";
 
 const Favorites = () => {
   const { user, setUser } = useAuth();
-  const [favorites, setFavorites] = useState([]);
-  const [deck, setDeck] = useState(null);
-  const [error, setError] = useState(null);
+  const { deck, error: deckError } = useTarotDeck();
+  const {
+    favorites,
+    error: favoritesError,
+    deleteFavorite,
+  } = useFavorites(user);
 
   const { isModalOpen, setIsModalOpen, openModal } = useModal();
 
-  const hasFetchedFavorites = useRef(false);
-  const hasFetchedDeck = useRef(false);
+  const combinedError = deckError || favoritesError;
 
-  const handleDeleteFavorite = async (id) => {
-    try {
-      await deleteFavoriteById(user, id);
-      const updatedFavorites = await getSavedImage(user);
-      setFavorites(updatedFavorites);
-    } catch (error) {
-      console.error("Failed to delete favorite:", error);
-      alert("Failed to delete favorite. Please try again.");
-    }
-  };
-
-  useEffect(() => {
-    const fetchFavorites = async () => {
-      try {
-        const favoriteData = await getSavedImage(user);
-        console.log(favoriteData);
-        setFavorites(favoriteData);
-      } catch (error) {
-        console.error("Failed to fetch favorites:", error);
-        setError("Failed to fetch favorites.");
-      }
-    };
-
-    if (user && !hasFetchedFavorites.current) {
-      hasFetchedFavorites.current = true;
-      fetchFavorites();
-    }
-  }, [hasFetchedFavorites, favorites, user]);
-
-  useEffect(() => {
-    const fetchDeck = async () => {
-      try {
-        const deckData = await readTarotDeck(); // Fetch deck details
-        setDeck(deckData);
-      } catch (err) {
-        console.error("Failed to fetch tarot deck:", err);
-        setError("Failed to load tarot deck.");
-      }
-    };
-
-    if (!hasFetchedDeck.current) {
-      hasFetchedDeck.current = true;
-      fetchDeck();
-    }
-  }, [hasFetchedDeck, deck]);
-
-  if (error) {
-    return <h2>{error}</h2>;
+  if (combinedError) {
+    return <h2>{combinedError}</h2>;
   }
 
   if (!deck || !favorites.length) {
@@ -149,7 +105,7 @@ const Favorites = () => {
                     </button>
                     <button
                       className="spooky-button"
-                      onClick={() => handleDeleteFavorite(favorite.ID)}
+                      onClick={() => deleteFavorite(favorite.ID)}
                     >
                       Delete
                     </button>

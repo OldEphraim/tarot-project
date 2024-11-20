@@ -41,9 +41,9 @@ p {
 
 .button-container {
   display: flex;
-  justify-content: center; /* Center the buttons */
-  gap: 20px; /* Space between buttons */
-  margin-top: 20px; /* Space above buttons */
+  justify-content: center;
+  gap: 20px;
+  margin-top: 20px;
 }
 
 .spooky-button {

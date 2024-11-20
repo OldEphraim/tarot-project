@@ -178,7 +178,7 @@ const Navbar = () => {
               target="_blank"
               rel="noopener noreferrer"
             >
-              About Me
+              About The Developer
             </a>
           </div>
         </li>

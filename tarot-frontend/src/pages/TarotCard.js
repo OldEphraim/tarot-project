@@ -1,23 +1,19 @@
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 import { Link, useParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useModal } from "../context/ModalContext";
-import { getSavedImage } from "../services/profileService";
-import { searchCardByName } from "../services/tarotService";
+import { useFavorites } from "../hooks/useFavorites";
+import { useCardDetails } from "../hooks/useCardDetails";
 import { setAsProfilePicture } from "../utils/updateProfilePicture";
 import Modal from "../components/Modal";
 import "./TarotCard.css";
 
 const TarotCard = () => {
-  const [card, setCard] = useState(null);
-  const [error, setError] = useState(null);
-  const [favorites, setFavorites] = useState([]);
-
   const { user, setUser } = useAuth();
   const { cardName } = useParams();
   const { isModalOpen, setIsModalOpen, openModal } = useModal();
-
-  const hasFetchedFavorites = useRef(false);
+  const { favorites, error: favoritesError } = useFavorites(user, cardName);
+  const { card, error: cardDetailsError } = useCardDetails(cardName);
 
   const handleCardDetailsClick = (
     card,
@@ -35,56 +31,17 @@ const TarotCard = () => {
     });
   };
 
-  useEffect(() => {
-    const fetchCard = async () => {
-      try {
-        const cardData = await searchCardByName(cardName);
-        setCard(cardData);
-      } catch (err) {
-        setError(err.message);
-      }
-    };
+  const combinedError = cardDetailsError || favoritesError;
 
-    fetchCard();
-  }, [cardName]);
-
-  useEffect(() => {
-    const fetchFavorites = async () => {
-      try {
-        const favoriteData = await getSavedImage(user);
-        console.log("Raw favorite data:", favoriteData);
-
-        // Filter favoriteData to include only items with matching CardName
-        const filteredFavorites = favoriteData.filter(
-          (item) => item.CardName === cardName
-        );
-
-        console.log("Filtered favorites:", filteredFavorites);
-        setFavorites(filteredFavorites);
-      } catch (error) {
-        console.error("Failed to fetch favorites:", error);
-        setError("Failed to fetch favorites.");
-      }
-    };
-
-    if (user && !hasFetchedFavorites.current) {
-      hasFetchedFavorites.current = true;
-      fetchFavorites();
-    }
-  }, [hasFetchedFavorites, favorites, user, cardName]);
-
-  if (error) {
-    return <h2>{error}</h2>;
+  if (combinedError) {
+    return <h2>{combinedError}</h2>;
   }
 
   if (!card) {
     return <h2>Loading...</h2>;
   }
 
-  const getImagePath = (number) => {
-    const imageFileName = `/tarot-images/card_${number}.jpg`;
-    return imageFileName;
-  };
+  const getImagePath = (number) => `/tarot-images/card_${number}.jpg`;
 
   return (
     <>
