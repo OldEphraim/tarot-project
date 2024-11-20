@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { useModal } from "../../context/ModalContext";
 import { useTarot } from "../../context/TarotContext";
@@ -12,7 +13,7 @@ const CardDetailModal = ({ setFadeOut }) => {
   const hasFetchedFavorites = useRef(false);
 
   const { user } = useAuth();
-  const { modalData } = useModal();
+  const { modalData, closeModal } = useModal();
   const { selectedSpread, workflow } = useTarot();
 
   useEffect(() => {
@@ -133,7 +134,27 @@ const CardDetailModal = ({ setFadeOut }) => {
           </div>{" "}
         </>
       ) : (
-        <div style={{ marginTop: "60px" }}></div>
+        <>
+          {modalData.positionMeaning !== "specific" ? (
+            <>
+              <div>
+                <Link
+                  to={`/tarot/cards/${modalData.card.details.name}`}
+                  style={{ textDecoration: "none" }}
+                >
+                  <button className="spooky-button">
+                    See More Card Details
+                  </button>
+                </Link>
+                <button className="spooky-button" onClick={closeModal}>
+                  Close Modal
+                </button>
+              </div>{" "}
+            </>
+          ) : (
+            <div style={{ marginBottom: "60px" }}></div>
+          )}
+        </>
       )}
     </>
   );

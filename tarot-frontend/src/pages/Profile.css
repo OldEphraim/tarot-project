@@ -96,3 +96,13 @@
   border: 1px solid #ddd;
   border-radius: 4px;
 }
+
+.log-link {
+  font-family: "Fanwood Text", serif;
+  font-size: 18.75px;
+  font-weight: bolder;
+  text-align: left;
+  mix-blend-mode: darken;
+  --font-color: black;
+  color: black;
+}

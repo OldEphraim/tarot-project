@@ -12,3 +12,26 @@
 .emoji {
   font-size: 50px;
 }
+
+.specific-favorites-container {
+  padding: 20px;
+}
+
+.specific-favorites-header {
+  font-family: "Fanwood Text", serif;
+  text-transform: uppercase;
+  color: white;
+  font-size: 25px;
+  letter-spacing: 0.2rem;
+}
+
+section {
+  margin-bottom: 40px;
+}
+
+.specific-favorites-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 140px;
+  margin: 0 30px;
+}

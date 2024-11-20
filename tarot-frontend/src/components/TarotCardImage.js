@@ -68,7 +68,9 @@ const TarotCardImage = ({
       )}
       {positionMeaning && (
         <div onClick={handleScrollToExplanation}>
-          <div className="position-meaning">{positionMeaning.text}</div>
+          <div className="position-meaning">
+            <strong>{positionMeaning.text}</strong>
+          </div>
           <div className="position-meaning">{positionMeaning.emoji}</div>
         </div>
       )}

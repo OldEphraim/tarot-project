@@ -4,7 +4,7 @@ import { useAuth } from "../context/AuthContext";
 import { useModal } from "../context/ModalContext";
 import { getSavedImage, deleteFavoriteById } from "../services/profileService";
 import { readTarotDeck } from "../services/tarotService";
-import { saveProfileChanges } from "../services/profileService";
+import { setAsProfilePicture } from "../utils/updateProfilePicture";
 import Modal from "../components/Modal";
 import "./Favorites.css";
 
@@ -30,23 +30,11 @@ const Favorites = () => {
     }
   };
 
-  const setAsProfilePicture = async (url) => {
-    try {
-      const updatedUser = {
-        ...user,
-        profile_picture: url,
-      };
-      await saveProfileChanges(updatedUser);
-      setUser(updatedUser);
-    } catch (error) {
-      console.error("Error saving profile picture:", error);
-    }
-  };
-
   useEffect(() => {
     const fetchFavorites = async () => {
       try {
-        const favoriteData = await getSavedImage(user); // Fetch user's favorites
+        const favoriteData = await getSavedImage(user);
+        console.log(favoriteData);
         setFavorites(favoriteData);
       } catch (error) {
         console.error("Failed to fetch favorites:", error);
@@ -153,7 +141,9 @@ const Favorites = () => {
                     )}
                     <button
                       className="spooky-button"
-                      onClick={() => setAsProfilePicture(favorite.ImageUrl)}
+                      onClick={() =>
+                        setAsProfilePicture(user, setUser, favorite.ImageUrl)
+                      }
                     >
                       Set As Profile Picture
                     </button>

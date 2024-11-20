@@ -4,7 +4,7 @@ import Typewriter from "./Typewriter";
 import { handleSaveReading } from "../services/profileService";
 import { useAuth } from "../context/AuthContext";
 import { useTarot } from "../context/TarotContext";
-import { extractWorkflowData } from "../utils/workflowUtils";
+import { extractWorkflowData } from "../utils/formatWorkflowJson";
 
 const Closing = ({ artStyle }) => {
   const { isAuthenticated, user } = useAuth();
