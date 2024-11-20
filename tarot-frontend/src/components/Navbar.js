@@ -101,13 +101,12 @@ const Navbar = () => {
                 ref={(el) => (dropdownRefs.current.tarot.menuItem = el)}
                 onClick={() => closeDropdowns()}
               >
-                <Link to="/tarot/about">Art of Tarot</Link>
-              </li>
-              <li onClick={() => closeDropdowns()}>
-                <Link to="/tarot/spreads">Tarot Spreads</Link>
-              </li>
-              <li onClick={() => closeDropdowns()}>
                 <Link to="/tarot/cards">Tarot Cards</Link>
+              </li>
+              <li onClick={() => closeDropdowns()}>
+                <Link to="https://labyrinthos.co/blogs/tarot-card-meanings-list">
+                  Card Meanings
+                </Link>
               </li>
             </ul>
           )}

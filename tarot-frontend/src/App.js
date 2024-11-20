@@ -8,7 +8,6 @@ import {
 import { useModal } from "./context/ModalContext";
 import Navbar from "./components/Navbar";
 import ProtectedRoute from "./components/ProtectedRoute";
-import AboutTarot from "./pages/AboutTarot";
 import CreateAccount from "./pages/CreateAccount";
 import Favorites from "./pages/Favorites";
 import Home from "./pages/Home";
@@ -18,7 +17,6 @@ import Profile from "./pages/Profile";
 import SavedReading from "./pages/SavedReading";
 import TarotCard from "./pages/TarotCard";
 import TarotGallery from "./pages/TarotGallery";
-import TarotSpreads from "./pages/TarotSpreads";
 import "./App.css";
 
 const AppContent = () => {
@@ -29,10 +27,28 @@ const AppContent = () => {
     setIsModalOpen(false);
   }, [location, setIsModalOpen]);
 
+  // Define the background image conditionally based on the route
+  const getBackgroundStyle = () => {
+    if (
+      location.pathname === "/login" ||
+      location.pathname === "/create-account"
+    ) {
+      return {
+        backgroundImage:
+          "url('/esmeralda-universe-images/square-brightly-lit-generated-misty-forest.webp')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        minHeight: "100vh", // Ensure the background spans the viewport height
+      };
+    }
+    return {};
+  };
+
   return (
     <>
       <Navbar />
-      <div className={`app`}>
+      <div className="app" style={getBackgroundStyle()}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/create-account" element={<CreateAccount />} />
@@ -49,10 +65,8 @@ const AppContent = () => {
           <Route path="/:username/readings/:slug" element={<ProtectedRoute />}>
             <Route index element={<SavedReading />} />
           </Route>
-          <Route path="/tarot" element={<AboutTarot />} />
           <Route path="/tarot/cards" element={<TarotGallery />} />
           <Route path="/tarot/cards/:cardName" element={<TarotCard />} />
-          <Route path="/tarot/spreads" element={<TarotSpreads />} />
         </Routes>
       </div>
     </>

@@ -40,11 +40,11 @@ const Login = () => {
     setIsSubmitting(true);
     try {
       await login({ username, password });
+      navigate(`/${user?.username}`);
     } catch (error) {
       setServerError(error.message);
     } finally {
       setIsSubmitting(false);
-      navigate(`/${user?.username}`);
     }
   };
 
