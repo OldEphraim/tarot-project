@@ -1,18 +1,16 @@
 import React, { useState } from "react";
 import { Box, CircularProgress } from "@mui/material";
-import tarotCards from "../../constants/TarotCards";
-import tarotThemes from "../../constants/TarotThemes";
 import { useAuth } from "../../context/AuthContext";
 import {
   saveProfileChanges,
   handleSaveImage,
 } from "../../services/profileService";
-import { useCardDetails } from "../../hooks/useCardDetails";
 import { useGenerateImage } from "../../hooks/useGenerateImages";
-import { formatCardName } from "../../utils/formatCardName";
+import CardAndThemeSelector from "../CardAndThemeSelector";
+import ImageGenerationButtons from "../ImageGenerationButtons";
 import "../../components/Modal.css";
 
-const ChangeProfilePictureModal = ({ handleClose }) => {
+const ChangeProfilePictureModal = () => {
   const { user, setUser } = useAuth();
   const {
     selectedCard,
@@ -20,13 +18,12 @@ const ChangeProfilePictureModal = ({ handleClose }) => {
     generatedPicture,
     isGenerating,
     isPictureReady,
+    handleGeneratePicture,
     handleCardChange,
     handleThemeChange,
-    handleGeneratePicture,
     setGeneratedPicture,
     spinnerRef,
   } = useGenerateImage();
-  const { card } = useCardDetails(formatCardName(selectedCard));
 
   const [isSaved, setIsSaved] = useState([]);
 
@@ -61,7 +58,6 @@ const ChangeProfilePictureModal = ({ handleClose }) => {
       <h2 style={{ color: "black" }} className="profile-picture-header">
         Generate New Profile Picture
       </h2>
-
       <div className="profile-picture-preview">
         {user.profile_picture && isSaved.length === 0 && (
           <>
@@ -130,93 +126,27 @@ const ChangeProfilePictureModal = ({ handleClose }) => {
           />
         )}
       </div>
-
-      <p style={{ color: "black" }}>
-        Your profile picture can be{" "}
-        {card?.arcana === "Minor Arcana" || card?.name === "Wheel of Fortune"
-          ? "the "
-          : ""}
-        <select
-          value={selectedCard}
-          onChange={handleCardChange}
-          className="dropdown"
-        >
-          <option value="">Select a Card</option>
-          {tarotCards.map((card, index) => (
-            <option key={index} value={card}>
-              {card}
-            </option>
-          ))}
-        </select>{" "}
-        in the{" "}
-        <select
-          value={selectedTheme}
-          onChange={handleThemeChange}
-          className="dropdown"
-        >
-          <option value="">Select a Theme</option>
-          {tarotThemes.map((theme, index) => (
-            <option key={index} value={theme}>
-              {theme}
-            </option>
-          ))}
-        </select>{" "}
-        style.
-      </p>
-
+      <CardAndThemeSelector
+        selectedCard={selectedCard}
+        selectedTheme={selectedTheme}
+        handleCardChange={handleCardChange}
+        handleThemeChange={handleThemeChange}
+        whatIsThis={"profile picture can"}
+      />
       {isSaved.length === 2 ? (
         <p style={{ color: isSaved[1], fontWeight: "bold", marginTop: "20px" }}>
           {isSaved[0]}
         </p>
       ) : (
-        <>
-          <div className="button-container" style={{ margin: "20px" }}>
-            {/* Case 1: Generating is in progress */}
-            {isGenerating && (
-              <button className="spooky-button modal-button" disabled>
-                Generating...
-              </button>
-            )}
-
-            {/* Case 2: Profile picture is ready */}
-            {!isGenerating && isPictureReady && (
-              <>
-                <button
-                  onClick={handleSaveProfilePicture}
-                  className="spooky-button modal-button"
-                >
-                  Save New Profile Picture
-                </button>
-                <button
-                  onClick={handleGeneratePicture}
-                  className="spooky-button modal-button"
-                  disabled={selectedCard === "" || selectedTheme === ""}
-                >
-                  Generate New Picture
-                </button>
-              </>
-            )}
-
-            {/* Case 3: Ready to generate picture */}
-            {!isGenerating && !isPictureReady && (
-              <button
-                onClick={handleGeneratePicture}
-                className="spooky-button modal-button"
-                disabled={selectedCard === "" || selectedTheme === ""}
-                style={{ margin: "10px" }}
-              >
-                Generate Picture
-              </button>
-            )}
-
-            <button
-              onClick={handleClose}
-              className="spooky-button modal-button"
-            >
-              Go Back
-            </button>
-          </div>
-        </>
+        <ImageGenerationButtons
+          isGenerating={isGenerating}
+          isPictureReady={isPictureReady}
+          selectedCard={selectedCard}
+          selectedTheme={selectedTheme}
+          handleGeneratePicture={handleGeneratePicture}
+          uniqueButton="Save New Profile Picture"
+          uniqueAction={handleSaveProfilePicture}
+        />
       )}
     </>
   );

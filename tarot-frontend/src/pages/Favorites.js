@@ -17,7 +17,7 @@ const Favorites = () => {
     deleteFavorite,
   } = useFavorites(user);
 
-  const { isModalOpen, setIsModalOpen, openModal } = useModal();
+  const { isModalOpen, openModal } = useModal();
 
   const combinedError = deckError || favoritesError;
 
@@ -120,7 +120,7 @@ const Favorites = () => {
       </div>
 
       {/* Confirmation Modal */}
-      {isModalOpen && <Modal onClose={() => setIsModalOpen(false)} />}
+      {isModalOpen && <Modal />}
     </>
   );
 };

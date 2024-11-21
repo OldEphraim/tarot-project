@@ -4,9 +4,9 @@ import { useAuth } from "../../context/AuthContext";
 import { useModal } from "../../context/ModalContext";
 import "../../components/Modal.css";
 
-const ConfirmChangeModal = ({ handleClose }) => {
+const ConfirmChangeModal = () => {
   const { user, setUser } = useAuth();
-  const { modalData } = useModal();
+  const { modalData, closeModal } = useModal();
   const [isSaved, setIsSaved] = useState(false);
 
   const handleConfirm = async () => {
@@ -49,7 +49,7 @@ const ConfirmChangeModal = ({ handleClose }) => {
           <button onClick={handleConfirm} className="spooky-button">
             I'm Sure
           </button>
-          <button onClick={handleClose} className="spooky-button">
+          <button onClick={closeModal} className="spooky-button">
             I Changed My Mind
           </button>
         </div>

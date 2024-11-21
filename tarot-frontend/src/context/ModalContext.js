@@ -8,6 +8,7 @@ export const ModalProvider = ({ children }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalType, setModalType] = useState(null);
   const [modalData, setModalData] = useState(null);
+  const [fadeOut, setFadeOut] = useState(false);
 
   const openModal = (type, data = null) => {
     setModalType(type);
@@ -16,9 +17,13 @@ export const ModalProvider = ({ children }) => {
   };
 
   const closeModal = () => {
-    setIsModalOpen(false);
-    setModalType(null);
-    setModalData(null);
+    setFadeOut(true);
+    setTimeout(() => {
+      setIsModalOpen(false);
+      setModalType(null);
+      setModalData(null);
+      setFadeOut(false);
+    }, 500);
   };
 
   return (
@@ -30,6 +35,7 @@ export const ModalProvider = ({ children }) => {
         modalData,
         openModal,
         closeModal,
+        fadeOut,
       }}
     >
       {children}

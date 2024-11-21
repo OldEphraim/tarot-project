@@ -52,10 +52,9 @@ const CreateAccount = () => {
         try {
           await login({ username, password });
         } catch (error) {
-          // This will eventually require Delete Account functionality to do right
           setErrors({ form: error.message });
         } finally {
-          navigate(`/${user.username}`); // Go to profile if logged in
+          navigate(`/${user.username}`);
         }
       }
     }
@@ -67,18 +66,15 @@ const CreateAccount = () => {
         <Link to="/">
           <div className="modal-close">X</div>
         </Link>
-
         <h2 className="modal-name">Join Us</h2>
         <p className="explanation">
           Embrace new beginnings. Fill in your details below to create your
           account!
         </p>
-
         <div className="tarot-images">
           <img src="/tarot-images/card_00.jpg" alt="First Card" />
           <img src="/tarot-images/card_78.jpg" alt="Last Card" />
         </div>
-
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <input
@@ -92,7 +88,6 @@ const CreateAccount = () => {
               <span className="error-text">{errors.username}</span>
             )}
           </div>
-
           <div className="form-group">
             <input
               type="email"
@@ -103,7 +98,6 @@ const CreateAccount = () => {
             />
             {errors.email && <span className="error-text">{errors.email}</span>}
           </div>
-
           <div className="form-group">
             <input
               type="password"
@@ -113,7 +107,6 @@ const CreateAccount = () => {
               onChange={handleChange}
             />
           </div>
-
           <div className="form-group">
             <input
               type="password"
@@ -126,7 +119,6 @@ const CreateAccount = () => {
               <span className="error-text">{errors.confirmPassword}</span>
             )}
           </div>
-
           <button
             type="submit"
             className="submit-button"

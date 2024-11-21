@@ -1,16 +1,14 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Box, CircularProgress } from "@mui/material";
-import tarotCards from "../../constants/TarotCards";
-import tarotThemes from "../../constants/TarotThemes";
 import { useAuth } from "../../context/AuthContext";
 import { handleSaveImage } from "../../services/profileService";
 import { useGenerateImage } from "../../hooks/useGenerateImages";
-import { useCardDetails } from "../../hooks/useCardDetails";
-import { formatCardName } from "../../utils/formatCardName";
+import CardAndThemeSelector from "../CardAndThemeSelector";
+import ImageGenerationButtons from "../ImageGenerationButtons";
 import "../../components/Modal.css";
 
-const JournalEntryModal = ({ handleClose }) => {
+const JournalEntryModal = () => {
   const { user } = useAuth();
   const {
     selectedCard,
@@ -18,12 +16,11 @@ const JournalEntryModal = ({ handleClose }) => {
     generatedPicture,
     isGenerating,
     isPictureReady,
+    handleGeneratePicture,
     handleCardChange,
     handleThemeChange,
-    handleGeneratePicture,
     spinnerRef,
   } = useGenerateImage();
-  const { card } = useCardDetails(formatCardName(selectedCard));
 
   const navigate = useNavigate();
 
@@ -72,92 +69,23 @@ const JournalEntryModal = ({ handleClose }) => {
         </div>
       </div>
 
-      <p style={{ color: "black" }}>
-        Your journal entry's header will be{" "}
-        {card.arcana === "Minor Arcana" || card.name === "Wheel of Fortune"
-          ? "the "
-          : ""}
-        <select
-          value={selectedCard}
-          onChange={handleCardChange}
-          className="dropdown"
-        >
-          <option value="">Select a Card</option>
-          {tarotCards.map((card, index) => (
-            <option key={index} value={card}>
-              {card}
-            </option>
-          ))}
-        </select>{" "}
-        in the{" "}
-        <select
-          value={selectedTheme}
-          onChange={handleThemeChange}
-          className="dropdown"
-        >
-          <option value="">Select a Theme</option>
-          {tarotThemes.map((theme, index) => (
-            <option key={index} value={theme}>
-              {theme}
-            </option>
-          ))}
-        </select>{" "}
-        style.
-      </p>
+      <CardAndThemeSelector
+        selectedCard={selectedCard}
+        selectedTheme={selectedTheme}
+        handleCardChange={handleCardChange}
+        handleThemeChange={handleThemeChange}
+        whatIsThis={"journal entry's header will"}
+      />
 
-      <div className="button-container" style={{ margin: "20px" }}>
-        {/* Case 1: Generating is in progress */}
-        {isGenerating && (
-          <button
-            className="spooky-button modal-button"
-            disabled
-            style={{ margin: "10px" }}
-          >
-            Generating...
-          </button>
-        )}
-
-        {/* Case 2: Profile picture is ready */}
-        {!isGenerating && isPictureReady && (
-          <>
-            <button
-              onClick={handleStartJournalEntry}
-              className="spooky-button modal-button"
-              style={{ margin: "10px" }}
-            >
-              Begin New Journal Entry
-            </button>
-            <button
-              onClick={handleGeneratePicture}
-              className="spooky-button modal-button"
-              disabled={selectedCard === "" || selectedTheme === ""}
-              style={{ margin: "10px" }}
-            >
-              Generate New Picture
-            </button>
-          </>
-        )}
-
-        {/* Case 3: Ready to generate picture */}
-        {!isGenerating && !isPictureReady && (
-          <button
-            onClick={handleGeneratePicture}
-            className="spooky-button modal-button"
-            disabled={selectedCard === "" || selectedTheme === ""}
-            style={{ margin: "10px" }}
-          >
-            Generate Picture
-          </button>
-        )}
-
-        <button
-          onClick={handleClose}
-          className="spooky-button modal-button"
-          style={{ margin: "10px" }}
-        >
-          Go Back
-        </button>
-      </div>
+      <ImageGenerationButtons
+        isGenerating={isGenerating}
+        isPictureReady={isPictureReady}
+        selectedCard={selectedCard}
+        selectedtheme={selectedTheme}
+        handleGeneratePicture={handleGeneratePicture}
+        uniqueButton="Begin New Journal Entry"
+        uniqueAction={handleStartJournalEntry}
+      />
     </>
   );
 };

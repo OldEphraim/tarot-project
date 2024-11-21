@@ -11,7 +11,7 @@ import "./TarotCard.css";
 const TarotCard = () => {
   const { user, setUser } = useAuth();
   const { cardName } = useParams();
-  const { isModalOpen, setIsModalOpen, openModal } = useModal();
+  const { isModalOpen, openModal } = useModal();
   const { favorites, error: favoritesError } = useFavorites(user, cardName);
   const { card, error: cardDetailsError } = useCardDetails(cardName);
 
@@ -113,9 +113,7 @@ const TarotCard = () => {
           <p>No favorites saved yet.</p>
         )}
       </div>
-
-      {/* Confirmation Modal */}
-      {isModalOpen && <Modal onClose={() => setIsModalOpen(false)} />}
+      {isModalOpen && <Modal />}
     </>
   );
 };

@@ -12,7 +12,7 @@ import "./JournalEntry.css";
 const JournalEntry = () => {
   const [favorite, setFavorite] = useState(null);
   const [error, setError] = useState(null);
-  const [journalText, setJournalText] = useState(""); // Tracks user input
+  const [journalText, setJournalText] = useState("");
 
   const { id } = useParams();
   const { user } = useAuth();
@@ -24,8 +24,6 @@ const JournalEntry = () => {
       try {
         const data = await getFavoriteById(user, id);
         setFavorite(data);
-
-        // Initialize journal text
         const initialText = data.journal_entry.Valid
           ? data.journal_entry.String
           : "";

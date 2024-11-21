@@ -7,7 +7,7 @@ import SettingsSection from "../components/profile_page_sections/SettingsSection
 import "./Profile.css";
 
 const Profile = () => {
-  const { isModalOpen, setIsModalOpen } = useModal();
+  const { isModalOpen } = useModal();
 
   return (
     <div className="profile-page">
@@ -23,7 +23,7 @@ const Profile = () => {
       </div>
 
       {/* Confirmation Modal */}
-      {isModalOpen && <Modal onClose={() => setIsModalOpen(false)} />}
+      {isModalOpen && <Modal />}
     </div>
   );
 };

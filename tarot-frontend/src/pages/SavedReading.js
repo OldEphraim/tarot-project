@@ -12,7 +12,7 @@ import "./SavedReading.css";
 const SavedReading = () => {
   const { username, slug } = useParams();
   const { user } = useAuth();
-  const { closeModal, isModalOpen } = useModal();
+  const { isModalOpen } = useModal();
 
   const [reading, setReading] = useState(null);
   const [error, setError] = useState(null);
@@ -76,36 +76,31 @@ const SavedReading = () => {
   return (
     <>
       <div className="home">
-        {isModalOpen && <Modal onClose={closeModal} />}
+        {isModalOpen && <Modal />}
         <h1 className="home-header">{reading.title}</h1>
         <div className="saved-typewriter">
           {`WELCOME, ${username}, to my tarot card reader. For more information regarding the meanings of specific tarot cards, or the spreads which can be used, please visit the resources which have been made available under ‘About Tarot’.`}
         </div>
-
         {reading.workflow_log.workflow === "cards" && (
           <div className="proceed-to-cards-workflow">
             <div className="saved-typewriter">
               YOUR CARDS will be drawn, but only after you answer three
               questions.
             </div>
-
             <div className="saved-typewriter">
               {`You have chosen for the cards to be drawn in the ${reading.workflow_log.artStyle} style.`}
             </div>
-
             {reading.workflow_log.userReason !== "" && (
               <div className="user-message">
                 <p>{reading.workflow_log.userReason}</p>
               </div>
             )}
-
             <div className="saved-typewriter">
               {getFortunetellerNowDrawingText(
                 reading.workflow_log.layout,
                 reading.workflow_log.cardImages.length
               )}
             </div>
-
             {deck && reading.workflow_log.layout === "Celtic Cross" && (
               <CelticCrossLayout
                 cards={reading.workflow_log.cardNames.map(getCardDetails)}
@@ -152,22 +147,16 @@ const SavedReading = () => {
             <div className="saved-typewriter">
               SO YOU have chosen to speak with the fortuneteller.
             </div>
-
             <div className="speak-to-fortuneteller-workflow">
               <img
                 className={`esmeralda fade-in`}
                 src="/esmeralda-universe-images/esmeralda.webp"
                 alt="esmeralda"
               />
-
               <div className="saved-typewriter">{esmeraldaIntro}</div>
-
               {reading.workflow_log.messages.map((message, index) => (
                 <React.Fragment key={index}>
-                  {/* Render user message */}
                   <div className="user-message">{message.user}</div>
-
-                  {/* Conditionally render the RowLayout if esmeralda.images is not empty */}
                   {message.esmeralda.images.length > 0 && (
                     <RowLayout
                       cards={message.esmeralda.names.map(getCardDetails)}
@@ -185,8 +174,6 @@ const SavedReading = () => {
                       currentCardIndex={message.esmeralda.names.length}
                     />
                   )}
-
-                  {/* Render esmeralda text */}
                   <div className="saved-typewriter">
                     {message.esmeralda.text}
                   </div>

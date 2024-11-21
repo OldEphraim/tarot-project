@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Box, CircularProgress } from "@mui/material";
 import { useModal } from "../context/ModalContext";
+import { scrollToElement } from "../utils/scrollToElement";
 
 const TarotCardImage = ({
   card,
@@ -12,20 +13,6 @@ const TarotCardImage = ({
   const [imgSrc, setImgSrc] = useState(imageUrl || null);
   const spinnerRef = useRef(null);
   const { openModal } = useModal();
-
-  const handleScrollToExplanation = () => {
-    const targetElement = document.getElementById(
-      `explanation-text-${position}`
-    );
-    if (targetElement) {
-      const yOffset = -70;
-      const yPosition =
-        targetElement.getBoundingClientRect().top +
-        window.pageYOffset +
-        yOffset;
-      window.scrollTo({ top: yPosition, behavior: "smooth" });
-    }
-  };
 
   useEffect(() => {
     setImgSrc(imageUrl);
@@ -67,7 +54,7 @@ const TarotCardImage = ({
         </Box>
       )}
       {positionMeaning && (
-        <div onClick={handleScrollToExplanation}>
+        <div onClick={() => scrollToElement(`explanation-text-${position}`)}>
           <div className="position-meaning">
             <strong>{positionMeaning.text}</strong>
           </div>
