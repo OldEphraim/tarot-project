@@ -4,6 +4,7 @@ import Modal from "../components/Modal";
 import ProfilePictureSection from "../components/profile_page_sections/ProfilePictureSection";
 import SavedLogsSection from "../components/profile_page_sections/SavedLogsSection";
 import SettingsSection from "../components/profile_page_sections/SettingsSection";
+import PasswordSection from "../components/profile_page_sections/PasswordSection";
 import "./Profile.css";
 
 const Profile = () => {
@@ -15,14 +16,13 @@ const Profile = () => {
         <ProfilePictureSection />
         <SavedLogsSection />
       </div>
-
       <div className="profile-right">
         <h2>Settings</h2>
-
-        <SettingsSection />
+        <div className="settings-section">
+          <SettingsSection />
+          <PasswordSection />
+        </div>
       </div>
-
-      {/* Confirmation Modal */}
       {isModalOpen && <Modal />}
     </div>
   );

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { useModal } from "../../context/ModalContext";
-import { updatePassword } from "../../services/profileService";
 import tarotThemes from "../../constants/TarotThemes";
 
 const SettingsSection = () => {
@@ -11,24 +10,9 @@ const SettingsSection = () => {
   const [username, setUsername] = useState("");
   const [emailEditable, setEmailEditable] = useState(false);
   const [usernameEditable, setUsernameEditable] = useState(false);
-  const [passwordEditable, setPasswordEditable] = useState(false);
-  const [currentPassword, setCurrentPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
 
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const { openModal, setIsModalOpen } = useModal();
-
-  const handleChangePassword = async () => {
-    try {
-      await updatePassword(user, currentPassword, newPassword, confirmPassword);
-      logout();
-      alert("Password updated successfully!");
-    } catch (error) {
-      console.error("Error updating password:", error);
-      alert("Failed to update password. Please try again.");
-    }
-  };
 
   const handleArtStyleChange = (e) => {
     const selectedStyle = e.target.value;
@@ -55,8 +39,7 @@ const SettingsSection = () => {
   };
 
   return (
-    <div className="settings-section">
-      {/* Art Style */}
+    <>
       <label>
         Art Style: <strong>{user.art_style ? user.art_style : "Random"}</strong>
       </label>
@@ -79,8 +62,6 @@ const SettingsSection = () => {
           style={{ marginTop: "15px" }}
         />
       )}
-
-      {/* Email */}
       <div className="settings-section">
         <label>
           Email: {emailEditable ? email : <strong>{user.email}</strong>}
@@ -100,8 +81,6 @@ const SettingsSection = () => {
         />{" "}
         Edit
       </div>
-
-      {/* Username */}
       <div className="settings-section">
         <label>
           Username:{" "}
@@ -122,8 +101,6 @@ const SettingsSection = () => {
         />{" "}
         Edit
       </div>
-
-      {/* Save Button */}
       <button
         className="spooky-button"
         onClick={handleSaveClick}
@@ -131,75 +108,7 @@ const SettingsSection = () => {
       >
         Save Settings
       </button>
-
-      {/* Update Password Field */}
-      <div className="settings-section">
-        <label>
-          Password:{" "}
-          {!passwordEditable ? (
-            <strong>********</strong>
-          ) : (
-            <>
-              <strong>
-                {newPassword === "" && confirmPassword === "" ? (
-                  "No new password entered"
-                ) : newPassword !== confirmPassword ? (
-                  "You have entered multiple values for your new password."
-                ) : (
-                  <span style={{ color: "green" }}>
-                    You may make this value your new password.
-                  </span>
-                )}
-              </strong>
-              <span>
-                <input
-                  type="password"
-                  value={currentPassword}
-                  onChange={(e) => setCurrentPassword(e.target.value)}
-                  placeholder="Enter Current Password"
-                />
-                <input
-                  type="password"
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  placeholder="Enter New Password"
-                  style={{ marginTop: "10px" }}
-                />
-                <input
-                  type="password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  placeholder="Confirm New Password"
-                  style={{ marginTop: "10px" }}
-                />
-                <div className="button-container">
-                  <button
-                    className="spooky-button"
-                    onClick={handleChangePassword}
-                    style={{ marginTop: "10px" }}
-                  >
-                    Change Password
-                  </button>
-                  <button
-                    className="spooky-button"
-                    onClick={() => setPasswordEditable(false)}
-                    style={{ marginTop: "10px" }}
-                  >
-                    Keep As Is
-                  </button>
-                </div>
-              </span>
-            </>
-          )}
-        </label>
-        <input
-          type="checkbox"
-          checked={passwordEditable}
-          onChange={() => setPasswordEditable(!passwordEditable)}
-        />{" "}
-        Edit
-      </div>
-    </div>
+    </>
   );
 };
 

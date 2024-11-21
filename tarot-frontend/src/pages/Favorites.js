@@ -118,8 +118,6 @@ const Favorites = () => {
           <p>No favorites saved yet.</p>
         )}
       </div>
-
-      {/* Confirmation Modal */}
       {isModalOpen && <Modal />}
     </>
   );

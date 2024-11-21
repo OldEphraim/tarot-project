@@ -80,7 +80,6 @@ const Navbar = () => {
             <Link to="/">Home</Link>
           </div>
         </li>
-
         <li onClick={(e) => e.stopPropagation()}>
           <div
             className="dropdown-toggle"
@@ -111,7 +110,6 @@ const Navbar = () => {
             </ul>
           )}
         </li>
-
         <li onClick={(e) => e.stopPropagation()}>
           <div
             className="dropdown-toggle"
@@ -170,7 +168,6 @@ const Navbar = () => {
             </ul>
           )}
         </li>
-
         <li onClick={(e) => e.stopPropagation()}>
           <div className="oldephraim-link" onClick={() => closeDropdowns()}>
             <a

@@ -36,7 +36,6 @@ const TarotChat = () => {
 
   return (
     <div className="tarot-chat">
-      {/* Render conversation history */}
       <div className="conversation-history">
         {conversation.map((msg, index) => {
           return (
@@ -53,8 +52,6 @@ const TarotChat = () => {
           );
         })}
       </div>
-
-      {/* Render textarea only when Esmeralda has finished typing */}
       {showTextarea && (
         <div className="message-input-box">
           <TextArea
@@ -79,7 +76,6 @@ const TarotChat = () => {
           </div>
         </div>
       )}
-
       {loading && <div className="loading-spinner">...</div>}
       {(hasLayout || esmeraldaMessageCount >= 6) && !loading && !isTyping && (
         <div style={{ border: "2px solid black", padding: "10px" }}>

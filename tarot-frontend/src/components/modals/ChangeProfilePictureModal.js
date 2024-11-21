@@ -1,17 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
 import { Box, CircularProgress } from "@mui/material";
 import { useAuth } from "../../context/AuthContext";
-import {
-  saveProfileChanges,
-  handleSaveImage,
-} from "../../services/profileService";
 import { useGenerateImage } from "../../hooks/useGenerateImages";
+import { useProfilePicture } from "../../hooks/useProfilePicture";
 import CardAndThemeSelector from "../CardAndThemeSelector";
 import ImageGenerationButtons from "../ImageGenerationButtons";
 import "../../components/Modal.css";
 
 const ChangeProfilePictureModal = () => {
-  const { user, setUser } = useAuth();
+  const { user } = useAuth();
   const {
     selectedCard,
     selectedTheme,
@@ -24,34 +21,8 @@ const ChangeProfilePictureModal = () => {
     setGeneratedPicture,
     spinnerRef,
   } = useGenerateImage();
-
-  const [isSaved, setIsSaved] = useState([]);
-
-  const handleSaveProfilePicture = async () => {
-    try {
-      const updatedUser = {
-        ...user,
-        profile_picture: generatedPicture[0],
-      };
-      await saveProfileChanges(updatedUser);
-      setUser(updatedUser);
-      setIsSaved(["Profile picture saved successfully!", "green"]);
-      setGeneratedPicture([]);
-      try {
-        await handleSaveImage(
-          user,
-          generatedPicture[0],
-          generatedPicture[1],
-          generatedPicture[2]
-        );
-      } catch (error) {
-        console.error("Error saving profile picture to saved images", error);
-      }
-    } catch (error) {
-      console.error("Error saving profile picture:", error);
-      setIsSaved(["Failed to save profile picture. Please try again.", "red"]);
-    }
-  };
+  const { isSaved, handleSaveProfilePicture } =
+    useProfilePicture(setGeneratedPicture);
 
   return (
     <>
@@ -145,7 +116,7 @@ const ChangeProfilePictureModal = () => {
           selectedTheme={selectedTheme}
           handleGeneratePicture={handleGeneratePicture}
           uniqueButton="Save New Profile Picture"
-          uniqueAction={handleSaveProfilePicture}
+          uniqueAction={() => handleSaveProfilePicture(generatedPicture)}
         />
       )}
     </>
