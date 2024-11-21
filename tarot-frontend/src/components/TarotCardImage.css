@@ -2,23 +2,23 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100px; /* Match the width of your card */
+  width: 100px;
 }
 
 .card {
-  width: 100%; /* Take the full width of the container */
+  width: 100%;
   transition:
     opacity 0.5s ease-in,
     transform 0.5s ease-in;
 }
 
 .position-meaning {
-  font-size: 0.75em; /* Small text */
-  color: #666; /* Subtle color */
-  margin-top: 5px; /* Space between card and label */
+  font-size: 0.75em;
+  color: #666;
+  margin-top: 5px;
   text-align: center;
-  max-width: 100%; /* Never wider than the card */
+  max-width: 100%;
   overflow: hidden;
-  text-overflow: ellipsis; /* Ellipsis for long text */
+  text-overflow: ellipsis;
   white-space: nowrap;
 }

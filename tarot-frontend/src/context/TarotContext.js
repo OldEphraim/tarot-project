@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useCallback, useState } from "react";
 
 const TarotContext = createContext();
 
@@ -12,7 +12,7 @@ export const TarotProvider = ({ children }) => {
   // Workflow functions
   const setWorkflowToCards = () => setWorkflow("cards");
   const setWorkflowToFortuneteller = () => setWorkflow("fortuneteller");
-  const clearWorkflow = () => setWorkflow(null);
+  const clearWorkflow = useCallback(() => setWorkflow(null), []);
 
   // Spread functions
   const chooseSpread = (spread) => setSelectedSpread(spread);

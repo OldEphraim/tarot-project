@@ -13,7 +13,7 @@
 
 /* Cross Wrapper */
 .cross-wrapper {
-  grid-column: 1 / 4; /* Take up full width of the grid */
+  grid-column: 1 / 4;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(3, 1fr);
@@ -53,7 +53,6 @@
 }
 
 /* Right Column Wrapper */
-/* Right Column for cards 7-10 */
 .right-column {
   display: grid;
   grid-template-rows: repeat(4, 1fr);
@@ -70,7 +69,7 @@
   text-align: center;
   position: relative;
   cursor: pointer;
-  height: auto; /* Maintain aspect ratio */
+  height: auto;
   opacity: 0;
   transform: scale(0.9);
   transition:
@@ -87,40 +86,40 @@
 }
 
 .card.position-2.visible {
-  transform: scale(1) rotate(90deg); /* Combine scale and rotation */
+  transform: scale(1) rotate(90deg);
 }
 
 .card img {
-  width: 100%; /* Make images scale based on their container */
+  width: 100%;
   height: auto;
   max-height: 100%;
 }
 
 .position-meaning {
-  font-size: 0.6em; /* Small text */
-  color: red; /* Subtle color */
-  margin-top: 5px; /* Space between card and label */
+  font-size: 0.6em;
+  color: red;
+  margin-top: 5px;
   text-align: center;
-  max-width: 100%; /* Never wider than the card */
+  max-width: 100%;
   overflow-wrap: normal;
 }
 
 /* Responsive design */
 @media (max-width: 1024px) {
   .card {
-    width: 60%; /* Shrink the card size */
+    width: 60%;
   }
 }
 
 @media (max-width: 768px) {
   .card {
-    width: 50%; /* Further shrink card size */
+    width: 50%;
   }
 }
 
 @media (max-width: 480px) {
   .card {
-    width: 40%; /* Further shrink card size */
+    width: 40%;
   }
 }
 
@@ -136,10 +135,10 @@
   flex-direction: row;
   place-self: center;
   box-sizing: border-box;
-  max-width: 150px; /* Set a max width to maintain proportions */
+  max-width: 150px;
 }
 
 .card-display.row-layout .card img {
-  width: 100%; /* Ensure images scale within card */
-  height: auto; /* Maintain aspect ratio */
+  width: 100%;
+  height: auto;
 }

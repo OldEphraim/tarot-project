@@ -107,8 +107,8 @@ input[type="password"]:focus {
 
 /* Submit Button */
 .submit-button {
-  display: block; /* Ensures the button takes up its own line */
-  margin: auto; /* Auto margins horizontally center the button */
+  display: block;
+  margin: auto;
   background: #6b9b37;
   text-align: center;
   color: #fff;
