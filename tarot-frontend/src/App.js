@@ -25,6 +25,7 @@ const AppContent = () => {
 
   useEffect(() => {
     setIsModalOpen(false);
+    window.scrollTo(0, 0);
   }, [location, setIsModalOpen]);
 
   const getBackgroundStyle = () => {
@@ -38,7 +39,7 @@ const AppContent = () => {
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
-        minHeight: "100vh", // Ensure the background spans the viewport height
+        minHeight: "100vh",
       };
     }
     return {};
