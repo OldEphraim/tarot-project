@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Typewriter from "./Typewriter";
 import { handleSaveReading } from "../services/profileService";
 import { useAuth } from "../context/AuthContext";
@@ -9,6 +9,8 @@ import { extractWorkflowData } from "../utils/formatWorkflowJson";
 const Closing = ({ artStyle }) => {
   const { isAuthenticated, user } = useAuth();
   const { selectedSpread, userReason, workflow } = useTarot();
+
+  const navigate = useNavigate();
 
   const getMessage = () => {
     if (workflow === "cards") {
@@ -34,6 +36,7 @@ const Closing = ({ artStyle }) => {
             })
           : extractWorkflowData(workflow);
       await handleSaveReading(user, workflowData);
+      navigate(`/${user.username}`);
     } catch (error) {
       console.error("Error saving log:", error);
     }

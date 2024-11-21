@@ -36,7 +36,10 @@ const ProfilePictureSection = () => {
         <button className="spooky-button" onClick={handleProfilePictureClick}>
           Generate New Profile Image
         </button>
-        <Link to={`/${user.username}/favorites`}>
+        <Link
+          to={`/${user.username}/favorites`}
+          style={{ textDecoration: "none" }}
+        >
           <button className="spooky-button">Personal Gallery</button>
         </Link>
         <button className="spooky-button" onClick={handleJournalEntryClick}>

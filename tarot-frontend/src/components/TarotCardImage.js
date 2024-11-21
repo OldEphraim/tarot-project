@@ -18,7 +18,7 @@ const TarotCardImage = ({
     setImgSrc(imageUrl);
     let loadTimeout;
 
-    if (!imageUrl || !imageUrl.includes("images/")) {
+    if (!imageUrl || imageUrl.indexOf("images/") === -1) {
       loadTimeout = setTimeout(() => {
         if (spinnerRef.current) {
           setImgSrc("/tarot-images/error.webp");
