@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useModal } from "../context/ModalContext";
@@ -23,14 +23,11 @@ const Home = () => {
     clearWorkflow,
   } = useTarot();
 
-  const closeModalRef = useRef(closeModal);
-
   useEffect(() => {
     setIsSecondParagraphVisible(false);
     setAreTopButtonsVisible(false);
     clearWorkflow();
-    closeModalRef.current();
-  }, [closeModalRef]);
+  }, [clearWorkflow]);
 
   return (
     <div className="home">

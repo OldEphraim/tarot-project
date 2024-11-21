@@ -6,11 +6,12 @@ import tarotThemes from "../../constants/TarotThemes";
 import { useAuth } from "../../context/AuthContext";
 import { handleSaveImage } from "../../services/profileService";
 import { useGenerateImage } from "../../hooks/useGenerateImages";
+import { useCardDetails } from "../../hooks/useCardDetails";
+import { formatCardName } from "../../utils/formatCardName";
 import "../../components/Modal.css";
 
 const JournalEntryModal = ({ handleClose }) => {
   const { user } = useAuth();
-
   const {
     selectedCard,
     selectedTheme,
@@ -22,6 +23,7 @@ const JournalEntryModal = ({ handleClose }) => {
     handleGeneratePicture,
     spinnerRef,
   } = useGenerateImage();
+  const { card } = useCardDetails(formatCardName(selectedCard));
 
   const navigate = useNavigate();
 
@@ -71,7 +73,10 @@ const JournalEntryModal = ({ handleClose }) => {
       </div>
 
       <p style={{ color: "black" }}>
-        Your journal entry's header will be a{" "}
+        Your journal entry's header will be{" "}
+        {card.arcana === "Minor Arcana" || card.name === "Wheel of Fortune"
+          ? "the "
+          : ""}
         <select
           value={selectedCard}
           onChange={handleCardChange}

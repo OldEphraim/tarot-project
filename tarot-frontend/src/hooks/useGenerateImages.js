@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { searchCardByName } from "../services/tarotService";
 import { useCardImages } from "../hooks/useCardImages";
+import { formatCardName } from "../utils/formatCardName";
 
 export const useGenerateImage = () => {
   const [selectedCard, setSelectedCard] = useState("");
@@ -79,18 +80,6 @@ export const useGenerateImage = () => {
       setShouldFetchImages(true);
       setShouldClearRequests(false);
     }, 0);
-  };
-
-  const formatCardName = (cardName) => {
-    const withoutThe = cardName.replace(/^The\s+/i, "");
-    const words = withoutThe.split(" ");
-    return words
-      .map((word, index) =>
-        index === 0
-          ? word.toLowerCase()
-          : word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-      )
-      .join("");
   };
 
   const isPictureReady = generatedPicture.length > 0;

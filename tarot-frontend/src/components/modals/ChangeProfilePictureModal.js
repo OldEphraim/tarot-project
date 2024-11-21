@@ -7,14 +7,13 @@ import {
   saveProfileChanges,
   handleSaveImage,
 } from "../../services/profileService";
+import { useCardDetails } from "../../hooks/useCardDetails";
 import { useGenerateImage } from "../../hooks/useGenerateImages";
+import { formatCardName } from "../../utils/formatCardName";
 import "../../components/Modal.css";
 
 const ChangeProfilePictureModal = ({ handleClose }) => {
   const { user, setUser } = useAuth();
-
-  const [isSaved, setIsSaved] = useState([]);
-
   const {
     selectedCard,
     selectedTheme,
@@ -27,6 +26,9 @@ const ChangeProfilePictureModal = ({ handleClose }) => {
     setGeneratedPicture,
     spinnerRef,
   } = useGenerateImage();
+  const { card } = useCardDetails(formatCardName(selectedCard));
+
+  const [isSaved, setIsSaved] = useState([]);
 
   const handleSaveProfilePicture = async () => {
     try {
@@ -131,6 +133,9 @@ const ChangeProfilePictureModal = ({ handleClose }) => {
 
       <p style={{ color: "black" }}>
         Your profile picture can be{" "}
+        {card?.arcana === "Minor Arcana" || card?.name === "Wheel of Fortune"
+          ? "the "
+          : ""}
         <select
           value={selectedCard}
           onChange={handleCardChange}

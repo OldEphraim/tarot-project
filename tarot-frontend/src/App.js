@@ -27,7 +27,6 @@ const AppContent = () => {
     setIsModalOpen(false);
   }, [location, setIsModalOpen]);
 
-  // Define the background image conditionally based on the route
   const getBackgroundStyle = () => {
     if (
       location.pathname === "/login" ||
