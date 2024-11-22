@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useAuth } from "../context/AuthContext";
 import { getSavedImage, deleteFavoriteById } from "../services/profileService";
 
 export const useFavorites = (user, cardName = null) => {
@@ -6,7 +7,10 @@ export const useFavorites = (user, cardName = null) => {
   const [error, setError] = useState(null);
   const hasFetchedFavorites = useRef(false);
 
+  const { isAuthenticated } = useAuth();
+
   const fetchFavorites = useCallback(async () => {
+    if (!isAuthenticated) return;
     try {
       const favoriteData = await getSavedImage(user);
       if (cardName) {
@@ -18,16 +22,17 @@ export const useFavorites = (user, cardName = null) => {
       console.error("Failed to fetch favorites:", error);
       setError("Failed to fetch favorites.");
     }
-  }, [user, cardName]);
+  }, [user, cardName, isAuthenticated]);
 
   useEffect(() => {
-    if (user && !hasFetchedFavorites.current) {
+    if (isAuthenticated && !hasFetchedFavorites.current) {
       hasFetchedFavorites.current = true;
       fetchFavorites();
     }
-  }, [user, cardName, fetchFavorites]);
+  }, [cardName, fetchFavorites, isAuthenticated]);
 
   const deleteFavorite = async (id) => {
+    if (!isAuthenticated) return;
     try {
       await deleteFavoriteById(user, id);
       fetchFavorites();

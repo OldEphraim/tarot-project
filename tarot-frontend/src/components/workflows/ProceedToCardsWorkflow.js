@@ -5,7 +5,12 @@ import TextArea from "../TextArea";
 import Typewriter from "../Typewriter";
 import { useAuth } from "../../context/AuthContext";
 import { useTarot } from "../../context/TarotContext";
-import { drawMultipleCards } from "../../services/tarotService";
+import {
+  drawMultipleCards,
+  getLastImages,
+  searchCardByName,
+} from "../../services/tarotService";
+import { formatCardName } from "../../utils/formatCardName";
 
 const ProceedToCardsWorkflow = () => {
   const [artStyle, setArtStyle] = useState("");
@@ -63,10 +68,26 @@ const ProceedToCardsWorkflow = () => {
     }
 
     try {
-      const fetchedCards = await drawMultipleCards(numCards);
-      setCards(fetchedCards);
+      if (isAuthenticated) {
+        const fetchedCards = await drawMultipleCards(numCards);
+        setCards(fetchedCards);
+      } else {
+        const lastImages = await getLastImages(numCards);
+        const cardDetailsPromises = lastImages.map((lastImage) =>
+          lastImage.cardName
+            ? searchCardByName(formatCardName(lastImage.cardName))
+            : null
+        );
+        const cards = await Promise.all(cardDetailsPromises);
+        const cardsWithURLsAndThemes = cards.map((card, index) => ({
+          ...card,
+          url: lastImages[index].url,
+          theme: lastImages[index].artStyle,
+        }));
+        setCards(cardsWithURLsAndThemes);
+      }
     } catch (error) {
-      console.error("Error fetching cards:", error);
+      console.error("Error in handleSpreadSelect:", error);
     }
   };
 
@@ -154,7 +175,7 @@ const ProceedToCardsWorkflow = () => {
           </div>
         )}
 
-      {isArtStyleSelectionChoiceKnown && (
+      {isArtStyleSelectionChoiceKnown && !isFortunetellerTextVisible && (
         <Typewriter
           text={`You have chosen for the cards to be drawn in the ${artStyle} style.`}
           startAnimation

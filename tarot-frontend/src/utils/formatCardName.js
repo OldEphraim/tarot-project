@@ -1,5 +1,5 @@
 export function formatCardName(cardName) {
-  const withoutThe = cardName.replace(/^The\s+/i, "");
+  const withoutThe = cardName.replace(/^The\s+/i, "").replace(/_/g, " ");
   const words = withoutThe.split(" ");
   return words
     .map((word, index) =>

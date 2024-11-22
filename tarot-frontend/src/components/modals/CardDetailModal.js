@@ -11,7 +11,7 @@ import "../../components/Modal.css";
 const CardDetailModal = () => {
   const [hasSaved, setHasSaved] = useState(false);
 
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const { modalData, closeModal } = useModal();
   const { selectedSpread, workflow } = useTarot();
   const { favorites } = useFavorites(user, modalData.card.name);
@@ -87,7 +87,7 @@ const CardDetailModal = () => {
             >
               See Explanation
             </button>
-            {!isFavorite && !hasSaved && (
+            {!isFavorite && !hasSaved && isAuthenticated && (
               <button
                 className="spooky-button"
                 onClick={() => handleSaveClick()}

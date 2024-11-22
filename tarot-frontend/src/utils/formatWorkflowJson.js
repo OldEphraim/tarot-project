@@ -2,8 +2,15 @@ export function extractWorkflowData(workflow, options = {}) {
   let payload = { workflow };
 
   const sanitizeImageUrl = (url) => {
-    const prefix = "http://localhost:3000";
-    return url.startsWith(prefix) ? url.slice(prefix.length) : url;
+    const prefixes = ["http://localhost:3000", "https://alansarcana.com"];
+
+    for (const prefix of prefixes) {
+      if (url.startsWith(prefix)) {
+        return url.slice(prefix.length);
+      }
+    }
+
+    return url;
   };
 
   if (workflow === "fortuneteller") {

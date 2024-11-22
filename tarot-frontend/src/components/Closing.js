@@ -16,11 +16,11 @@ const Closing = ({ artStyle }) => {
     if (workflow === "cards") {
       return isAuthenticated
         ? "I hope you have found meaning in the cards today. You may save your results."
-        : "I hope you have found meaning in the cards today. To save your results, please log in.";
+        : "I hope you have found meaning in the cards today. To save a drawing, please log in.";
     } else if (workflow === "fortuneteller") {
       return isAuthenticated
         ? "The fortuneteller has drawn your cards. While you may continue speaking to the fortuneteller, you may save your results."
-        : "The fortuneteller has drawn your cards. While you may continue speaking to the fortuneteller, you can also log in to save your results.";
+        : "The fortuneteller has drawn your cards. While you may continue speaking to the fortuneteller, you can also log in so that future results can be saved.";
     }
     return "";
   };

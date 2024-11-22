@@ -18,16 +18,19 @@ const TarotCardImage = ({
     setImgSrc(imageUrl);
     let loadTimeout;
 
-    if (!imageUrl || imageUrl.indexOf("images/") === -1) {
-      loadTimeout = setTimeout(() => {
-        if (spinnerRef.current) {
-          setImgSrc("/tarot-images/error.webp");
-        }
-      }, 240000);
+    if (!imageUrl || imageUrl === "Error generating image.") {
+      loadTimeout = setTimeout(
+        () => {
+          if (spinnerRef.current) {
+            setImgSrc("/tarot-images/error.webp");
+          }
+        },
+        60000 + position * 60000
+      );
 
       return () => clearTimeout(loadTimeout);
     }
-  }, [imageUrl]);
+  }, [imageUrl, position]);
 
   const handleImageClick = () => {
     openModal("cardDetail", {

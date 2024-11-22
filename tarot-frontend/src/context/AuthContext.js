@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, {
+  createContext,
+  useContext,
+  useCallback,
+  useState,
+  useEffect,
+} from "react";
 import {
   login as loginService,
   logout as logoutService,
@@ -17,14 +23,51 @@ export const AuthProvider = ({ children }) => {
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   // Wrapper around setUserState to update both state and local storage
-  const setUser = (updatedUser) => {
+  const setUser = useCallback((updatedUser) => {
     if (updatedUser) {
       setAuthData(updatedUser); // Save to local storage
       setUserState(updatedUser); // Update state
     } else {
       clearAuthData(); // Clear local storage if user is null
     }
+  }, []);
+
+  // Login function
+  const login = async ({ username, password, expiresInSeconds = 3600 }) => {
+    try {
+      const response = await loginService({
+        username,
+        password,
+        expiresInSeconds,
+      });
+      setUser(response);
+    } catch (error) {
+      throw error;
+    }
   };
+
+  // Logout function
+  const logout = useCallback(async () => {
+    let logoutError = null;
+
+    try {
+      await logoutService();
+      clearAuthData();
+    } catch (error) {
+      logoutError = error;
+      console.error("Error during logout:", error);
+      clearAuthData();
+    } finally {
+      setUser(null);
+      clearAuthData();
+
+      if (logoutError) {
+        console.warn("Proceeding to clear auth data despite logout failure.");
+      }
+
+      window.location.reload();
+    }
+  }, [setUser]);
 
   // Refresh token logic
   useEffect(() => {
@@ -63,43 +106,7 @@ export const AuthProvider = ({ children }) => {
     } else {
       refreshToken();
     }
-  }, [user]);
-
-  // Login function
-  const login = async ({ username, password, expiresInSeconds = 3600 }) => {
-    try {
-      const response = await loginService({
-        username,
-        password,
-        expiresInSeconds,
-      });
-      setUser(response);
-    } catch (error) {
-      throw error;
-    }
-  };
-
-  const logout = async () => {
-    let logoutError = null;
-
-    try {
-      await logoutService();
-      clearAuthData();
-    } catch (error) {
-      logoutError = error;
-      console.error("Error during logout:", error);
-      clearAuthData();
-    } finally {
-      setUser(null);
-      clearAuthData();
-
-      if (logoutError) {
-        console.warn("Proceeding to clear auth data despite logout failure.");
-      }
-
-      window.location.reload();
-    }
-  };
+  }, [user, logout, setUser]);
 
   const value = {
     user,

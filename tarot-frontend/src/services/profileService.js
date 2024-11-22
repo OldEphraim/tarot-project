@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:8080/api",
+  baseURL: `${process.env.REACT_APP_TAROT_API}/api`,
 });
 
 export const saveProfileChanges = async (user) => {
@@ -51,7 +51,6 @@ export const getSavedImage = async (user) => {
         Authorization: `Bearer ${user.token}`,
       },
     });
-    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error(

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useAuth } from "../context/AuthContext";
 import { getRandomTheme } from "../constants/TarotThemes";
 import {
   generateCardImage,
@@ -9,14 +10,18 @@ export const useCardImages = (cards, artStyle, shouldClear) => {
   const [imageRequests, setImageRequests] = useState({});
   const hasFetched = useRef(false);
 
+  const { user } = useAuth();
+
   useEffect(() => {
     if (shouldClear) {
       setImageRequests({});
-      hasFetched.current = false; // Reset hasFetched state
+      hasFetched.current = false;
     }
   }, [shouldClear]);
 
   useEffect(() => {
+    if (!cards.length || !artStyle) return;
+
     const fetchImages = async () => {
       if (hasFetched.current) return;
       hasFetched.current = true;
@@ -32,14 +37,14 @@ export const useCardImages = (cards, artStyle, shouldClear) => {
           };
         } else if (artStyle === "Random") {
           const theme = getRandomTheme();
-          const requestId = await generateCardImage(theme, card.name);
+          const requestId = await generateCardImage(user, theme, card.name);
           newImageRequests[card.name] = {
             requestId,
             status: "pending",
             theme: theme,
           };
         } else {
-          const requestId = await generateCardImage(artStyle, card.name);
+          const requestId = await generateCardImage(user, artStyle, card.name);
           newImageRequests[card.name] = {
             requestId,
             status: "pending",
@@ -54,7 +59,7 @@ export const useCardImages = (cards, artStyle, shouldClear) => {
     if (cards.length > 0) {
       fetchImages();
     }
-  }, [artStyle, cards]);
+  }, [artStyle, cards, user]);
 
   useEffect(() => {
     const pollForImages = async () => {

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useAuth } from "../context/AuthContext";
 import { useTarot } from "../context/TarotContext";
 import { useCardExplanations } from "../hooks/useCardExplanations";
 import { useCardImages } from "../hooks/useCardImages";
@@ -13,6 +14,7 @@ const CardDisplay = ({ cards, artStyle }) => {
   const [currentCardIndex, setCurrentCardIndex] = useState(1);
   const [skipAnimation, setSkipAnimation] = useState(false);
 
+  const { isAuthenticated } = useAuth();
   const { selectedSpread } = useTarot();
 
   useInactivityHandler(cards.length, setSkipAnimation, setCurrentCardIndex);
@@ -22,7 +24,26 @@ const CardDisplay = ({ cards, artStyle }) => {
     skipAnimation ? cards.length : currentCardIndex,
     skipAnimation
   );
-  const { imageRequests } = useCardImages(cards, artStyle, false);
+
+  let imageRequests;
+  const { imageRequests: authenticatedImageRequests } = useCardImages(
+    isAuthenticated ? cards : [],
+    isAuthenticated ? artStyle : [],
+    isAuthenticated
+  );
+
+  if (isAuthenticated) {
+    imageRequests = authenticatedImageRequests;
+  } else {
+    imageRequests = cards.reduce((acc, card) => {
+      acc[card.name] = {
+        url: card.url,
+        status: "ready",
+        theme: card.theme.replace(/_/g, " "),
+      };
+      return acc;
+    }, {});
+  }
 
   const handleTypewriterEnd = () => {
     if (!skipAnimation) {

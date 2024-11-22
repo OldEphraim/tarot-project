@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:8080/api",
+  baseURL: `${process.env.REACT_APP_TAROT_API}/api`,
 });
 
 export const drawMultipleCards = async (numCards) => {
@@ -16,5 +16,10 @@ export const readTarotDeck = async () => {
 
 export const searchCardByName = async (cardName) => {
   const response = await api.get(`/search?cardName=${cardName}`);
+  return response.data;
+};
+
+export const getLastImages = async (numCards) => {
+  const response = await api.get(`/get-last-images?limit=${numCards}`);
   return response.data;
 };

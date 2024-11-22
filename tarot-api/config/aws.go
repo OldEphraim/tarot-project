@@ -11,7 +11,7 @@ import (
 var S3Client *s3.Client
 
 func InitAWS() {
-    cfg, err := config.LoadDefaultConfig(context.TODO())
+    cfg, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion("us-east-2"))
     if err != nil {
         log.Fatalf("unable to load SDK config, %v", err)
     }

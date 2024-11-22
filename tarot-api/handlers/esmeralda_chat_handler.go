@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 	"sort"
 	"strings"
@@ -30,6 +31,7 @@ func EsmeraldaChatHandler(client *openai.Client) http.HandlerFunc {
 		// Get Esmeralda's response
 		response, err := chatService.GetEsmeraldaResponse(req.Message)
 		if err != nil {
+			log.Println(err)
 			http.Error(w, "Failed to get response from Esmeralda", http.StatusInternalServerError)
 			return
 		}
@@ -43,8 +45,8 @@ func EsmeraldaChatHandler(client *openai.Client) http.HandlerFunc {
 		// Construct the JSON response
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(map[string]interface{}{
-			"response": response,
-			"cards":    matchedCards,
+			"response":    response,
+			"cards":       matchedCards,
 			"celticCross": celticCross,
 		})
 	}

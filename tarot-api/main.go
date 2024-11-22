@@ -18,10 +18,28 @@ import (
 )
 
 func main() {
-	envErr := godotenv.Load()
-	if envErr != nil {
-		log.Fatal("Error loading .env file")
+	godotenv.Load()
+	_, lookupErr := os.LookupEnv("OPENAI_API_KEY")
+	if !lookupErr {
+		log.Fatal("Proper environment variables not set")
 	}
+	_, lookupErr1 := os.LookupEnv("DB_URL")
+	if !lookupErr1 {
+		log.Fatal("Proper environment variables not set")
+	}
+	_, lookupErr2 := os.LookupEnv("JWT_SECRET")
+	if !lookupErr2 {
+		log.Fatal("Proper environment variables not set")
+	}
+	_, lookupErr3 := os.LookupEnv("AWS_ACCESS_KEY_ID")
+	if !lookupErr3 {
+		log.Fatal("Proper environment variables not set")
+	}
+	_, lookupErr4 := os.LookupEnv("AWS_SECRET_ACCESS_KEY")
+	if !lookupErr4 {
+		log.Fatal("Proper environment variables not set")
+	}
+
 
 	config.InitAWS()
 
@@ -85,8 +103,9 @@ func main() {
 	http.HandleFunc("/api/chat", utils.WrapWithMiddleware(handlers.ChatHandler(client), http.MethodPost))
 	http.HandleFunc("/api/draw", utils.WrapWithMiddleware(handlers.DrawCardsHandler, http.MethodGet))
 	http.HandleFunc("/api/esmeralda/chat", utils.WrapWithMiddleware(handlers.EsmeraldaChatHandler(client), http.MethodPost))
-	http.HandleFunc("/api/generate-image", utils.WrapWithMiddleware(handlers.ImageGenerationHandler(rateLimiter), http.MethodPost))
+	http.HandleFunc("/api/generate-image", utils.WrapWithMiddleware(handlers.ImageGenerationHandler(rateLimiter, jwtSecret), http.MethodPost))
 	http.HandleFunc("/api/get-image-result", utils.WrapWithMiddleware(handlers.GetImageResultHandler(rateLimiter), http.MethodGet))
+	http.HandleFunc("/api/get-last-images", utils.WrapWithMiddleware(handlers.GetLastImagesHandler, http.MethodGet))
 	http.HandleFunc("/api/search", utils.WrapWithMiddleware(handlers.SearchCardHandler, http.MethodGet))
 	http.HandleFunc("/api/tarot-deck", utils.WrapWithMiddleware(handlers.TarotDeckHandler, http.MethodGet))
 

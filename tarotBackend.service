@@ -1,0 +1,12 @@
+[Unit]
+Description=Tarot backend, for alansarcana.com
+After=postgresql.service
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/tarotBackend
+EnvironmentFile=/etc/tarotBackend.conf
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

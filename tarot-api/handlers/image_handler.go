@@ -2,12 +2,27 @@ package handlers
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
+	"tarot-api/internal/auth"
 	"tarot-api/services"
 )
 
-func ImageGenerationHandler(rl *services.RateLimiter) http.HandlerFunc {
+func ImageGenerationHandler(rl *services.RateLimiter, jwtSecret []byte) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		// Verify JWT and extract user information
+		tokenString := r.Header.Get("Authorization")
+		if len(tokenString) > 7 && tokenString[:7] == "Bearer " {
+			tokenString = tokenString[7:]
+		}
+		userID, err := auth.ValidateJWT(tokenString, jwtSecret)
+		if err != nil {
+			log.Printf("JWT validation failed: %v\n", err)
+			http.Error(w, "Unauthorized", http.StatusUnauthorized)
+			return
+		}
+		log.Printf("Authenticated user ID: %s\n", userID)
+
 		// Pass the request to the RateLimiter for queued processing
 		rl.AddRequest(w, r)
 	}
