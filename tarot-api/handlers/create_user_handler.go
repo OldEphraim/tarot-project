@@ -66,11 +66,11 @@ func CreateUserHandler(w http.ResponseWriter, r *http.Request, dbQueries *databa
 	}
 
 	respondWithJSON(w, http.StatusCreated, map[string]interface{}{
-		"id":              newUser.ID,
-		"username":        newUser.Username,
-		"created_at":      newUser.CreatedAt,
-		"updated_at":      newUser.UpdatedAt,
-		"email":           newUser.Email,
+		"id":         newUser.ID,
+		"username":   newUser.Username,
+		"created_at": newUser.CreatedAt,
+		"updated_at": newUser.UpdatedAt,
+		"email":      newUser.Email,
 	})
 }
 

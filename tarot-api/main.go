@@ -40,7 +40,6 @@ func main() {
 		log.Fatal("Proper environment variables not set")
 	}
 
-
 	config.InitAWS()
 
 	dbURL := os.Getenv("DB_URL")

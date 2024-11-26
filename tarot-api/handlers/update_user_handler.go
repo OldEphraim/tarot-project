@@ -12,18 +12,18 @@ import (
 )
 
 func UpdateUserHandler(w http.ResponseWriter, r *http.Request, dbQueries *database.Queries, jwtSecret []byte) {
-    // Manually parse the user ID from the URL path
-    pathParts := strings.Split(r.URL.Path, "/")
-    if len(pathParts) < 4 || pathParts[3] == "" {
-        http.Error(w, "Invalid user ID in URL", http.StatusBadRequest)
-        return
-    }
-    userId := pathParts[3]
+	// Manually parse the user ID from the URL path
+	pathParts := strings.Split(r.URL.Path, "/")
+	if len(pathParts) < 4 || pathParts[3] == "" {
+		http.Error(w, "Invalid user ID in URL", http.StatusBadRequest)
+		return
+	}
+	userId := pathParts[3]
 
 	// Verify JWT and extract user information
 	tokenString := r.Header.Get("Authorization")
 	if len(tokenString) > 7 && tokenString[:7] == "Bearer " {
-		tokenString = tokenString[7:] 
+		tokenString = tokenString[7:]
 	}
 	userID, err := auth.ValidateJWT(tokenString, jwtSecret)
 	if err != nil || userID.String() != userId {
@@ -85,7 +85,7 @@ func UpdateUserHandler(w http.ResponseWriter, r *http.Request, dbQueries *databa
 
 	if input.ProfilePicture != nil && *input.ProfilePicture != "" {
 		err := dbQueries.UpdateUserProfilePicture(r.Context(), database.UpdateUserProfilePictureParams{
-			ID:       userID,
+			ID:             userID,
 			ProfilePicture: sql.NullString{String: *input.ProfilePicture, Valid: true},
 		})
 		if err != nil {

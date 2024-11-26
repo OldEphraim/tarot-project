@@ -51,27 +51,27 @@ func GenerateCardImage(client *openai.Client, theme, card string) (string, error
 		return "", err
 	}
 
-    // Get the URL from OpenAI response
-    openAIImageURL := response.Data[0].URL
+	// Get the URL from OpenAI response
+	openAIImageURL := response.Data[0].URL
 
-    // Create a meaningful object key for the S3 bucket
-    separator := "-" 
+	// Create a meaningful object key for the S3 bucket
+	separator := "-"
 	objectKey := fmt.Sprintf(
 		"images/%s%s%s%s%s%s",
-		strings.ReplaceAll(card, " ", "_"),      
+		strings.ReplaceAll(card, " ", "_"),
 		separator,
-		strings.ReplaceAll(theme, " ", "_"),     
+		strings.ReplaceAll(theme, " ", "_"),
 		separator,
-		uuid.New().String(),                    
-		filepath.Ext(openAIImageURL),          
+		uuid.New().String(),
+		filepath.Ext(openAIImageURL),
 	)
-	
-    // Upload the image to S3 and get S3 URL
-    s3URL, err := UploadImageToS3(openAIImageURL, "tarot-project-bucket", objectKey)
-    if err != nil {
-        log.Printf("failed to upload image to S3: %v", err)
-        return "", err
-    }
+
+	// Upload the image to S3 and get S3 URL
+	s3URL, err := UploadImageToS3(openAIImageURL, "tarot-project-bucket", objectKey)
+	if err != nil {
+		log.Printf("failed to upload image to S3: %v", err)
+		return "", err
+	}
 
 	// Return S3 URL
 	return s3URL, nil

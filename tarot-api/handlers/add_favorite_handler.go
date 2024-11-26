@@ -15,11 +15,11 @@ import (
 func AddToFavoritesHandler(w http.ResponseWriter, r *http.Request, dbQueries *database.Queries, jwtSecret []byte) {
 	// Parse request body
 	var input struct {
-		UserID       uuid.UUID    `json:"user_id"`
-		ImageURL     string       `json:"image_url"`
-		CardName     string       `json:"card_name"`
-		ArtStyle     string       `json:"art_style"`
-		JournalEntry *string      `json:"journal_entry,omitempty"`
+		UserID       uuid.UUID `json:"user_id"`
+		ImageURL     string    `json:"image_url"`
+		CardName     string    `json:"card_name"`
+		ArtStyle     string    `json:"art_style"`
+		JournalEntry *string   `json:"journal_entry,omitempty"`
 	}
 
 	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
@@ -31,7 +31,7 @@ func AddToFavoritesHandler(w http.ResponseWriter, r *http.Request, dbQueries *da
 	// Verify JWT and extract user information
 	tokenString := r.Header.Get("Authorization")
 	if len(tokenString) > 7 && tokenString[:7] == "Bearer " {
-		tokenString = tokenString[7:] 
+		tokenString = tokenString[7:]
 	}
 	userID, err := auth.ValidateJWT(tokenString, jwtSecret)
 	if err != nil || userID != input.UserID {
@@ -69,13 +69,13 @@ func AddToFavoritesHandler(w http.ResponseWriter, r *http.Request, dbQueries *da
 	// Respond with success and include the newly created favorite details
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(map[string]interface{}{
-		"message":      "Image added to favorites",
-		"id":           newFavorite.ID,
-		"user_id":      newFavorite.UserID,
-		"image_url":    newFavorite.ImageUrl,
-		"card_name":    newFavorite.CardName,
-		"art_style":    newFavorite.ArtStyle,
+		"message":       "Image added to favorites",
+		"id":            newFavorite.ID,
+		"user_id":       newFavorite.UserID,
+		"image_url":     newFavorite.ImageUrl,
+		"card_name":     newFavorite.CardName,
+		"art_style":     newFavorite.ArtStyle,
 		"journal_entry": newFavorite.JournalEntry.String,
-		"created_at":   newFavorite.CreatedAt,
+		"created_at":    newFavorite.CreatedAt,
 	})
 }

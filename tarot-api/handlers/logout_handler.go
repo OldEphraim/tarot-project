@@ -12,8 +12,8 @@ import (
 func LogoutHandler(w http.ResponseWriter, r *http.Request, dbQueries *database.Queries) {
 	// Get the token and username from the body
 	var request struct {
-		Id       uuid.UUID `json:"user_id"`
-		Token    string    `json:"token,omitempty"`
+		Id    uuid.UUID `json:"user_id"`
+		Token string    `json:"token,omitempty"`
 	}
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
 		respondWithError(w, http.StatusBadRequest, "Invalid or missing input")

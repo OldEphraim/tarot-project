@@ -171,11 +171,11 @@ const Navbar = () => {
         <li onClick={(e) => e.stopPropagation()}>
           <div className="oldephraim-link" onClick={() => closeDropdowns()}>
             <a
-              href="https://oldephraim.github.io"
+              href="https://oldephraimlearnstocode.wordpress.com/2024/11/24/tarot-project-links/"
               target="_blank"
               rel="noopener noreferrer"
             >
-              About The Developer
+              About This Project
             </a>
           </div>
         </li>

@@ -16,7 +16,7 @@ func SearchCardHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Search for the card in the tarotDeck
 	for _, card := range models.TarotDetails {
-		if strings.EqualFold(card.Details.Name, cardName) { // Assuming TarotCard has a Name field
+		if strings.EqualFold(card.Details.Name, cardName) {
 			w.Header().Set("Content-Type", "application/json")
 			json.NewEncoder(w).Encode(card)
 			return

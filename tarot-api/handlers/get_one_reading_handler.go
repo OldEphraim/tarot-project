@@ -11,14 +11,14 @@ import (
 )
 
 func GetReadingBySlugHandler(w http.ResponseWriter, r *http.Request, dbQueries *database.Queries, jwtSecret []byte) {
-    // Extract user ID and slug from the URL path
-    pathParts := strings.Split(r.URL.Path, "/")
-    if len(pathParts) < 7 || pathParts[4] == "" || pathParts[6] == "" {
-        http.Error(w, "Invalid user ID or slug in URL", http.StatusBadRequest)
-        return
-    }
-    userIDParam := pathParts[4]
-    slug := pathParts[6]
+	// Extract user ID and slug from the URL path
+	pathParts := strings.Split(r.URL.Path, "/")
+	if len(pathParts) < 7 || pathParts[4] == "" || pathParts[6] == "" {
+		http.Error(w, "Invalid user ID or slug in URL", http.StatusBadRequest)
+		return
+	}
+	userIDParam := pathParts[4]
+	slug := pathParts[6]
 
 	// Verify JWT and extract user information
 	tokenString := r.Header.Get("Authorization")

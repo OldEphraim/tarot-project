@@ -4,8 +4,6 @@ import (
 	"crypto/rand"
 	"encoding/hex"
 	"errors"
-	"net/http"
-	"strings"
 	"time"
 
 	"golang.org/x/crypto/bcrypt"
@@ -73,21 +71,6 @@ func ValidateJWT(tokenString string, tokenSecret []byte) (uuid.UUID, error) {
 	return userID, nil
 }
 
-// GetBearerToken extracts the token string from the Authorization header.
-func GetBearerToken(headers http.Header) (string, error) {
-	authHeader := headers.Get("Authorization")
-	if authHeader == "" {
-		return "", jwt.NewValidationError("missing authorization header", jwt.ValidationErrorMalformed)
-	}
-
-	const prefix = "Bearer "
-	if !strings.HasPrefix(authHeader, prefix) {
-		return "", jwt.NewValidationError("invalid authorization header format", jwt.ValidationErrorMalformed)
-	}
-
-	return strings.TrimSpace(authHeader[len(prefix):]), nil
-}
-
 func MakeRefreshToken() (string, error) {
 	token := make([]byte, 32) // 256 bits
 	_, err := rand.Read(token)
@@ -95,19 +78,4 @@ func MakeRefreshToken() (string, error) {
 		return "", err
 	}
 	return hex.EncodeToString(token), nil
-}
-
-// GetAPIKey extracts the API key from the Authorization header
-func GetAPIKey(headers http.Header) (string, error) {
-	authHeader := headers.Get("Authorization")
-	if authHeader == "" {
-		return "", errors.New("authorization header not found")
-	}
-
-	parts := strings.Split(authHeader, " ")
-	if len(parts) != 2 || strings.ToLower(parts[0]) != "apikey" {
-		return "", errors.New("invalid authorization format")
-	}
-
-	return strings.TrimSpace(parts[1]), nil
 }

@@ -18,8 +18,8 @@ import (
 func AddToReadingsHandler(w http.ResponseWriter, r *http.Request, dbQueries *database.Queries, jwtSecret []byte, client *openai.Client) {
 	// Parse request body
 	var input struct {
-		UserID      uuid.UUID               `json:"user_id"`
-		WorkflowData map[string]interface{} `json:"workflow_data"` // Updated to accept JSON data
+		UserID       uuid.UUID              `json:"user_id"`
+		WorkflowData map[string]interface{} `json:"workflow_data"` 
 	}
 
 	log.Printf("Workflow data received: %+v\n", input.WorkflowData)
@@ -110,7 +110,7 @@ func AddToReadingsHandler(w http.ResponseWriter, r *http.Request, dbQueries *dat
 	// Add the reading to the database
 	err = dbQueries.AddReading(r.Context(), database.AddReadingParams{
 		UserID:      userID,
-		WorkflowLog: workflowJSON, 
+		WorkflowLog: workflowJSON,
 		Title:       processedTitle,
 		Slug:        slug,
 	})

@@ -14,40 +14,40 @@ import (
 )
 
 func UploadImageToS3(imageURL string, bucketName string, objectKey string) (string, error) {
-    log.Println("Fetching image from URL:", imageURL)
-    // Fetch image data
-    resp, err := http.Get(imageURL)
-    if err != nil {
-        log.Println("Error fetching image:", err)
-        return "", err
-    }
-    defer resp.Body.Close()
+	log.Println("Fetching image from URL:", imageURL)
+	// Fetch image data
+	resp, err := http.Get(imageURL)
+	if err != nil {
+		log.Println("Error fetching image:", err)
+		return "", err
+	}
+	defer resp.Body.Close()
 
-    buf := new(bytes.Buffer)
-    _, err = buf.ReadFrom(resp.Body)
-    if err != nil {
-        log.Println("Error reading image response body:", err)
-        return "", err
-    }
+	buf := new(bytes.Buffer)
+	_, err = buf.ReadFrom(resp.Body)
+	if err != nil {
+		log.Println("Error reading image response body:", err)
+		return "", err
+	}
 
-    log.Println("Uploading image to S3 with key:", objectKey)
+	log.Println("Uploading image to S3 with key:", objectKey)
 
-    // Upload to S3
-    _, err = config.S3Client.PutObject(context.TODO(), &s3.PutObjectInput{
-        Bucket:      aws.String(bucketName),
-        Key:         aws.String(objectKey),
-        Body:        bytes.NewReader(buf.Bytes()),
-        ContentType: aws.String("image/webp"),
-    })
-    if err != nil {
-        log.Println("Error uploading to S3:", err)
-        return "", err
-    }
+	// Upload to S3
+	_, err = config.S3Client.PutObject(context.TODO(), &s3.PutObjectInput{
+		Bucket:      aws.String(bucketName),
+		Key:         aws.String(objectKey),
+		Body:        bytes.NewReader(buf.Bytes()),
+		ContentType: aws.String("image/webp"),
+	})
+	if err != nil {
+		log.Println("Error uploading to S3:", err)
+		return "", err
+	}
 
-    s3URL := "https://" + bucketName + ".s3.amazonaws.com/" + objectKey
-    log.Println("Successfully uploaded image to S3:", s3URL)
+	s3URL := "https://" + bucketName + ".s3.amazonaws.com/" + objectKey
+	log.Println("Successfully uploaded image to S3:", s3URL)
 
-    return s3URL, nil
+	return s3URL, nil
 }
 
 func GetRecentImagesFromS3(bucketName string, prefix string, maxResults int) ([]string, error) {
