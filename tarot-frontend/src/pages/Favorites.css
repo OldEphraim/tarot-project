@@ -28,7 +28,6 @@ section {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: 280px;
-  margin: 0 120px;
 }
 
 .favorite-item {
@@ -36,7 +35,7 @@ section {
 }
 
 .favorite-item img {
-  width: 100%;
+  width: 75%;
   height: auto;
   border-radius: 8px;
   object-fit: contain;
