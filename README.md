@@ -4,6 +4,12 @@ This project was originally meant to be a tarot-themed API for boot.dev, but spi
 
 This is the first project I've built which supports authentication (log-in and log-out ability). Logged-in users can create journal entries and get a limited number of calls to DALL-E (to generate free images of tarot cards in a variety of art styles) per day; they can also save those images or save "readings" done by ChatGPT. (Users who are not logged in cannot create new images, and are instead merely shown already generated art, and cannot save their conversations with the fortuneteller/ChatGPT).
 
-## Contributing
+## Workflows
 
-You can contribute to this project by using it yourself! Send me the coolest cards the AI draws for you and let me know if the fortuneteller's predictions come true.
+Fortuneteller Workflow:
+
+[![Fortuneteller Workflow](https://www.youtube.com/watch?v=b3VwDMxyPK0)]
+
+Draw Cards Workflow:
+
+[![Draw Cards Workflow](https://www.youtube.com/watch?v=OiMsL_V7Kqs)]
