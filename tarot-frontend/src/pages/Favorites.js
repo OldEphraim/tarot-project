@@ -25,7 +25,7 @@ const Favorites = () => {
     return <h2>{combinedError}</h2>;
   }
 
-  if (!deck || !favorites.length) {
+  if (!deck) {
     return <h2>Loading...</h2>;
   }
 
@@ -54,7 +54,7 @@ const Favorites = () => {
     <>
       <div className="favorites-container">
         <h1 className="favorites-header">Your Favorites</h1>
-        {favorites.length > 0 ? (
+        {favorites ? (
           <div className="favorites-grid">
             {favorites.map((favorite, index) => {
               const cardDetails = getCardDetails(favorite.CardName);

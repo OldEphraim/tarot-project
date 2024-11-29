@@ -58,7 +58,7 @@ const TarotCard = () => {
       </div>
       <div className="specific-favorites-container">
         <h1 className="specific-favorites-header">Your Favorites</h1>
-        {favorites.length > 0 ? (
+        {favorites ? (
           <div className="specific-favorites-grid">
             {favorites.map((favorite, index) => {
               return (
