@@ -8,8 +8,8 @@ This is the first project I've built which supports authentication (log-in and l
 
 Fortuneteller Workflow:
 
-[![Fortuneteller Workflow](https://www.youtube.com/watch?v=b3VwDMxyPK0)]
+[![Fortuneteller Workflow](https://img.youtube.com/vi/b3VwDMxyPK0/0.jpg)](https://youtu.be/OiMsL_V7Kqs)
 
 Draw Cards Workflow:
 
-[![Draw Cards Workflow](https://www.youtube.com/watch?v=OiMsL_V7Kqs)]
+[![Draw Cards Workflow](https://img.youtube.com/vi/OiMsL_V7Kqs/0.jpg)](https://youtu.be/OiMsL_V7Kqs)
